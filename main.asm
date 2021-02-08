@@ -15,12 +15,23 @@ rept $150 - $104
   db 0
 endr
 
-section "Scroll", wram0
-slot1:
+section "Data", wram0
+slotValuesStart:
+slot1Value:
   ds 1
 
-slot2:
+slot2Value:
   ds 1
+
+slot3Value:
+  ds 1
+
+slot4Value:
+  ds 1
+
+slot5Value:
+  ds 1
+slotValuesEnd:
 
 section "Game Code", ROM0
 Start:
@@ -34,40 +45,56 @@ jp .setup
   reti
 
 .setup
+  ld a, 1
+  ld [slot1Value], a
+  ld a, 3
+  ld [slot2Value], a
+  ld a, 2
+  ld [slot3Value], a
+  ld a, 5
+  ld [slot4Value], a
+  ld a, 6
+  ld [slot5Value], a
+
   xor a
   ld [rLCDC], a
   ld hl, $9000
   ld de, Empty
   ld bc, Dice6TilesEnd - Empty
 
-.copyDiceTiles
+.copyTiles
   ld a, [de]
   ld [hli], a
   inc de
   dec bc
   ld a, b
   or c
-  jr nz, .copyDiceTiles
+  jr nz, .copyTiles
 
 .drawDice
+  ld a, [slot1Value]
+  call .setupDie
   ld hl, BEGIN_SLOT_1
-  ld de, Dice6MapStart
   call .copyDiceSlot
 
+  ld a, [slot2Value]
+  call .setupDie
   ld hl, BEGIN_SLOT_2
-  ld de, Dice2MapStart
   call .copyDiceSlot
 
+  ld a, [slot3Value]
+  call .setupDie
   ld hl, BEGIN_SLOT_3
-  ld de, Dice3MapStart
   call .copyDiceSlot
 
+  ld a, [slot4Value]
+  call .setupDie
   ld hl, BEGIN_SLOT_4
-  ld de, Dice4MapStart
   call .copyDiceSlot
 
+  ld a, [slot5Value]
+  call .setupDie
   ld hl, BEGIN_SLOT_5
-  ld de, Dice5MapStart
   call .copyDiceSlot
 
 .initDisplay
@@ -106,6 +133,50 @@ jp .setup
 
   ld b, $1a
   jr .loop
+
+.setupDie:
+  cp a, 0
+  jr z, .setDieTo0
+  cp a, 1
+  jr z, .setDieTo1
+  cp a, 2
+  jr z, .setDieTo2
+  cp a, 3
+  jr z, .setDieTo3
+  cp a, 4
+  jr z, .setDieTo4
+  cp a, 5
+  jr z, .setDieTo5
+  cp a, 6
+  jr z, .setDieTo6
+
+.setDieTo0:
+  ld de, Dice0MapStart
+  reti
+
+.setDieTo1:
+  ld de, Dice1MapStart
+  reti
+
+.setDieTo2:
+  ld de, Dice2MapStart
+  reti
+
+.setDieTo3:
+  ld de, Dice3MapStart
+  reti
+
+.setDieTo4:
+  ld de, Dice4MapStart
+  reti
+
+.setDieTo5:
+  ld de, Dice5MapStart
+  reti
+
+.setDieTo6:
+  ld de, Dice6MapStart
+  reti
 
 .copyDiceSlot
   ld b, 4
