@@ -1,16 +1,16 @@
 include "hardware.inc"
 
-BEGIN_SLOT_1 equ $99C0
-BEGIN_SLOT_2 equ $99C4
-BEGIN_SLOT_3 equ $99C8
-BEGIN_SLOT_4 equ $99CC
-BEGIN_SLOT_5 equ $99D0
+BEGIN_SLOT_1 equ $99E1
+BEGIN_SLOT_2 equ BEGIN_SLOT_1+4
+BEGIN_SLOT_3 equ BEGIN_SLOT_2+4
+BEGIN_SLOT_4 equ BEGIN_SLOT_3+4
+BEGIN_SLOT_5 equ BEGIN_SLOT_4+4
 
-BEGIN_MENU_ROLL equ $980F
+BEGIN_MENU_ROLL equ $982F
 BEGIN_MENU_KEEP equ BEGIN_MENU_ROLL+$40
 BEGIN_MENU_SCORE equ BEGIN_MENU_KEEP+$40
 
-BEGIN_ONES equ $9801
+BEGIN_ONES equ $9821
 BEGIN_TWOS equ BEGIN_ONES+$40
 BEGIN_THREES equ BEGIN_TWOS+$40
 BEGIN_FOURS equ BEGIN_THREES+$40
@@ -18,7 +18,7 @@ BEGIN_FIVES equ BEGIN_FOURS+$40
 BEGIN_SIXES equ BEGIN_FIVES+$40
 BEGIN_BONUS equ BEGIN_SIXES+$40
 
-BEGIN_3KIND equ $9808
+BEGIN_3KIND equ $9828
 BEGIN_4KIND equ BEGIN_3KIND+$40
 BEGIN_FULL equ BEGIN_4KIND+$40
 BEGIN_SMALL equ BEGIN_FULL+$40
@@ -27,27 +27,32 @@ BEGIN_YATZY equ BEGIN_LARGE+$40
 BEGIN_CHANCE equ BEGIN_YATZY+$40
 
 
-BEGIN_ROLLS equ $98CE
+BEGIN_ROLLS equ $98EE
 BEGIN_SUBTOTAL equ BEGIN_ROLLS+$41
 BEGIN_TOTAL equ BEGIN_SUBTOTAL+$60
 
-BEGIN_VERTICAL_BORDER1 equ $9800
-BEGIN_VERTICAL_BORDER2 equ $9807
-BEGIN_VERTICAL_BORDER3 equ $980E
-BEGIN_VERTICAL_BORDER4 equ $9813
+BEGIN_VERTICAL_BORDER1 equ $9820
+BEGIN_VERTICAL_BORDER2 equ $9827
+BEGIN_VERTICAL_BORDER3 equ $982E
+BEGIN_VERTICAL_BORDER4 equ $9833
 
-BEGIN_HORIZONTAL_BORDER1 EQU $99A0
-BEGIN_HORIZONTAL_BORDER2 EQU $98AF
+BEGIN_HORIZONTAL_BORDER1 EQU $9800
+BEGIN_HORIZONTAL_BORDER2 EQU $99C0
+BEGIN_HORIZONTAL_BORDER3 EQU $98CF
 
-JUNC1 equ $99A0
-JUNC2 equ $99A7
-JUNC3 equ $99AE
-JUNC4 equ $99B3
-JUNC5 equ $98AE
-JUNC6 equ $98B3
+JUNC1 equ $99C0
+JUNC2 equ $99C7
+JUNC3 equ $99CE
+JUNC4 equ $99D3 
+JUNC5 equ $98CE
+JUNC6 equ $98D3
+JUNC7 equ $9800
+JUNC8 equ $9807
+JUNC9 equ $980E
+JUNC10 equ $9813
 
-MENU_Y_MIN equ $10
-MENU_Y_MAX equ $30
+MENU_Y_MIN equ $18
+MENU_Y_MAX equ $38
 
 MENU_X_MIN equ $80
 MENU_X_MAX equ $80
@@ -155,13 +160,6 @@ jp .setup
   ld de, TilesStart
   ld bc, TilesEnd - TilesStart
   call .copyTiles
-
-  ; xor a
-  ; ld [rLCDC], a
-  ; ld hl, _VRAM
-  ; ld de, ArrowTile
-  ; ld bc, ArrowTileEnd - ArrowTile
-  ; call .copyTiles
 
 .drawMenu
   ld de, RollMapStart
@@ -277,6 +275,11 @@ jp .setup
 
   ld de, HorizontalBorderMapStart
   ld hl, BEGIN_HORIZONTAL_BORDER2
+  ld b, 20
+  call .drawHorizontalBorder
+
+  ld de, HorizontalBorderMapStart
+  ld hl, BEGIN_HORIZONTAL_BORDER3
   ld b, 4
   call .drawHorizontalBorder
 
@@ -307,6 +310,26 @@ jp .setup
 
   ld de, JunctionRMapStart
   ld hl, JUNC6
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionTLMapStart
+  ld hl, JUNC7
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionTMapStart
+  ld hl, JUNC8
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionTMapStart
+  ld hl, JUNC9
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionTRMapStart
+  ld hl, JUNC10
   ld a, [de]
   ld [hl], a
 
@@ -361,7 +384,7 @@ jp .setup
 
   ld a, [ARROW_MIN_X]
   ld [_ARROW_X], a
-  ld a, $5E
+  ld a, $40
   ld [_ARROW_NUM], a
   ld a, 0
   ld [_ARROW_ATT], a
@@ -423,8 +446,8 @@ jp .setup
   reti
 
 .copyDiceSlot
-  ld b, 4
-  ld c, 4
+  ld b, 3
+  ld c, 3
 
 .copyDiceSlotLoop
   ld a, [de]
@@ -437,8 +460,8 @@ jp .setup
   dec c
   cp c
   jr z, .diceReturn
-  ld a, 28
-  ld b, 4
+  ld a, 29
+  ld b, 3
 
 .nextLineLoop
   inc hl
@@ -547,37 +570,31 @@ resetDice:
   ret
 
 changeDice:
-  call Start.waitVBlank
   ld a, [slot1Value]
   call Start.setupDie
   ld hl, BEGIN_SLOT_1
   call Start.copyDiceSlot
 
-  call Start.waitVBlank
   ld a, [slot2Value]
   call Start.setupDie
   ld hl, BEGIN_SLOT_2
   call Start.copyDiceSlot
 
-  call Start.waitVBlank
   ld a, [slot3Value]
   call Start.setupDie
   ld hl, BEGIN_SLOT_3
   call Start.copyDiceSlot
 
-  call Start.waitVBlank
   ld a, [slot4Value]
   call Start.setupDie
   ld hl, BEGIN_SLOT_4
   call Start.copyDiceSlot
 
-  call Start.waitVBlank
   ld a, [slot5Value]
   call Start.setupDie
   ld hl, BEGIN_SLOT_5
   call Start.copyDiceSlot
 
-  call Start.reset
   ret
 
 moveArrowUp:
