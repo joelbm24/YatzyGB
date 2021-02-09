@@ -52,37 +52,109 @@ DB $5E
 ArrowMapEnd:
 
 RollMapStart:
-DB $5F,$60,$61
+DB $00, $5F,$60,$61
 RollMapEnd:
 
 KeepMapStart:
-DB $62, $63, $64
+DB $00, $62, $63, $64
 KeepMapEnd:
 
 ScoreMapStart:
-DB $65, $66, $67
+DB $00, $65, $66, $67
 ScoreMapEnd:
 
 OnesMapStart:
-DB $68,$69, $6A
+DB $00, $68,$69, $6A
 OnesMapEnd:
 
 TwosMapStart:
-DB $6B, $6C, $6D
+DB $00, $6B, $6C, $6D
 TwosMapEnd:
 
 ThreesMapStart:
-DB $6E, $6F, $70
+DB $00, $6E, $6F, $70
 ThreesMapEnd:
 
 FoursMapStart:
-DB $71, $72, $73
+DB $00, $71, $72, $73
 FoursMapEnd:
 
 FivesMapStart:
-DB $74, $75, $76
+DB $00, $74, $75, $76
 FivesMapEnd:
 
 SixesMapStart:
-DB $77, $78, $79
+DB $00, $77, $78, $79
 SixesMapEnd:
+
+BonusMapStart:
+DB $00, $7A, $7B, $7C
+BonusMapEnd:
+
+ThreeKindMapStart:
+DB $00, $7D, $7E, $7F
+ThreeKindMapEnd:
+
+FourKindMapStart:
+DB $00, $80, $81, $82
+FourKindMapEnd:
+
+FullMapStart:
+DB $00, $83, $84, $85
+FullMapEnd:
+
+SmallMapStart:
+DB $00, $86, $87, $88
+SmallMapEnd:
+
+LargeMapStart:
+DB $00, $89, $8A, $8B
+LargeMapEnd:
+
+YatzyMapStart:
+DB $00, $8C, $8D, $8E
+YatzyMapEnd:
+
+ChanceMapStart:
+DB $00, $8F, $90, $91
+ChanceMapEnd:
+
+RollsMapStart:
+DB $00, $92, $93, $94
+RollsMapEnd:
+
+SubtotalMapStart:
+DB $95, $96, $97, $98
+SubtotalMapEnd:
+
+TotalMapStart:
+DB $99, $9A, $9B, $9C
+TotalMapEnd:
+
+VerticalBorderMapStart:
+DB $9D
+VerticalBorderMapEnd:
+
+HorizontalBorderMapStart:
+DB $9E
+HorizontalBorderMapEnd:
+
+JunctionBLMapStart:
+DB $9F
+JunctionBLMapEnd:
+
+JunctionBMapStart:
+DB $A0
+JunctionBMapEnd:
+
+JunctionBRMapStart:
+DB $A1
+JunctionBRMapEnd:
+
+JunctionLMapStart:
+DB $A2
+JunctionLMapEnd:
+
+JunctionRMapStart:
+DB $A3
+JunctionRMapEnd:

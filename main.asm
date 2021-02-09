@@ -6,10 +6,9 @@ BEGIN_SLOT_3 equ $99C8
 BEGIN_SLOT_4 equ $99CC
 BEGIN_SLOT_5 equ $99D0
 
-BEGIN_ARROW equ $9810
-BEGIN_MENU_ROLL equ $9811
-BEGIN_MENU_KEEP equ $9851
-BEGIN_MENU_SCORE equ $9891
+BEGIN_MENU_ROLL equ $980F
+BEGIN_MENU_KEEP equ BEGIN_MENU_ROLL+$40
+BEGIN_MENU_SCORE equ BEGIN_MENU_KEEP+$40
 
 BEGIN_ONES equ $9801
 BEGIN_TWOS equ BEGIN_ONES+$40
@@ -17,12 +16,41 @@ BEGIN_THREES equ BEGIN_TWOS+$40
 BEGIN_FOURS equ BEGIN_THREES+$40
 BEGIN_FIVES equ BEGIN_FOURS+$40
 BEGIN_SIXES equ BEGIN_FIVES+$40
+BEGIN_BONUS equ BEGIN_SIXES+$40
+
+BEGIN_3KIND equ $9808
+BEGIN_4KIND equ BEGIN_3KIND+$40
+BEGIN_FULL equ BEGIN_4KIND+$40
+BEGIN_SMALL equ BEGIN_FULL+$40
+BEGIN_LARGE equ BEGIN_SMALL+$40
+BEGIN_YATZY equ BEGIN_LARGE+$40
+BEGIN_CHANCE equ BEGIN_YATZY+$40
+
+
+BEGIN_ROLLS equ $98CE
+BEGIN_SUBTOTAL equ BEGIN_ROLLS+$41
+BEGIN_TOTAL equ BEGIN_SUBTOTAL+$60
+
+BEGIN_VERTICAL_BORDER1 equ $9800
+BEGIN_VERTICAL_BORDER2 equ $9807
+BEGIN_VERTICAL_BORDER3 equ $980E
+BEGIN_VERTICAL_BORDER4 equ $9813
+
+BEGIN_HORIZONTAL_BORDER1 EQU $99A0
+BEGIN_HORIZONTAL_BORDER2 EQU $98AF
+
+JUNC1 equ $99A0
+JUNC2 equ $99A7
+JUNC3 equ $99AE
+JUNC4 equ $99B3
+JUNC5 equ $98AE
+JUNC6 equ $98B3
 
 MENU_Y_MIN equ $10
 MENU_Y_MAX equ $30
 
-MENU_X_MIN equ $88
-MENU_X_MAX equ $88
+MENU_X_MIN equ $80
+MENU_X_MAX equ $80
 
 _ARROW_Y     EQU     _OAMRAM
 _ARROW_X     EQU     _OAMRAM+1
@@ -95,7 +123,6 @@ jp .setup
   ld a, [rLY]
   cp 144
   jr c, .waitVBlank
- 
   ret
 
 .copyTiles
@@ -124,17 +151,17 @@ jp .setup
 
   xor a
   ld [rLCDC], a
-  ld hl, $9000
+  ld hl, $8000
   ld de, TilesStart
   ld bc, TilesEnd - TilesStart
   call .copyTiles
 
-  xor a
-  ld [rLCDC], a
-  ld hl, _VRAM
-  ld de, ArrowTile
-  ld bc, ArrowTileEnd - ArrowTile
-  call .copyTiles
+  ; xor a
+  ; ld [rLCDC], a
+  ; ld hl, _VRAM
+  ; ld de, ArrowTile
+  ; ld bc, ArrowTileEnd - ArrowTile
+  ; call .copyTiles
 
 .drawMenu
   ld de, RollMapStart
@@ -175,6 +202,113 @@ jp .setup
   ld de, SixesMapStart
   ld hl, BEGIN_SIXES
   call drawTextTiles
+
+  ld de, BonusMapStart
+  ld hl, BEGIN_BONUS
+  call drawTextTiles
+
+.drawLowerCard
+  ld de, ThreeKindMapStart
+  ld hl, BEGIN_3KIND
+  call drawTextTiles
+
+  ld de, FourKindMapStart
+  ld hl, BEGIN_4KIND
+  call drawTextTiles
+
+  ld de, FullMapStart
+  ld hl, BEGIN_FULL
+  call drawTextTiles
+
+  ld de, SmallMapStart
+  ld hl, BEGIN_SMALL
+  call drawTextTiles
+
+    ld de, LargeMapStart
+  ld hl, BEGIN_LARGE
+  call drawTextTiles
+
+  ld de, YatzyMapStart
+  ld hl, BEGIN_YATZY
+  call drawTextTiles
+
+  ld de, ChanceMapStart
+  ld hl, BEGIN_CHANCE
+  call drawTextTiles
+
+.drawInfo
+  ld de, RollsMapStart
+  ld hl, BEGIN_ROLLS
+  call drawTextTiles
+
+  ld de, SubtotalMapStart
+  ld hl, BEGIN_SUBTOTAL
+  call drawTextTiles
+
+  ld de, TotalMapStart
+  ld hl, BEGIN_TOTAL
+  call drawTextTiles
+
+.drawBorder
+  ld de, VerticalBorderMapStart
+  ld hl, BEGIN_VERTICAL_BORDER1
+  ld b, 13
+  call .drawVerticalBorder
+
+  ld de, VerticalBorderMapStart
+  ld hl, BEGIN_VERTICAL_BORDER2
+  ld b, 13
+  call .drawVerticalBorder
+
+  ld de, VerticalBorderMapStart
+  ld hl, BEGIN_VERTICAL_BORDER3
+  ld b, 13
+  call .drawVerticalBorder
+
+  ld de, VerticalBorderMapStart
+  ld hl, BEGIN_VERTICAL_BORDER4 
+  ld b, 13
+  call .drawVerticalBorder
+
+  ld de, HorizontalBorderMapStart
+  ld hl, BEGIN_HORIZONTAL_BORDER1
+  ld b, 20
+  call .drawHorizontalBorder
+
+  ld de, HorizontalBorderMapStart
+  ld hl, BEGIN_HORIZONTAL_BORDER2
+  ld b, 4
+  call .drawHorizontalBorder
+
+  ld de, JunctionBLMapStart
+  ld hl, JUNC1
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionBMapStart
+  ld hl, JUNC2
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionBMapStart
+  ld hl, JUNC3
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionBRMapStart
+  ld hl, JUNC4
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionLMapStart
+  ld hl, JUNC5
+  ld a, [de]
+  ld [hl], a
+
+  ld de, JunctionRMapStart
+  ld hl, JUNC6
+  ld a, [de]
+  ld [hl], a
 
 .drawDice
   ld a, [slot1Value]
@@ -227,7 +361,7 @@ jp .setup
 
   ld a, [ARROW_MIN_X]
   ld [_ARROW_X], a
-  ld a, $0
+  ld a, $5E
   ld [_ARROW_NUM], a
   ld a, 0
   ld [_ARROW_ATT], a
@@ -240,7 +374,7 @@ jp .setup
   call turnOffLCD
   ld [rNR52], a
 
-  ld a, LCDCF_ON|LCDCF_BG9800|LCDCF_BGON|LCDCF_OBJ8|LCDCF_OBJON
+  ld a, LCDCF_ON|LCDCF_BG8000|LCDCF_BG9800|LCDCF_BGON|LCDCF_OBJ8|LCDCF_OBJON
   ld [rLCDC], a
   reti
 
@@ -315,6 +449,34 @@ jp .setup
 
 .diceReturn
   reti
+
+.drawVerticalBorder
+  ld a, [de]
+  ld [hli], a
+  dec b
+  ld a, b
+  cp a, 0
+  jr z, .vBorderReturn
+  ld a, 31
+
+.nextBorderLineLoop
+  inc hl
+  dec a
+  cp a, 0
+  jr z, .drawVerticalBorder
+  jr .nextBorderLineLoop
+
+.vBorderReturn
+  reti
+
+.drawHorizontalBorder
+  ld a, [de]
+  ld [hli], a
+  dec b
+  ld a, b
+  cp a, 0
+  jr z, .vBorderReturn
+  jr .drawHorizontalBorder
 
 setMenuCursorConstraints:
   ld a, MENU_Y_MIN
@@ -448,15 +610,31 @@ moveArrowDown:
   ret
 
 moveArrowLeft:
-  ld a, [rSCX]
-  sub a, 1
-  ld [rSCX],a
+  call setPress
+  ld a, [ARROW_MIN_X]
+  ld b, a
+  ld a, [_ARROW_X]
+  cp a, b
+
+  jp z, inputReturn
+
+  ld a, [_ARROW_X]
+  sub a, 64
+  ld [_ARROW_X],a
   ret
 
 moveArrowRight:
-  ld a, [rSCX]
-  add a, 1
-  ld [rSCX],a
+  call setPress
+  ld a, [ARROW_MAX_X]
+  ld b, a
+  ld a, [_ARROW_X]
+  cp a, b
+
+  jp z, inputReturn
+
+  ld a, [_ARROW_X]
+  add a, 64
+  ld [_ARROW_X],a
   ret
 
 inputReturn:
@@ -498,12 +676,12 @@ input:
   ; left
  	ld		a, [_PAD]
 	and    		%00100000
-	call		nz, oneDice
+	call		nz, moveArrowLeft
 
   ; right
   ld		a, [_PAD]
 	and    		%00010000
-	call		nz, resetDice
+	call		nz, moveArrowRight
 
   ; A
   ld		a, [_PAD]
@@ -551,6 +729,9 @@ slowdown:
 	ret
 
 drawTextTiles:
+  ld a, [de]
+  ld [hli], a
+  inc de
   ld a, [de]
   ld [hli], a
   inc de
