@@ -110,6 +110,7 @@ ARROW_MAX_X:
 section "Game Code", ROM0
 Start:
 call turnOffLCD
+call initSound
 
 .initDisplay
   ; Init display Registers
@@ -395,7 +396,6 @@ jp .setup
 
 .reset
   call turnOffLCD
-  ld [rNR52], a
 
   ld a, LCDCF_ON|LCDCF_BG8000|LCDCF_BG9800|LCDCF_BGON|LCDCF_OBJ8|LCDCF_OBJON
   ld [rLCDC], a
@@ -598,6 +598,7 @@ changeDice:
   ret
 
 moveArrowUp:
+  call Beep
   call setPress
 
   ld a, [ARROW_MIN_Y]
@@ -613,6 +614,7 @@ moveArrowUp:
   ret
 
 moveArrowDown:
+  call Beep
   call setPress
   ld a, [ARROW_MAX_Y]
   ld b, a
@@ -758,6 +760,39 @@ drawTextTiles:
   ld a, [de]
   ld [hli], a
   inc de
+  ret
+
+initSound:
+  ld a, %10000000
+  ld [rNR52], a
+
+  ld a, %01110111
+  ld [rNR50], a
+
+  ld a, %11111111
+  ld [rNR51], a
+  ret
+
+Beep:
+  ld a, %01000011
+  ld [rNR10], a
+
+  ld a, %10101011
+  ld [rNR11], a
+
+  ld a, %11110110
+  ld [rNR12], a
+
+  ld a, %10011011
+  ld [rNR13], a
+
+  ld a, %11000101
+  ld [rNR14], a
+  ld bc, $001f
+
+  ; ld  a, [rNR24]
+  ; set 7,a
+  ; ld  [rNR24], a
   ret
 
 section "Tiles", ROM0
