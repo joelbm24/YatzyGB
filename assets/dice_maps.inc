@@ -46,3 +46,43 @@ DB $56,$57,$58,$59
 DB $56,$57,$58,$59
 DB $5A,$5B,$5C,$5D
 Dice6MapEnd:
+
+ArrowMapStart:
+DB $5E
+ArrowMapEnd:
+
+RollMapStart:
+DB $5F,$60,$61
+RollMapEnd:
+
+KeepMapStart:
+DB $62, $63, $64
+KeepMapEnd:
+
+ScoreMapStart:
+DB $65, $66, $67
+ScoreMapEnd:
+
+OnesMapStart:
+DB $68,$69, $6A
+OnesMapEnd:
+
+TwosMapStart:
+DB $6B, $6C, $6D
+TwosMapEnd:
+
+ThreesMapStart:
+DB $6E, $6F, $70
+ThreesMapEnd:
+
+FoursMapStart:
+DB $71, $72, $73
+FoursMapEnd:
+
+FivesMapStart:
+DB $74, $75, $76
+FivesMapEnd:
+
+SixesMapStart:
+DB $77, $78, $79
+SixesMapEnd:
