@@ -1,66 +1,5 @@
 include "hardware.inc"
-
-BEGIN_SLOT_1 equ $99E1
-BEGIN_SLOT_2 equ BEGIN_SLOT_1+4
-BEGIN_SLOT_3 equ BEGIN_SLOT_2+4
-BEGIN_SLOT_4 equ BEGIN_SLOT_3+4
-BEGIN_SLOT_5 equ BEGIN_SLOT_4+4
-
-BEGIN_MENU_ROLL equ $982F
-BEGIN_MENU_KEEP equ BEGIN_MENU_ROLL+$40
-BEGIN_MENU_SCORE equ BEGIN_MENU_KEEP+$40
-
-BEGIN_ONES equ $9821
-BEGIN_TWOS equ BEGIN_ONES+$40
-BEGIN_THREES equ BEGIN_TWOS+$40
-BEGIN_FOURS equ BEGIN_THREES+$40
-BEGIN_FIVES equ BEGIN_FOURS+$40
-BEGIN_SIXES equ BEGIN_FIVES+$40
-BEGIN_BONUS equ BEGIN_SIXES+$40
-
-BEGIN_3KIND equ $9828
-BEGIN_4KIND equ BEGIN_3KIND+$40
-BEGIN_FULL equ BEGIN_4KIND+$40
-BEGIN_SMALL equ BEGIN_FULL+$40
-BEGIN_LARGE equ BEGIN_SMALL+$40
-BEGIN_YATZY equ BEGIN_LARGE+$40
-BEGIN_CHANCE equ BEGIN_YATZY+$40
-
-
-BEGIN_ROLLS equ $98EE
-BEGIN_SUBTOTAL equ BEGIN_ROLLS+$41
-BEGIN_TOTAL equ BEGIN_SUBTOTAL+$60
-
-BEGIN_VERTICAL_BORDER1 equ $9820
-BEGIN_VERTICAL_BORDER2 equ $9827
-BEGIN_VERTICAL_BORDER3 equ $982E
-BEGIN_VERTICAL_BORDER4 equ $9833
-
-BEGIN_HORIZONTAL_BORDER1 EQU $9800
-BEGIN_HORIZONTAL_BORDER2 EQU $99C0
-BEGIN_HORIZONTAL_BORDER3 EQU $98CF
-
-JUNC1 equ $99C0
-JUNC2 equ $99C7
-JUNC3 equ $99CE
-JUNC4 equ $99D3 
-JUNC5 equ $98CE
-JUNC6 equ $98D3
-JUNC7 equ $9800
-JUNC8 equ $9807
-JUNC9 equ $980E
-JUNC10 equ $9813
-
-MENU_Y_MIN equ $18
-MENU_Y_MAX equ $38
-
-MENU_X_MIN equ $80
-MENU_X_MAX equ $80
-
-_ARROW_Y     EQU     _OAMRAM
-_ARROW_X     EQU     _OAMRAM+1
-_ARROW_NUM   EQU     _OAMRAM+2
-_ARROW_ATT   EQU     _OAMRAM+3
+include "constants.inc"
 
 section "Header", ROM0[$100]
 EntryPoint:
@@ -72,43 +11,16 @@ rept $150 - $104
 endr
 
 section "Data", wram0
-slotValuesStart:
-slot1Value:
-  ds 1
-
-slot2Value:
-  ds 1
-
-slot3Value:
-  ds 1
-
-slot4Value:
-  ds 1
-
-slot5Value:
-  ds 1
-slotValuesEnd:
-
-_PAD:
-  ds 1
-
-_PAD_PRESSED:
-  ds 1
-
-ARROW_MIN_Y:
-  ds 1
-
-ARROW_MAX_Y:
-  ds 1
-
-ARROW_MIN_X:
-  ds 1
-
-ARROW_MAX_X:
-  ds 1
+include "variables.inc"
 
 section "Game Code", ROM0
 Start:
+ld a, 0
+ld [SELECTION], a
+ld [MENU], a
+ld [KEPT_DICE], a
+ld [_PAD_PRESSED], a
+
 call turnOffLCD
 call initSound
 
@@ -131,6 +43,30 @@ jp .setup
   jr c, .waitVBlank
   ret
 
+
+.setup
+  ld a, 0
+  ld [slot1Value], a
+  ld [slot2Value], a
+  ld [slot3Value], a
+  ld [slot4Value], a
+  ld [slot5Value], a
+
+  xor a
+  ld [rLCDC], a
+  ld hl, $8000
+  ld de, TilesStart
+  ld bc, TilesEnd - TilesStart
+
+  ld a, TACF_START
+  ld [rTAC], a
+  ld a, [rDIV]
+  ld [Seed], a
+  ld a, [rDIV]
+  ld [Seed+1], a
+  ld a, [rDIV]
+  ld [Seed+2], a
+
 .copyTiles
   ld a, [de]
   ld [hli], a
@@ -139,28 +75,6 @@ jp .setup
   ld a, b
   or c
   jr nz, .copyTiles
-  ret
-
-.setup
-  call resetPress
-
-  ld a, 1
-  ld [slot1Value], a
-  ld a, 2
-  ld [slot2Value], a
-  ld a, 3
-  ld [slot3Value], a
-  ld a, 4
-  ld [slot4Value], a
-  ld a, 5
-  ld [slot5Value], a
-
-  xor a
-  ld [rLCDC], a
-  ld hl, $8000
-  ld de, TilesStart
-  ld bc, TilesEnd - TilesStart
-  call .copyTiles
 
 .drawMenu
   ld de, RollMapStart
@@ -335,47 +249,24 @@ jp .setup
   ld [hl], a
 
 .drawDice
-  ld a, [slot1Value]
-  call .setupDie
-  ld hl, BEGIN_SLOT_1
-  call .copyDiceSlot
-
-  ld a, [slot2Value]
-  call .setupDie
-  ld hl, BEGIN_SLOT_2
-  call .copyDiceSlot
-
-  ld a, [slot3Value]
-  call .setupDie
-  ld hl, BEGIN_SLOT_3
-  call .copyDiceSlot
-
-  ld a, [slot4Value]
-  call .setupDie
-  ld hl, BEGIN_SLOT_4
-  call .copyDiceSlot
-
-  ld a, [slot5Value]
-  call .setupDie
-  ld hl, BEGIN_SLOT_5
-  call .copyDiceSlot
+  call changeDice
 
 .startSpriteClean
-    call turnOffLCD
+  call turnOffLCD
  
-    ld hl, _OAMRAM
-    ld de, 40*4
+  ld hl, _OAMRAM
+  ld de, 40*4
 
 .spriteCleanLoop
-    ld a, 0
-    ld [hl], a
-    dec de
+  ld a, 0
+  ld [hl], a
+  dec de
 
-    ld a, d
-    or e
-    jp z, .setupArrow
-    inc hl
-    jp .spriteCleanLoop
+  ld a, d
+  or e
+  jp z, .setupArrow
+  inc hl
+  jp .spriteCleanLoop
 
 .setupArrow
   call setMenuCursorConstraints
@@ -385,7 +276,7 @@ jp .setup
 
   ld a, [ARROW_MIN_X]
   ld [_ARROW_X], a
-  ld a, $40
+  ld a, [ArrowMapStart]
   ld [_ARROW_NUM], a
   ld a, 0
   ld [_ARROW_ATT], a
@@ -399,79 +290,7 @@ jp .setup
 
   ld a, LCDCF_ON|LCDCF_BG8000|LCDCF_BG9800|LCDCF_BGON|LCDCF_OBJ8|LCDCF_OBJON
   ld [rLCDC], a
-  reti
-
-.setupDie:
-  cp a, 0
-  jr z, .setDieTo0
-  cp a, 1
-  jr z, .setDieTo1
-  cp a, 2
-  jr z, .setDieTo2
-  cp a, 3
-  jr z, .setDieTo3
-  cp a, 4
-  jr z, .setDieTo4
-  cp a, 5
-  jr z, .setDieTo5
-  cp a, 6
-  jr z, .setDieTo6
-
-.setDieTo0:
-  ld de, Dice0MapStart
-  reti
-
-.setDieTo1:
-  ld de, Dice1MapStart
-  reti
-
-.setDieTo2:
-  ld de, Dice2MapStart
-  reti
-
-.setDieTo3:
-  ld de, Dice3MapStart
-  reti
-
-.setDieTo4:
-  ld de, Dice4MapStart
-  reti
-
-.setDieTo5:
-  ld de, Dice5MapStart
-  reti
-
-.setDieTo6:
-  ld de, Dice6MapStart
-  reti
-
-.copyDiceSlot
-  ld b, 3
-  ld c, 3
-
-.copyDiceSlotLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec b
-  ld a, b
-  cp a, 0
-  jr nz, .copyDiceSlotLoop
-  dec c
-  cp c
-  jr z, .diceReturn
-  ld a, 29
-  ld b, 3
-
-.nextLineLoop
-  inc hl
-  dec a
-  cp a, 0
-  jr z, .copyDiceSlotLoop
-  jr .nextLineLoop
-
-.diceReturn
-  reti
+  ret
 
 .drawVerticalBorder
   ld a, [de]
@@ -511,6 +330,63 @@ setMenuCursorConstraints:
   ld [ARROW_MIN_X], a
   ld a, MENU_X_MAX
   ld [ARROW_MAX_X], a
+
+  ld a, MENU_X_CHANGE
+  ld [ARROW_X_CHANGE], a
+
+  ld a, MENU_Y_CHANGE
+  ld [ARROW_Y_CHANGE], a
+
+  ret
+
+setKeepConstraints:
+  ld a, DICE_Y_MIN
+  ld [ARROW_MIN_Y], a
+  ld a, DICE_Y_MAX
+  ld [ARROW_MAX_Y], a
+
+  ld a, DICE_X_MIN
+  ld [ARROW_MIN_X], a
+  ld a, DICE_X_MAX
+  ld [ARROW_MAX_X], a
+
+  ld a, DICE_X_CHANGE
+  ld [ARROW_X_CHANGE], a
+
+  ld a, DICE_Y_CHANGE
+  ld [ARROW_Y_CHANGE], a
+
+  ret
+
+setCardConstraints:
+  ld a, CARD_Y_MIN
+  ld [ARROW_MIN_Y], a
+  ld a, CARD_Y_MAX
+  ld [ARROW_MAX_Y], a
+
+  ld a, CARD_X_MIN
+  ld [ARROW_MIN_X], a
+  ld a, CARD_X_MAX
+  ld [ARROW_MAX_X], a
+
+  ld a, CARD_X_CHANGE
+  ld [ARROW_X_CHANGE], a
+
+  ld a, CARD_Y_CHANGE
+  ld [ARROW_Y_CHANGE], a
+
+  ret
+
+incMenuSelection:
+  ld a, [SELECTION]
+  inc a
+  ld [SELECTION], a
+  ret
+
+decMenuSelection:
+  ld a, [SELECTION]
+  dec a
+  ld [SELECTION], a
   ret
 
 read_pad:
@@ -541,64 +417,415 @@ read_pad:
     ld      [_PAD], a
     ret
 
-oneDice:
-  ld a, 1
-  ld [slot1Value], a
-  ld a, 1
-  ld [slot2Value], a
-  ld a, 1
-  ld [slot3Value], a
-  ld a, 1
-  ld [slot4Value], a
-  ld a, 1
-  ld [slot5Value], a
-  call changeDice
-  ret
-
 resetDice:
   ld a, 0
+  
   ld [slot1Value], a
-  ld a, 0
+  call changeDice.drawDiceSlot1
   ld [slot2Value], a
-  ld a, 0
+  call changeDice.drawDiceSlot1
   ld [slot3Value], a
-  ld a, 0
+  call changeDice.drawDiceSlot1
   ld [slot4Value], a
-  ld a, 0
+  call changeDice.drawDiceSlot1
   ld [slot5Value], a
+  call changeDice.drawDiceSlot1
+
+  ld [KEPT_DICE], a
+
   call changeDice
+  call changeDice
+  call changeDice
+  call changeDice
+
   ret
 
 changeDice:
+  call .drawDiceSlot1
+  call .drawDiceSlot2
+  call .drawDiceSlot3
+  call .drawDiceSlot4
+  call .drawDiceSlot5
+  ret
+
+.drawDiceSlot1
+  ld a, [KEPT_DICE]
+  ld b, a
   ld a, [slot1Value]
-  call Start.setupDie
+  bit 0, b
+  call z, .setupDie
+  call nz, .setupInvertDie
   ld hl, BEGIN_SLOT_1
-  call Start.copyDiceSlot
+  call .copyDiceSlot
+  ret
 
+.drawDiceSlot2
+  ld a, [KEPT_DICE]
+  ld b, a
   ld a, [slot2Value]
-  call Start.setupDie
+  bit 1, b
+  call z, .setupDie
+  call nz, .setupInvertDie
   ld hl, BEGIN_SLOT_2
-  call Start.copyDiceSlot
+  call .copyDiceSlot
+  ret
 
+.drawDiceSlot3
+  ld a, [KEPT_DICE]
+  ld b, a
+  bit 2, b
   ld a, [slot3Value]
-  call Start.setupDie
+  call z, .setupDie
+  call nz, .setupInvertDie
   ld hl, BEGIN_SLOT_3
-  call Start.copyDiceSlot
+  call .copyDiceSlot
+  ret
 
+.drawDiceSlot4
+  ld a, [KEPT_DICE]
+  ld b, a
+  bit 3, b
   ld a, [slot4Value]
-  call Start.setupDie
+  call z, .setupDie
+  call nz, .setupInvertDie
   ld hl, BEGIN_SLOT_4
-  call Start.copyDiceSlot
+  call .copyDiceSlot
+  ret
 
+.drawDiceSlot5
+  ld a, [KEPT_DICE]
+  ld b, a
+  bit 4, b
   ld a, [slot5Value]
-  call Start.setupDie
+  call z, .setupDie
+  call nz, .setupInvertDie
   ld hl, BEGIN_SLOT_5
-  call Start.copyDiceSlot
+  call .copyDiceSlot
+  ret
+
+.setupDie:
+  cp a, 0
+  jr z, .setDieTo0
+  cp a, 1
+  jr z, .setDieTo1
+  cp a, 2
+  jr z, .setDieTo2
+  cp a, 3
+  jr z, .setDieTo3
+  cp a, 4
+  jr z, .setDieTo4
+  cp a, 5
+  jr z, .setDieTo5
+  cp a, 6
+  jr z, .setDieTo6
+
+.setupInvertDie:
+  cp a, 1
+  jr z, .setDieToInvert1
+  cp a, 2
+  jr z, .setDieToInvert2
+  cp a, 3
+  jr z, .setDieToInvert3
+  cp a, 4
+  jr z, .setDieToInvert4
+  cp a, 5
+  jr z, .setDieToInvert5
+  cp a, 6
+  jr z, .setDieToInvert6
+
+.setDieTo0:
+  ld de, Dice0MapStart
+  ret
+
+.setDieTo1:
+  ld de, Dice1MapStart
+  ret
+
+.setDieToInvert1
+  ld de, InvertDice1MapStart
+  ret
+
+.setDieTo2:
+  ld de, Dice2MapStart
+  ret
+
+.setDieToInvert2
+  ld de, InvertDice2MapStart
+  ret
+
+.setDieTo3:
+  ld de, Dice3MapStart
+  ret
+
+.setDieToInvert3
+  ld de, InvertDice3MapStart
+  ret
+
+.setDieTo4:
+  ld de, Dice4MapStart
+  ret
+
+.setDieToInvert4
+  ld de, InvertDice4MapStart
+  ret
+
+.setDieTo5:
+  ld de, Dice5MapStart
+  ret
+
+.setDieToInvert5
+  ld de, InvertDice5MapStart
+  ret
+
+.setDieTo6:
+  ld de, Dice6MapStart
+  ret
+
+.setDieToInvert6
+  ld de, InvertDice6MapStart
+  ret
+
+.changeSlot1
+  ld b, a
+  ld a, [KEPT_DICE]
+  bit 0, a
+  ret nz
+
+  ld a, b
+  ld [slot1Value], a
+  ret
+
+.changeSlot2
+  ld b, a
+  ld a, [KEPT_DICE]
+  bit 1, a
+  ret nz
+
+  ld a, b
+  ld [slot2Value], a
+  ret
+
+.changeSlot3
+  ld b, a
+  ld a, [KEPT_DICE]
+  bit 2, a
+  ret nz
+
+  ld a, b
+  ld [slot3Value], a
+  ret
+
+.changeSlot4
+  ld b, a
+  ld a, [KEPT_DICE]
+  bit 3, a
+  ret nz
+
+  ld a, b
+  ld [slot4Value], a
+  ret
+
+.changeSlot5
+  ld b, a
+  ld a, [KEPT_DICE]
+  bit 4, a
+  ret nz
+
+  ld a, b
+  ld [slot5Value], a
+  ret
+
+.copyDiceSlot
+  ld b, 3
+  ld c, 3
+
+.copyDiceSlotLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec b
+  ld a, b
+  cp a, 0
+  jr nz, .copyDiceSlotLoop
+  dec c
+  cp c
+  jr z, .diceReturn
+  ld a, 29
+  ld b, 3
+
+.nextLineLoop
+  inc hl
+  dec a
+  cp a, 0
+  jr z, .copyDiceSlotLoop
+  jr .nextLineLoop
+
+.diceReturn
+  ret
+
+select:
+  call setPress
+  call SelectBeep
+
+  ld a, [MENU]
+  cp a, 0
+  call z, changeMenu
+
+  cp a, 1
+  call z, selectDie
 
   ret
 
+changeMenu:
+  ld a, [SELECTION]
+  cp a, 0
+  call z, roll
+
+  ld a, [SELECTION]
+  cp a, 1
+  call z, selectKeep
+
+  ld a, [SELECTION]
+  cp a, 2
+  call z, selectCard
+  ret
+
+roll:
+  ld a, [RN]
+  call changeDice.changeSlot1
+  call changeDice.drawDiceSlot1
+  
+  ld a, [RN+1]
+  call changeDice.changeSlot2
+  call changeDice.drawDiceSlot2
+
+  ld a, [RN+2]
+  call changeDice.changeSlot3
+  call changeDice.drawDiceSlot3
+
+  ld a, [RN+3]
+  call changeDice.changeSlot4
+  call changeDice.drawDiceSlot4
+
+  ld a, [RN+4]
+  call changeDice.changeSlot5
+  call changeDice.drawDiceSlot5
+
+  call changeDice
+  call changeDice
+  call changeDice
+  ret
+
+selectCard:
+  ld a, 2
+  ld [MENU], a
+
+  ld a, 0
+  ld [SELECTION], a
+
+  call setCardConstraints
+
+  call setCursor
+  ret
+
+selectDie:
+  ld a, [SELECTION]
+  cp a, 0
+  jr z, .selectSlot1
+
+  ld a, [SELECTION]
+  cp a, 1
+  jr z, .selectSlot2
+
+  ld a, [SELECTION]
+  cp a, 2
+  jr z, .selectSlot3
+
+  ld a, [SELECTION]
+  cp a, 3
+  jr z, .selectSlot4
+
+  ld a, [SELECTION]
+  cp a, 4
+  jr z, .selectSlot5
+
+.selectSlot1
+  ld b, 0
+  set 0, b
+
+  ld a, [KEPT_DICE]
+  xor b
+  ld [KEPT_DICE], a
+  call changeDice.drawDiceSlot1
+  ret
+
+.selectSlot2
+  ld b, 0
+  set 1, b
+
+  ld a, [KEPT_DICE]
+  xor b
+  ld [KEPT_DICE], a
+  call changeDice.drawDiceSlot2
+  ret
+
+.selectSlot3
+  ld b, 0
+  set 2, b
+
+  ld a, [KEPT_DICE]
+  xor b
+  ld [KEPT_DICE], a
+  call changeDice.drawDiceSlot3
+  ret
+
+.selectSlot4
+  ld b, 0
+  set 3, b
+
+  ld a, [KEPT_DICE]
+  xor b
+  ld [KEPT_DICE], a
+  call changeDice.drawDiceSlot4
+  ret
+
+.selectSlot5
+  ld b, 0
+  set 4, b
+
+  ld a, [KEPT_DICE]
+  xor b
+  ld [KEPT_DICE], a
+  call changeDice.drawDiceSlot5
+  ret
+
+selectKeep:
+  ld a, 1
+  ld [MENU], a
+
+  ld a, 0
+  ld [SELECTION], a
+
+  call setKeepConstraints
+
+  call setCursor
+
+  ret
+
+changeToMainMenu:
+  call setPress
+
+  ld a, 0
+  ld [SELECTION], a
+  ld a, 0
+  ld [MENU], a
+
+  call setMenuCursorConstraints
+  call setCursor
+  ret
+
+
 moveArrowUp:
-  call Beep
   call setPress
 
   ld a, [ARROW_MIN_Y]
@@ -606,25 +833,35 @@ moveArrowUp:
   ld a, [_ARROW_Y]
   cp a, b
 
+  call z, ErrorBeep
   jp z, inputReturn
 
+  call Beep
+  call decMenuSelection
+
+  ld a, [ARROW_Y_CHANGE]
+  ld b, a
   ld a, [_ARROW_Y]
-  sub a, 16
+  sub a, b
   ld [_ARROW_Y],a
   ret
 
 moveArrowDown:
-  call Beep
   call setPress
   ld a, [ARROW_MAX_Y]
   ld b, a
   ld a, [_ARROW_Y]
   cp a, b
-
+  call z, ErrorBeep
   jp z, inputReturn
 
+  call Beep
+  call incMenuSelection
+
+  ld a, [ARROW_Y_CHANGE]
+  ld b, a
   ld a, [_ARROW_Y]
-  add a, 16
+  add a, b
   ld [_ARROW_Y],a
   ret
 
@@ -635,10 +872,16 @@ moveArrowLeft:
   ld a, [_ARROW_X]
   cp a, b
 
+  call z, ErrorBeep
   jp z, inputReturn
 
+  call Beep
+  call decMenuSelection
+
+  ld a, [ARROW_X_CHANGE]
+  ld b, a
   ld a, [_ARROW_X]
-  sub a, 64
+  sub a, b
   ld [_ARROW_X],a
   ret
 
@@ -649,10 +892,16 @@ moveArrowRight:
   ld a, [_ARROW_X]
   cp a, b
 
+  call z, ErrorBeep
   jp z, inputReturn
 
+  call Beep
+  call incMenuSelection
+
+  ld a, [ARROW_X_CHANGE]
+  ld b, a
   ld a, [_ARROW_X]
-  add a, 64
+  add a, b
   ld [_ARROW_X],a
   ret
 
@@ -671,10 +920,14 @@ resetPress:
 
 input:
 	call	read_pad
+  call Reseed
+  call setRandomNumbers
+
   call Start.waitVBlank
 
+
   ; wait til button is released
-  ld		a, [_PAD]
+  ld a, [_PAD]
 	cp 0
   call z, resetPress
 
@@ -702,15 +955,15 @@ input:
 	and    		%00010000
 	call		nz, moveArrowRight
 
-  ; A
-  ld		a, [_PAD]
-	and    		%00000010
-	call		nz, resetDice
-
   ; B
   ld		a, [_PAD]
+	and    		%00000010
+	call		nz, changeToMainMenu
+
+  ; A
+  ld		a, [_PAD]
 	and    		%00000001
-	call		nz, resetDice
+	call		nz, select
 
   ; Start
   ld		a, [_PAD]
@@ -719,21 +972,21 @@ input:
 
   jr input
 
+
 turnOffLCD:
-    ld a,[rLCDC]
-    rlca
-    ret nc 
- 
+  ld a,[rLCDC]
+  rlca
+  ret nc 
  
 .waitVBlank
-    ld a, [rLY]
-    cp 145
-    jr nz, .waitVBlank
+  ld a, [rLY]
+  cp 145
+  jr nz, .waitVBlank
  
-    ld a,[rLCDC]
-    res 7,a
-    ld [rLCDC],a
-    ret
+  ld a,[rLCDC]
+  res 7,a
+  ld [rLCDC],a
+  jr turnOffLCD
 
 slowdown:
 .delay:
@@ -762,6 +1015,19 @@ drawTextTiles:
   inc de
   ret
 
+setCursor:
+  ld a, [ARROW_MIN_X]
+  ld [_ARROW_X], a
+
+  ld a, [ARROW_MIN_Y]
+  ld [_ARROW_Y], a
+  
+  ld a, [ArrowMapStart]
+  ld [_ARROW_NUM], a
+  ld a, 0
+  ld [_ARROW_ATT], a
+  ret
+
 initSound:
   ld a, %10000000
   ld [rNR52], a
@@ -773,7 +1039,25 @@ initSound:
   ld [rNR51], a
   ret
 
-Beep:
+ErrorBeep:
+  ld a, %01000011
+  ld [rNR10], a
+
+  ld a, %10101011
+  ld [rNR11], a
+
+  ld a, %11110110
+  ld [rNR12], a
+
+  ld a, %10011011
+  ld [rNR13], a
+
+  ld a, %11000000
+  ld [rNR14], a
+  ret
+
+
+SelectBeep:
   ld a, %01000011
   ld [rNR10], a
 
@@ -788,17 +1072,108 @@ Beep:
 
   ld a, %11000101
   ld [rNR14], a
-  ld bc, $001f
-
-  ; ld  a, [rNR24]
-  ; set 7,a
-  ; ld  [rNR24], a
   ret
+
+Beep:
+  ld a, %01000011
+  ld [rNR10], a
+
+  ld a, %10101011
+  ld [rNR11], a
+
+  ld a, %11110110
+  ld [rNR12], a
+
+  ld a, %11111011
+  ld [rNR13], a
+
+  ld a, %11000101
+  ld [rNR14], a
+  ret
+
+setRandomNumbers:
+  call RandomNumber
+  ld [RN], a
+  
+  call RandomNumber
+  ld [RN+1], a
+
+  call RandomNumber
+  ld [RN+2], a
+
+  call RandomNumber
+  ld [RN+3], a
+
+  call RandomNumber
+  ld [RN+4], a
+
+
+Reseed:
+  ld a, [rDIV]
+  ld [Seed], a
+  ld a, [rTIMA]
+  ld [Seed+1], a
+  ld a, [rDIV]
+  ld b, a
+  ld a, [rTIMA]
+  xor b
+  ld [Seed+2], a
+  ret
+
+RandomNumber:
+  ld      hl,Seed
+  ld      a,[hl+]
+  sra     a
+  sra     a
+  sra     a
+  xor     [hl]
+  inc     hl
+  rra
+  rl      [hl]
+  dec     hl
+  rl      [hl]
+  dec     hl
+  rl      [hl]
+  ld      a,[rDIV]
+
+.randomness:
+  add [hl]
+  call mod6
+  ld a, c
+  ret
+
+mod6:
+  ld b, a
+  ld c, 0
+
+.loop
+  dec b
+  inc c
+  ld a, 6
+  cp a, c
+  call z, .resetC
+
+  ld a, 0
+  cp a, b
+  jr nz, .loop
+
+  inc c
+  ret
+
+.resetC
+  ld c, 0
+  ret
+
+ScoreDice:
+
+; load value you want to count into A
+.countValue
+
 
 section "Tiles", ROM0
 TilesStart:
 include "assets/dice_tiles.inc"
 TilesEnd:
 
-section "Dice Maps", ROM0
+section "Maps", ROM0
 include "assets/dice_maps.inc"

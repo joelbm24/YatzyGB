@@ -163,3 +163,45 @@ JunctionTRMapEnd:
 JunctionTMapStart:
 DB $88
 JunctionTMapEnd:
+
+InvertDice1MapStart:
+DB $89,$8A,$8B
+DB $8C,$8D,$8E
+DB $8F,$90,$91
+InvertDice1MapEnd:
+
+InvertDice2MapStart:
+DB $92,$93,$94
+DB $95,$96,$97
+DB $98,$99,$9A
+InvertDice2MapEnd:
+
+InvertDice3MapStart:
+DB $9B,$9C,$9D
+DB $9E,$9F,$A0
+DB $A1,$A2,$A3
+InvertDice3MapEnd:
+
+InvertDice4MapStart:
+DB $A4,$A5,$A6
+DB $A7,$A8,$A9
+DB $AA,$AB,$AC
+InvertDice4MapEnd:
+
+InvertDice5MapStart:
+DB $AD,$AE,$AF
+DB $B0,$B1,$B2
+DB $B3,$B4,$B5
+InvertDice5MapEnd:
+
+InvertDice6MapStart:
+DB $B6,$B7,$B8
+DB $B9,$BA,$BB
+DB $BC,$BD,$BE
+InvertDice6MapEnd:
+
+EmptyDiceMapStart:
+DB $00,$00,$00
+DB $00,$00,$00
+DB $00,$00,$00
+EmptyDiceMapEnd:
