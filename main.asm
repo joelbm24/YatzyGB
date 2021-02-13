@@ -20,6 +20,7 @@ ld [SELECTION], a
 ld [MENU], a
 ld [KEPT_DICE], a
 ld [_PAD_PRESSED], a
+ld [CARD], a
 
 .initDisplay
   ; Init display Registers
@@ -89,9 +90,10 @@ ld [_PAD_PRESSED], a
 
 .main
   call sounds.init
-  call arrow.initialize
   call setMenuCursorConstraints
+  call arrow.initialize
   call arrow.setPosition
+  call arrow.jump
   call LCDControl.turnOn
 
   jp input
@@ -101,6 +103,7 @@ include "lib/lcd_control.inc"
 include "lib/dice.inc"
 include "lib/sounds.inc"
 include "lib/status.inc"
+include "lib/scorecard.inc"
 
 setMenuCursorConstraints:
   ld a, MENU_Y_MIN
@@ -168,6 +171,7 @@ decMenuSelection:
   ld a, [SELECTION]
   dec a
   ld [SELECTION], a
+
   ret
 
 read_pad:
@@ -409,9 +413,14 @@ moveArrowLeft:
   ret z
 
   call sounds.MoveBeep
+  ld a, [MENU]
+  cp a, 2
+  call z, scorecard.changeToCard0
+  call arrow.left
+  ret z
+
   call decMenuSelection
 
-  call arrow.left
   ret
 
 moveArrowRight:
@@ -425,6 +434,11 @@ moveArrowRight:
   ret z
 
   call sounds.MoveBeep
+  ld a, [MENU]
+  cp a, 2
+  call z, scorecard.changeToCard1
+  call arrow.right
+  ret z
   call incMenuSelection
 
   call arrow.right

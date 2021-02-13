@@ -66,6 +66,9 @@ SELECTION:
 MENU:
   ds 1
 
+CARD:
+  ds 1
+
 KEPT_DICE:
   ds 1
 
