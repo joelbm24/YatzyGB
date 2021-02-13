@@ -1,3 +1,12 @@
+SCREEN_UPDATE:
+  ds 1
+
+ARROW_UPDATE:
+  ds 1
+
+ARROW_DIRECTION:
+  ds 1
+
 slotValuesStart:
 slot1Value:
   ds 1
@@ -21,6 +30,12 @@ _PAD:
 _PAD_PRESSED:
   ds 1
 
+ARROW_X:
+  ds 1
+
+ARROW_Y:
+  ds 1
+
 ARROW_MIN_Y:
   ds 1
 
@@ -39,6 +54,12 @@ ARROW_X_CHANGE:
 ARROW_Y_CHANGE:
   ds 1
 
+NO_BACK:
+  ds 1
+
+DISABLE_KEEP_SCORE:
+  ds 1
+
 SELECTION:
   ds 1
 
@@ -53,6 +74,9 @@ Seed:
 
 RN:
   ds 5
+
+ROLL_COUNT:
+  ds 1
 
 POSSIBLE_ONES:
   ds 1
