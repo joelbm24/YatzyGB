@@ -42,19 +42,21 @@ status:
 
 .drawSubtotal
   ld hl, BEGIN_SUBTOTAL+33
-  ld de, DISPLAY_TOTAL+2
+  ld de, DISPLAY_SUBTOTAL+2
   ld a, [de]
   dec de
   add $BF
   ld [hli], a
+
   ld a, [de]
   dec de
   add $BF
   ld [hli], a
+
   ld a, [de]
-  dec de
   add $BF
-  ld [hli], a
+  ld [hl], a
+  ret
 
 .updateTotal
   ld a, [TOTAL]
@@ -68,20 +70,23 @@ status:
 .drawTotal
   ld hl, BEGIN_TOTAL+32
   ld de, DISPLAY_TOTAL+3
+
   ld a, [de]
   dec de
   add $BF
   ld [hli], a
+
   ld a, [de]
   dec de
   add $BF
   ld [hli], a
+
   ld a, [de]
   dec de
   add $BF
   ld [hli], a
+
   ld a, [de]
-  dec de
   add $BF
   ld [hl], a
   ret

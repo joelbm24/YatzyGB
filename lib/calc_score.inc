@@ -55,6 +55,28 @@ calcScore:
   ld a, 30
   ret
 
+.calcRepeatYatzy
+  ld a, 100
+  ret
+
+.is3Kind
+  ret
+
+.is4Kind
+  ret
+
+.isFull
+  ret
+
+.isSmall
+  ret
+
+.isLarge
+  ret
+
+.isYatzy
+  ret
+
 .calcPossibleUpperScore:
   call .calcOnes
   ld [POSSIBLE_ONES], a

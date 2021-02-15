@@ -300,6 +300,8 @@ selectCategory:
   call disableKeepScore
   call changeDice.resetDice
   call status.resetRollCount
+  call status.updateSubtotal
+  call status.updateTotal
   call changeToMainMenu
   ret
 

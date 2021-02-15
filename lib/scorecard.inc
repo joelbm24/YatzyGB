@@ -89,11 +89,48 @@ scorecard:
   ld [hl], a
   ret
 
+.addSubtotal
+  ld b, a
+  ld a, [SUBTOTAL]
+  add b
+  ld [SUBTOTAL], a
+  ret
+
+.addTotal
+  ld c, a
+  xor a
+  ld b, a
+  ld a, [TOTAL+1]
+  ld l, a
+  ld a, [TOTAL]
+  ld h, a
+  add hl, bc
+  ld a, h
+  ld [TOTAL], a
+  ld a, l
+  ld [TOTAL+1], a
+  ret
+
+.checkAddBonus
+  ld a, [UPPER_STATUS]
+  bit 6, a
+  ret nz
+  
+  ld a, [SUBTOTAL]
+  cp a, 62
+  call nc, .setBonus
+  ret
+
 .setOnes
   ld a, [UPPER_STATUS]
   set 0, a
   ld [UPPER_STATUS], a
   call .changeOnes
+  ld a, [POSSIBLE_ONES]
+  call .addSubtotal
+  ld a, [POSSIBLE_ONES]
+  call .addTotal
+  call .checkAddBonus
   ret
 
 .setTwos
@@ -101,6 +138,11 @@ scorecard:
   set 1, a
   ld [UPPER_STATUS], a
   call .changeTwos
+  ld a, [POSSIBLE_TWOS]
+  call .addSubtotal
+  ld a, [POSSIBLE_TWOS]
+  call .addTotal
+  call .checkAddBonus
   ret
 
 .setThrees
@@ -108,6 +150,11 @@ scorecard:
   set 2, a
   ld [UPPER_STATUS], a
   call .changeThrees
+  ld a, [POSSIBLE_THREES]
+  call .addSubtotal
+  ld a, [POSSIBLE_THREES]
+  call .addTotal
+  call .checkAddBonus
   ret
 
 .setFours
@@ -115,6 +162,11 @@ scorecard:
   set 3, a
   ld [UPPER_STATUS], a
   call .changeFours
+  ld a, [POSSIBLE_FOURS]
+  call .addSubtotal
+  ld a, [POSSIBLE_FOURS]
+  call .addTotal
+  call .checkAddBonus
   ret
 
 .setFives
@@ -122,6 +174,11 @@ scorecard:
   set 4, a
   ld [UPPER_STATUS], a
   call .changeFives
+  ld a, [POSSIBLE_FIVES]
+  call .addSubtotal
+  ld a, [POSSIBLE_FIVES]
+  call .addTotal
+  call .checkAddBonus
   ret
 
 .setSixes
@@ -129,6 +186,11 @@ scorecard:
   set 5, a
   ld [UPPER_STATUS], a
   call .changeSixes
+  ld a, [POSSIBLE_SIXES]
+  call .addSubtotal
+  ld a, [POSSIBLE_SIXES]
+  call .addTotal
+  call .checkAddBonus
   ret
 
 .setBonus
@@ -136,6 +198,10 @@ scorecard:
   set 6, a
   ld [UPPER_STATUS], a
   call .changeBonus
+  ld a, [POSSIBLE_BONUS]
+  call .addSubtotal
+  ld a, [POSSIBLE_BONUS]
+  call .addTotal
   ret
 
 .set3Kind
@@ -143,6 +209,8 @@ scorecard:
   set 0, a
   ld [LOWER_STATUS], a
   call .change3Kind
+  ld a, [POSSIBLE_3KIND]
+  call .addTotal
   ret
 
 .set4Kind
@@ -150,6 +218,8 @@ scorecard:
   set 1, a
   ld [LOWER_STATUS], a
   call .change4Kind
+  ld a, [POSSIBLE_4KIND]
+  call .addTotal
   ret
 
 .setFull
@@ -157,6 +227,8 @@ scorecard:
   set 2, a
   ld [LOWER_STATUS], a
   call .changeFull
+  ld a, [POSSIBLE_FULL]
+  call .addTotal
   ret
 
 .setSmall
@@ -164,6 +236,8 @@ scorecard:
   set 3, a
   ld [LOWER_STATUS], a
   call .changeSmall
+  ld a, [POSSIBLE_SMALL]
+  call .addTotal
   ret
 
 .setLarge
@@ -171,6 +245,8 @@ scorecard:
   set 4, a
   ld [LOWER_STATUS], a
   call .changeLarge
+  ld a, [POSSIBLE_LARGE]
+  call .addTotal
   ret
 
 .setYatzy
@@ -178,6 +254,8 @@ scorecard:
   set 5, a
   ld [LOWER_STATUS], a
   call .changeYatzy
+  ld a, [POSSIBLE_YATZY]
+  call .addTotal
   ret
 
 .setChance
@@ -185,6 +263,8 @@ scorecard:
   set 6, a
   ld [LOWER_STATUS], a
   call .changeChance
+  ld a, [POSSIBLE_CHANCE]
+  call .addTotal
   ret
 
 .clearOnes
@@ -1145,4 +1225,18 @@ scorecard:
   ld a, [SELECTION]
   cp a, 16
   ret z
-  
+
+.setGameFinished
+  ld a, [GAME_FINISHED]
+  cp a, 1
+  ld [GAME_FINISHED], a
+  ret
+
+.checkFinished
+  ld a, [UPPER_STATUS]
+  ld b, a
+  ld a, [LOWER_STATUS]
+  add b
+  cp a, 254
+  call z, .setGameFinished
+  ret

@@ -171,48 +171,6 @@ POSSIBLE_YATZY:
 POSSIBLE_CHANCE:
   ds 1
 
-SCORE_ONES:
-  ds 1
-
-SCORE_TWOS:
-  ds 1
-
-SCORE_THREES:
-  ds 1
-
-SCORE_FOURS:
-  ds 1
-
-SCORE_FIVES:
-  ds 1
-
-SCORE_SIXES:
-  ds 1
-
-SCORE_BONUS:
-  ds 1
-
-SCORE_3KIND:
-  ds 1
-
-SCORE_4KIND:
-  ds 1
-
-SCORE_FULL:
-  ds 1
-
-SCORE_SMALL:
-  ds 1
-
-SCORE_LARGE:
-  ds 1
-
-SCORE_YATZY:
-  ds 1
-
-SCORE_CHANCE:
-  ds 1
-
 TOTAL:
   ds 2
 
@@ -223,4 +181,10 @@ LOWER_STATUS:
   ds 1
 
 UPPER_STATUS:
+  ds 1
+
+DICE_STATUS:
+  ds 1
+
+GAME_FINISHED:
   ds 1
