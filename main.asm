@@ -252,11 +252,6 @@ changeMenu:
   ret
 
 roll:
-  call calcScore.calcPossibleScore
-  call scorecard.update
-  call status.decreaseRollCount
-  call enableKeepScore
-
   ld a, [RN]
   call changeDice.changeSlot1
   ld a, [RN+1]
@@ -267,6 +262,11 @@ roll:
   call changeDice.changeSlot4
   ld a, [RN+4]
   call changeDice.changeSlot5
+
+  call calcScore.calcPossibleScore
+  call scorecard.update
+  call status.decreaseRollCount
+  call enableKeepScore
 
   ld a, [ROLL_COUNT]
   cp a, 0

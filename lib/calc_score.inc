@@ -1,26 +1,159 @@
 calcScore:
+
+.addOne
+  ld a, b
+  add a, 1
+  ld b, a
+  ret
+
+.addTwo
+  ld a, b
+  add a, 2
+  ld b, a
+  ret
+
+.addThree
+  ld a, b
+  add a, 3
+  ld b, a
+  ret
+
+.addFour
+  ld a, b
+  add a, 4
+  ld b, a
+  ret
+
+.addFive
+  ld a, b
+  add a, 5
+  ld b, a
+  ret
+
+.addSix
+  ld a, b
+  add a, 6
+  ld b, a
+  ret
+
 .calcOnes
-  ld a, 5
+  ld b, 0
+  ld a, [slot1Value]
+  cp a, 1
+  call z, .addOne
+  ld a, [slot2Value]
+  cp a, 1
+  call z, .addOne
+  ld a, [slot3Value]
+  cp a, 1
+  call z, .addOne
+  ld a, [slot4Value]
+  cp a, 1
+  call z, .addOne
+  ld a, [slot5Value]
+  cp a, 1
+  call z, .addOne
+  ld a, b
   ret
 
 .calcTwos
-  ld a, 10
+  ld b, 0
+  ld a, [slot1Value]
+  cp a, 2
+  call z, .addTwo
+  ld a, [slot2Value]
+  cp a, 2
+  call z, .addTwo
+  ld a, [slot3Value]
+  cp a, 2
+  call z, .addTwo
+  ld a, [slot4Value]
+  cp a, 2
+  call z, .addTwo
+  ld a, [slot5Value]
+  cp a, 2
+  call z, .addTwo
+  ld a, b
   ret
 
 .calcThrees
-  ld a, 15
+  ld b, 0
+  ld a, [slot1Value]
+  cp a, 3
+  call z, .addThree
+  ld a, [slot2Value]
+  cp a, 3
+  call z, .addThree
+  ld a, [slot3Value]
+  cp a, 3
+  call z, .addThree
+  ld a, [slot4Value]
+  cp a, 3
+  call z, .addThree
+  ld a, [slot5Value]
+  cp a, 3
+  call z, .addThree
+  ld a, b
   ret
 
 .calcFours
-  ld a, 20
+  ld b, 0
+  ld a, [slot1Value]
+  cp a, 4
+  call z, .addFour
+  ld a, [slot2Value]
+  cp a, 4
+  call z, .addFour
+  ld a, [slot3Value]
+  cp a, 4
+  call z, .addFour
+  ld a, [slot4Value]
+  cp a, 4
+  call z, .addFour
+  ld a, [slot5Value]
+  cp a, 4
+  call z, .addFour
+  ld a, b
   ret
 
 .calcFives
-  ld a, 25
+  ld b, 0
+  ld a, [slot1Value]
+  cp a, 5
+  call z, .addFive
+  ld a, [slot2Value]
+  cp a, 5
+  call z, .addFive
+  ld a, [slot3Value]
+  cp a, 5
+  call z, .addFive
+  ld a, [slot4Value]
+  cp a, 5
+  call z, .addFive
+  ld a, [slot5Value]
+  cp a, 5
+  call z, .addFive
+  ld a, b
   ret
 
 .calcSixes
-  ld a, 30
+  ld b, 0
+  ld a, [slot1Value]
+  cp a, 6
+  call z, .addSix
+  ld a, [slot2Value]
+  cp a, 6
+  call z, .addSix
+  ld a, [slot3Value]
+  cp a, 6
+  call z, .addSix
+  ld a, [slot4Value]
+  cp a, 6
+  call z, .addSix
+  ld a, [slot5Value]
+  cp a, 6
+  call z, .addSix
+  ld a, b
   ret
 
 .calcBonus
