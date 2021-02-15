@@ -7,23 +7,6 @@ ARROW_UPDATE:
 ARROW_DIRECTION:
   ds 1
 
-slotValuesStart:
-slot1Value:
-  ds 1
-
-slot2Value:
-  ds 1
-
-slot3Value:
-  ds 1
-
-slot4Value:
-  ds 1
-
-slot5Value:
-  ds 1
-slotValuesEnd:
-
 _PAD:
   ds 1
 
@@ -74,57 +57,6 @@ KEPT_DICE:
 
 Seed:
   ds 3
-
-RN:
-  ds 5
-
-DISPLAY_TOTAL:
-  ds 4
-
-DISPLAY_SUBTOTAL:
-  ds 3
-
-DISPLAY_ONES:
-  ds 2
-
-DISPLAY_TWOS:
-  ds 2
-
-DISPLAY_THREES:
-  ds 2
-
-DISPLAY_FOURS:
-  ds 2
-
-DISPLAY_FIVES:
-  ds 2
-
-DISPLAY_SIXES:
-  ds 2
-
-DISPLAY_BONUS:
-  ds 2
-
-DISPLAY_3KIND:
-  ds 2
-
-DISPLAY_4KIND:
-  ds 2
-
-DISPLAY_FULL:
-  ds 2
-
-DISPLAY_SMALL:
-  ds 2
-
-DISPLAY_LARGE:
-  ds 2
-
-DISPLAY_YATZY:
-  ds 2
-
-DISPLAY_CHANCE:
-  ds 2
 
 ROLL_COUNT:
   ds 1
@@ -183,8 +115,149 @@ LOWER_STATUS:
 UPPER_STATUS:
   ds 1
 
+NUMBER_OF_ONES:
+  ds 1
+
+NUMBER_OF_TWOS:
+  ds 1
+
+NUMBER_OF_THREES:
+  ds 1
+
+NUMBER_OF_FOURS:
+  ds 1
+
+NUMBER_OF_FIVES:
+  ds 1
+
+NUMBER_OF_SIXES:
+  ds 1
+
+STRAIGHT:
+  ds 1
+
+ONE_TOTAL:
+  ds 1
+
+TWO_TOTAL:
+  ds 1
+
+THREE_TOTAL:
+  ds 1
+
+FOUR_TOTAL:
+  ds 1
+
+FIVE_TOTAL:
+  ds 1
+
+SIX_TOTAL:
+  ds 1
+
+DICE_SUM:
+  ds 1
+
 DICE_STATUS:
   ds 1
 
 GAME_FINISHED:
   ds 1
+
+OLD_X:
+  ds 1
+
+OLD_Y:
+  ds 1
+
+OLD_SELECTION:
+  ds 1
+
+OLD_MENU:
+  ds 1
+
+OLD_X_MIN:
+  ds 1
+
+OLD_Y_MIN:
+  ds 1
+
+OLD_X_MAX:
+  ds 1
+
+OLD_Y_MAX:
+  ds 1
+
+OLD_Y_CHANGE:
+  ds 1
+
+OLD_X_CHANGE:
+  ds 1
+
+Section "Display Data", hram
+DISPLAY_BONUS:
+  ds 2
+
+DISPLAY_TOTAL:
+  ds 4
+
+DISPLAY_SUBTOTAL:
+  ds 3
+
+DISPLAY_ONES:
+  ds 2
+
+DISPLAY_TWOS:
+  ds 2
+
+DISPLAY_THREES:
+  ds 2
+
+DISPLAY_FOURS:
+  ds 2
+
+DISPLAY_FIVES:
+  ds 2
+
+DISPLAY_SIXES:
+  ds 2
+
+DISPLAY_3KIND:
+  ds 2
+
+DISPLAY_4KIND:
+  ds 2
+
+DISPLAY_FULL:
+  ds 2
+
+DISPLAY_SMALL:
+  ds 2
+
+DISPLAY_LARGE:
+  ds 2
+
+DISPLAY_YATZY:
+  ds 2
+
+DISPLAY_CHANCE:
+  ds 2
+
+slotValuesStart:
+slot1Value:
+  ds 1
+
+slot2Value:
+  ds 1
+
+slot3Value:
+  ds 1
+
+slot4Value:
+  ds 1
+
+slot5Value:
+  ds 1
+slotValuesEnd:
+
+RN:
+  ds 5

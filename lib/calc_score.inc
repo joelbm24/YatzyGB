@@ -1,159 +1,217 @@
 calcScore:
+.init
+.reset
+  xor a
+  ld [DICE_STATUS], a
+  ld [ONE_TOTAL], a
+  ld [TWO_TOTAL], a
+  ld [THREE_TOTAL], a
+  ld [FOUR_TOTAL], a
+  ld [FIVE_TOTAL], a
+  ld [SIX_TOTAL], a
+  ld [STRAIGHT], a
+  ld [DICE_SUM], a
+  ret
 
 .addOne
-  ld a, b
+  ld a, [ONE_TOTAL]
   add a, 1
-  ld b, a
+  ld [ONE_TOTAL], a
+  ld a, [DICE_SUM]
+  add a, 1
+  ld [DICE_SUM], a
+  ld a, [STRAIGHT]
+  set 0, a
+  ld [STRAIGHT], a
   ret
 
 .addTwo
-  ld a, b
+  ld a, [TWO_TOTAL]
   add a, 2
-  ld b, a
+  ld [TWO_TOTAL], a
+  ld a, [DICE_SUM]
+  add a, 2
+  ld [DICE_SUM], a
+  ld a, [STRAIGHT]
+  set 1, a
+  ld [STRAIGHT], a
   ret
 
 .addThree
-  ld a, b
+  ld a, [THREE_TOTAL]
   add a, 3
-  ld b, a
+  ld [THREE_TOTAL], a
+  ld a, [DICE_SUM]
+  add a, 3
+  ld [DICE_SUM], a
+  ld a, [STRAIGHT]
+  set 2, a
+  ld [STRAIGHT], a
   ret
 
 .addFour
-  ld a, b
+  ld a, [FOUR_TOTAL]
   add a, 4
-  ld b, a
+  ld [FOUR_TOTAL], a
+  ld a, [DICE_SUM]
+  add a, 4
+  ld [DICE_SUM], a
+  ld a, [STRAIGHT]
+  set 3, a
+  ld [STRAIGHT], a
   ret
 
 .addFive
-  ld a, b
+  ld a, [FIVE_TOTAL]
   add a, 5
-  ld b, a
+  ld [FIVE_TOTAL], a
+  ld a, [DICE_SUM]
+  add a, 5
+  ld [DICE_SUM], a
+  ld a, [STRAIGHT]
+  set 4, a
+  ld [STRAIGHT], a
   ret
 
 .addSix
-  ld a, b
+  ld a, [SIX_TOTAL]
   add a, 6
-  ld b, a
+  ld [SIX_TOTAL], a
+  ld a, [DICE_SUM]
+  add a, 6
+  ld [DICE_SUM], a
+  ld a, [STRAIGHT]
+  set 5, a
+  ld [STRAIGHT], a
   ret
 
+.calcDice
 .calcOnes
-  ld b, 0
   ld a, [slot1Value]
   cp a, 1
   call z, .addOne
+
   ld a, [slot2Value]
   cp a, 1
   call z, .addOne
+
   ld a, [slot3Value]
   cp a, 1
   call z, .addOne
+
   ld a, [slot4Value]
   cp a, 1
   call z, .addOne
+
   ld a, [slot5Value]
   cp a, 1
   call z, .addOne
-  ld a, b
-  ret
 
 .calcTwos
-  ld b, 0
   ld a, [slot1Value]
   cp a, 2
   call z, .addTwo
+
   ld a, [slot2Value]
   cp a, 2
   call z, .addTwo
+
   ld a, [slot3Value]
   cp a, 2
   call z, .addTwo
+
   ld a, [slot4Value]
   cp a, 2
   call z, .addTwo
+
   ld a, [slot5Value]
   cp a, 2
   call z, .addTwo
-  ld a, b
-  ret
 
 .calcThrees
-  ld b, 0
   ld a, [slot1Value]
   cp a, 3
   call z, .addThree
+
   ld a, [slot2Value]
   cp a, 3
   call z, .addThree
+
   ld a, [slot3Value]
   cp a, 3
   call z, .addThree
+
   ld a, [slot4Value]
   cp a, 3
   call z, .addThree
+
   ld a, [slot5Value]
   cp a, 3
   call z, .addThree
-  ld a, b
-  ret
 
 .calcFours
-  ld b, 0
   ld a, [slot1Value]
   cp a, 4
   call z, .addFour
+
   ld a, [slot2Value]
   cp a, 4
   call z, .addFour
+
   ld a, [slot3Value]
   cp a, 4
   call z, .addFour
+
   ld a, [slot4Value]
   cp a, 4
   call z, .addFour
+
   ld a, [slot5Value]
   cp a, 4
   call z, .addFour
-  ld a, b
-  ret
 
 .calcFives
-  ld b, 0
   ld a, [slot1Value]
   cp a, 5
   call z, .addFive
+
   ld a, [slot2Value]
   cp a, 5
   call z, .addFive
+
   ld a, [slot3Value]
   cp a, 5
   call z, .addFive
+
   ld a, [slot4Value]
   cp a, 5
   call z, .addFive
+
   ld a, [slot5Value]
   cp a, 5
   call z, .addFive
-  ld a, b
-  ret
 
 .calcSixes
-  ld b, 0
   ld a, [slot1Value]
   cp a, 6
   call z, .addSix
+
   ld a, [slot2Value]
   cp a, 6
   call z, .addSix
+
   ld a, [slot3Value]
   cp a, 6
   call z, .addSix
+
   ld a, [slot4Value]
   cp a, 6
   call z, .addSix
+
   ld a, [slot5Value]
   cp a, 6
   call z, .addSix
-  ld a, b
+
   ret
 
 .calcBonus
@@ -161,79 +219,271 @@ calcScore:
   ret
 
 .calc3Kind
-  ld a, 30
+  ld a, [DICE_STATUS]
+  bit 0, a
+  ld a, 0
+  ret z
+
+  ld a, [DICE_SUM]
+  ld b, a
   ret
 
 .calc4Kind
-  ld a, 30
+  ld a, [DICE_STATUS]
+  bit 1, a
+  ld a, 0
+  ret z
+
+  ld a, [DICE_SUM]
   ret
 
 .calcFull
+  ld a, [DICE_STATUS]
+  bit 2, a
+  ld a, 0
+  ret z
   ld a, 25
   ret
 
 .calcSmall
+  ld a, [DICE_STATUS]
+  bit 3, a
+  ld a, 0
+  ret z
+
   ld a, 30
   ret
 
 .calcLarge
+  ld a, [DICE_STATUS]
+  bit 4, a
+  ld a, 0
+  ret z
+
   ld a, 40
   ret
 
 .calcYatzy
+  ld a, [DICE_STATUS]
+  bit 5, a
+  ld a, 0
+  ret z
+
   ld a, 50
   ret
 
 .calcChance
-  ld a, 30
+  ld a, [DICE_SUM]
   ret
 
 .calcRepeatYatzy
+  ld a, [LOWER_STATUS]
+  bit 7, a
+  ld a, 00
+  ret z
+
   ld a, 100
   ret
 
+.set3Kind
+  ld a, [DICE_STATUS]
+  set 0, a
+  ld [DICE_STATUS], a
+  ret
+
+.set4Kind
+  ld a, [DICE_STATUS]
+  set 0, a
+  set 1, a
+  ld [DICE_STATUS], a
+  ret
+
+.setFull
+  ld a, [DICE_STATUS]
+  set 2, a
+  ld [DICE_STATUS], a
+  ret
+
+.setSmall
+  ld a, [DICE_STATUS]
+  set 3, a
+  ld [DICE_STATUS], a
+  ret
+
+.setLarge
+  ld a, [DICE_STATUS]
+  set 3, a
+  set 4, a
+  ld [DICE_STATUS], a
+  ret
+
+.setYatzy
+  ld a, [DICE_STATUS]
+  set 0, a
+  set 1, a
+  set 5, a
+  ld [DICE_STATUS], a
+
+.set2Kind
+  ld a, [DICE_STATUS]
+  set 6, a
+  ld [DICE_STATUS], a
+  ret
+
 .is3Kind
+  ld a, [ONE_TOTAL]
+  cp a, 3
+  call z, .set3Kind
+
+  ld a, [TWO_TOTAL]
+  cp a, 6
+  call z, .set3Kind
+
+  ld a, [THREE_TOTAL]
+  cp a, 9
+  call z, .set3Kind
+
+  ld a, [FOUR_TOTAL]
+  cp a, 12
+  call z, .set3Kind
+
+  ld a, [FIVE_TOTAL]
+  cp a, 15
+  call z, .set3Kind
+
+  ld a, [SIX_TOTAL]
+  cp a, 18
+  call z, .set3Kind
   ret
 
 .is4Kind
+  ld a, [ONE_TOTAL]
+  cp a, 4
+  call z, .set4Kind
+  ld a, [TWO_TOTAL]
+  cp a, 8
+  call z, .set4Kind
+  ld a, [THREE_TOTAL]
+  cp a, 12
+  call z, .set4Kind
+  ld a, [FOUR_TOTAL]
+  cp a, 16
+  call z, .set4Kind
+  ld a, [FIVE_TOTAL]
+  cp a, 20
+  call z, .set4Kind
+  ld a, [SIX_TOTAL]
+  cp a, 24
+  call z, .set4Kind
+  ret
+
+.is2Kind
+  ld a, [ONE_TOTAL]
+  cp a, 2
+  call z, .set2Kind
+  ld a, [TWO_TOTAL]
+  cp a, 4
+  call z, .set2Kind
+  ld a, [THREE_TOTAL]
+  cp a, 6
+  call z, .set2Kind
+  ld a, [FOUR_TOTAL]
+  cp a, 8
+  call z, .set2Kind
+  ld a, [FIVE_TOTAL]
+  cp a, 10
+  call z, .set2Kind
+  ld a, [SIX_TOTAL]
+  cp a, 12
+  call z, .set2Kind
   ret
 
 .isFull
+  ld a, [DICE_STATUS]
+  and %01000001
+  cp a, 65
+  call z, .setFull
   ret
 
 .isSmall
+  ld a, [STRAIGHT]
+  cp a, 15
+  call z, .setSmall
+
+  ld a, [STRAIGHT]
+  cp a, 30
+  call z, .setSmall
+
+  ld a, [STRAIGHT]
+  cp a, 60
+  call z, .setSmall
   ret
 
 .isLarge
+  ld a, [STRAIGHT]
+  cp a, 31
+  call z, .setLarge
+
+  ld a, [STRAIGHT]
+  cp a, 62
+  call z, .setLarge
   ret
 
 .isYatzy
+  ld a, [ONE_TOTAL]
+  cp a, 5
+  call z, .setYatzy
+  ld a, [TWO_TOTAL]
+  cp a, 10
+  call z, .setYatzy
+  ld a, [THREE_TOTAL]
+  cp a, 15
+  call z, .setYatzy
+  ld a, [FOUR_TOTAL]
+  cp a, 20
+  call z, .setYatzy
+  ld a, [FIVE_TOTAL]
+  cp a, 25
+  call z, .setYatzy
+  ld a, [SIX_TOTAL]
+  cp a, 30
+  call z, .setYatzy
+  ret
   ret
 
 .calcPossibleUpperScore:
-  call .calcOnes
+  ld a, [ONE_TOTAL]
   ld [POSSIBLE_ONES], a
 
-  call .calcTwos
+  ld a, [TWO_TOTAL]
   ld [POSSIBLE_TWOS], a
 
-  call .calcThrees
+  ld a, [THREE_TOTAL]
   ld [POSSIBLE_THREES], a
 
-  call .calcFours
+  ld a, [FOUR_TOTAL]
   ld [POSSIBLE_FOURS], a
 
-  call .calcFives
+  ld a, [FIVE_TOTAL]
   ld [POSSIBLE_FIVES], a
 
-  call .calcSixes
+  ld a, [SIX_TOTAL]
   ld [POSSIBLE_SIXES], a
 
   call .calcBonus
   ld [POSSIBLE_BONUS], a
+
   ret
 
 .calcPossibleLowerScore:
+  call .is2Kind
+  call .is3Kind
+  call .is4Kind
+  call .isFull
+  call .isSmall
+  call .isLarge
+  call .isYatzy
+
   call .calc3Kind
   ld [POSSIBLE_3KIND], a
 
@@ -257,6 +507,7 @@ calcScore:
   ret
 
 .calcPossibleScore
+  call .calcDice
   call .calcPossibleUpperScore
   call .calcPossibleLowerScore
   ret

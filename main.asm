@@ -13,16 +13,9 @@ endr
 section "Data", wram0
 include "lib/variables.inc"
 
+
 section "Game Code", ROM0
 Start:
-xor a
-ld [SELECTION], a
-ld [MENU], a
-ld [KEPT_DICE], a
-ld [_PAD_PRESSED], a
-ld [CARD], a
-call status.init
-call scorecard.init
 
 .initDisplay
   ; Init display Registers
@@ -35,32 +28,8 @@ call scorecard.init
   ld [rSCY], a
   ld [rSCX], a
 
-.setup
-  ld a, 3
-  ld [ROLL_COUNT], a
-
-  ld a, 1
-  ld [DISABLE_KEEP_SCORE], a
-
-  xor a
-  ld [slot1Value], a
-  ld [slot2Value], a
-  ld [slot3Value], a
-  ld [slot4Value], a
-  ld [slot5Value], a
-
-  ld a, TACF_START
-  ld [rTAC], a
-  ld a, [rDIV]
-  ld [Seed], a
-  ld a, [rDIV]
-  ld [Seed+1], a
-  ld a, [rDIV]
-  ld [Seed+2], a
-
   call LCDControl.waitVBlank
   call LCDControl.turnOff
-  
 
 .copyTiles
   ld hl, $8000
@@ -76,22 +45,40 @@ call scorecard.init
   or c
   jr nz, .copyTilesLoop
 
-.drawGameScreen
-  ld hl, _SCRN0
-  ld de, GameScreenMap
-  ld bc, GameScreenEnd - GameScreenMap
+.setupGame
+  ld a, 3
+  ld [ROLL_COUNT], a
 
-.drawTilesLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec bc
-  ld a, b
-  or c
-  jr nz, .drawTilesLoop
+  ld a, 1
+  ld [DISABLE_KEEP_SCORE], a
+
+  xor a
+  ld [slot1Value], a
+  ld [slot2Value], a
+  ld [slot3Value], a
+  ld [slot4Value], a
+  ld [slot5Value], a
+  ld [SELECTION], a
+  ld [MENU], a
+  ld [KEPT_DICE], a
+  ld [CARD], a
+  ld [_PAD], a
+  call status.init
+  call scorecard.init
+  call sounds.init
+
+  ld a, TACF_START
+  ld [rTAC], a
+  ld a, [rDIV]
+  ld [Seed], a
+  ld a, [rDIV]
+  ld [Seed+1], a
+  ld a, [rDIV]
+  ld [Seed+2], a
 
 .main
-  call sounds.init
+  call drawGameScreen
+  call drawWindow
   call setMenuCursorConstraints
   call arrow.initialize
   call arrow.setPosition
@@ -124,6 +111,64 @@ setMenuCursorConstraints:
 
   ld a, MENU_Y_CHANGE
   ld [ARROW_Y_CHANGE], a
+  ret
+
+setOldMenuConstraints:
+  ld a, [OLD_SELECTION]
+  ld [SELECTION], a
+  ld a, [OLD_MENU]
+  ld [MENU], a
+
+  ld a, [OLD_X]
+  ld [_ARROW_X], a
+
+  ld a, [OLD_Y]
+  ld [_ARROW_Y], a
+
+  ld a, [OLD_Y_MIN]
+  ld [ARROW_MIN_Y], a
+  ld a, [OLD_Y_MAX]
+  ld [ARROW_MAX_Y], a
+
+  ld a, [OLD_X_MIN]
+  ld [ARROW_MIN_X], a
+  ld a, [OLD_X_MAX]
+  ld [ARROW_MAX_X], a
+
+  ld a, [OLD_X_CHANGE]
+  ld [ARROW_X_CHANGE], a
+
+  ld a, [OLD_Y_CHANGE]
+  ld [ARROW_Y_CHANGE], a
+  ret
+
+swapMenu:
+  ld a, [SELECTION]
+  ld [OLD_SELECTION], a
+  ld a, [MENU]
+  ld [OLD_MENU], a
+
+  ld a, [ARROW_X]
+  ld [OLD_X], a
+
+  ld a, [ARROW_Y]
+  ld [OLD_Y], a
+
+  ld a, [ARROW_MIN_Y]
+  ld [OLD_Y_MIN], a
+  ld a, [ARROW_MAX_Y]
+  ld [OLD_Y_MAX], a
+
+  ld a, [ARROW_MIN_X]
+  ld [OLD_X_MIN], a
+  ld a, [ARROW_MAX_X]
+  ld [OLD_X_MAX], a
+
+  ld a, [ARROW_X_CHANGE]
+  ld [OLD_X_CHANGE], a
+
+  ld a, [ARROW_Y_CHANGE]
+  ld [OLD_Y_CHANGE], a
   ret
 
 setKeepConstraints:
@@ -160,6 +205,25 @@ setCardConstraints:
   ld [ARROW_X_CHANGE], a
 
   ld a, CARD_Y_CHANGE
+  ld [ARROW_Y_CHANGE], a
+
+  ret
+
+setPauseConstraints:
+  ld a, PAUSE_Y_MIN
+  ld [ARROW_MIN_Y], a
+  ld a, PAUSE_Y_MAX
+  ld [ARROW_MAX_Y], a
+
+  ld a, PAUSE_X_MIN
+  ld [ARROW_MIN_X], a
+  ld a, PAUSE_X_MAX
+  ld [ARROW_MAX_X], a
+
+  ld a, PAUSE_X_CHANGE
+  ld [ARROW_X_CHANGE], a
+
+  ld a, PAUSE_Y_CHANGE
   ld [ARROW_Y_CHANGE], a
 
   ret
@@ -205,11 +269,12 @@ read_pad:
     ld      [_PAD], a
     ret
 
-changeScoreCard:
-  ret
-
 select:
   call setPress
+
+  ld a, [MENU]
+  cp a, 4
+  call z, selectYesNo
 
   ld a, [MENU]
   cp a, 0
@@ -252,6 +317,9 @@ changeMenu:
   ret
 
 roll:
+  call calcScore.init
+  call scorecard.clear
+
   ld a, [RN]
   call changeDice.changeSlot1
   ld a, [RN+1]
@@ -264,8 +332,8 @@ roll:
   call changeDice.changeSlot5
 
   call calcScore.calcPossibleScore
-  call scorecard.update
   call status.decreaseRollCount
+  call scorecard.update
   call enableKeepScore
 
   ld a, [ROLL_COUNT]
@@ -340,6 +408,44 @@ selectKeep:
   call arrow.jump
 
   ret
+
+selectPause:
+  call setPress
+  ld a, [MENU]
+  cp a, 4
+  jp z, selectYesNo.closeWindow
+
+  call swapMenu
+
+  ld a, 4
+  ld [MENU], a
+
+  ld a, 0
+  ld [SELECTION], a
+
+  call openCloseWindow
+  call setPauseConstraints
+  call arrow.jump
+
+  ret
+
+selectYesNo:
+  ld a, [SELECTION]
+  cp a, 0
+  jp z, Start.setupGame
+
+.closeWindow
+	ld	a, [rLCDC]
+	res 5, a
+	ld	[rLCDC], a
+  ld a, 0
+  ld [_PAD], a
+
+  call LCDControl.waitVBlank
+  call setOldMenuConstraints
+  call arrow.jump
+  call arrow.move
+  jp input
 
 goBack:
   call setPress
@@ -533,11 +639,16 @@ input:
   ; Start
   ld		a, [_PAD]
 	and    		%00001000
-	call		nz, changeDice.resetDice
+	call		nz, selectPause
 
 
   call LCDControl.waitVBlank
   call moveArrow
+  
+  ld a, [MENU]
+  cp a, 4
+  jr z, input
+
   call draw
   call scorecard.drawPossibleLower
   call scorecard.drawPossibleUpper
@@ -545,6 +656,7 @@ input:
   call LCDControl.waitVBlank
   call scorecard.drawPossibleLower
   call scorecard.drawPossibleUpper
+
   call scorecard.drawPossibleLower
   call scorecard.drawPossibleUpper
 
@@ -555,6 +667,12 @@ input:
 
 include "lib/helpers.inc"
 
+openCloseWindow:
+	; Activate and deactivate the window sprites
+	ld		a, [rLCDC]
+	or		LCDCF_WINON
+	ld		[rLCDC], a
+  ret
 
 section "Tiles", ROM0
 TilesStart:

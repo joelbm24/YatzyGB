@@ -6,6 +6,8 @@ status:
   ld [TOTAL+1], a
   ld [DISPLAY_SUBTOTAL], a
   ld [DISPLAY_SUBTOTAL+1], a
+  ld [DISPLAY_SUBTOTAL], a
+  ld [DISPLAY_SUBTOTAL+2], a
   ld [DISPLAY_TOTAL], a
   ld [DISPLAY_TOTAL+1], a
   ld [DISPLAY_TOTAL+2], a

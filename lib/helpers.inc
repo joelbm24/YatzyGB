@@ -1,3 +1,33 @@
+drawGameScreen:
+  ld hl, _SCRN0
+  ld de, GameScreenMap
+  ld bc, GameScreenEnd - GameScreenMap
+
+.drawTilesLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec bc
+  ld a, b
+  or c
+  jr nz, .drawTilesLoop
+  ret
+
+drawWindow:
+  ld hl, _SCRN1
+  ld de, WindowMap
+  ld bc, WindowMapEnd - WindowMap
+
+.drawWindowLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec bc
+  ld a, b
+  or c
+  jr nz, .drawWindowLoop
+  ret
+
 drawTextTiles:
   ld a, [de]
   ld [hli], a

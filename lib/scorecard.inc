@@ -105,6 +105,12 @@ scorecard:
   ld a, [TOTAL]
   ld h, a
   add hl, bc
+
+  call calcScore.calcRepeatYatzy
+  ld b, 0
+  ld c, a
+  add hl, bc
+
   ld a, h
   ld [TOTAL], a
   ld a, l
@@ -115,10 +121,11 @@ scorecard:
   ld a, [UPPER_STATUS]
   bit 6, a
   ret nz
-  
+
   ld a, [SUBTOTAL]
   cp a, 62
   call nc, .setBonus
+  call c, .checkCardFilled
   ret
 
 .setOnes
@@ -204,6 +211,23 @@ scorecard:
   call .addTotal
   ret
 
+.checkCardFilled
+  ld a, [UPPER_STATUS]
+  cp a, 63
+  call z, .setNoBonus
+  ret
+
+.setNoBonus
+  ld a, [UPPER_STATUS]
+  set 6, a
+  ld [UPPER_STATUS], a
+  xor a
+  ld [POSSIBLE_BONUS], a
+  call .clearBonus
+  call .updateBonus
+  call .changeBonus
+  ret
+
 .set3Kind
   ld a, [LOWER_STATUS]
   set 0, a
@@ -256,6 +280,9 @@ scorecard:
   call .changeYatzy
   ld a, [POSSIBLE_YATZY]
   call .addTotal
+  ld a, [LOWER_STATUS]
+  set 7, a
+  ld [LOWER_STATUS], a
   ret
 
 .setChance
@@ -889,7 +916,9 @@ scorecard:
   call .drawFours
   call .drawFives
   call .drawSixes
-  call .drawBonus
+  ld a, [UPPER_STATUS]
+  bit 6, a
+  call nz, .drawBonus
   ret
 
 .clearUpper
@@ -1237,6 +1266,6 @@ scorecard:
   ld b, a
   ld a, [LOWER_STATUS]
   add b
-  cp a, 254
+  cp a, 126
   call z, .setGameFinished
   ret
