@@ -1,3 +1,18 @@
+drawTitleScreen:
+  ld hl, _SCRN0
+  ld de, TitleScreenMap
+  ld bc, TitleScreenMapEnd - TitleScreenMap
+
+.drawTitleTilesLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec bc
+  ld a, b
+  or c
+  jr nz, .drawTitleTilesLoop
+  ret
+
 drawGameScreen:
   ld hl, _SCRN0
   ld de, GameScreenMap

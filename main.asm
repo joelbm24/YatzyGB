@@ -31,7 +31,36 @@ Start:
   call LCDControl.waitVBlank
   call LCDControl.turnOff
 
+.copyTitleTiles
+  ld hl, $8000
+  ld de, TitleTilesStart
+  ld bc, TitleTilesEnd - TitleTilesStart
+
+.copyTitleTilesLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec bc
+  ld a, b
+  or c
+  jr nz, .copyTitleTilesLoop
+
+  call drawTitleScreen
+  call LCDControl.turnOn
+
+.lockup
+  call read_pad
+  ld		a, [_PAD]
+	and    		%00001000
+	call		nz, .copyTiles
+  jr .lockup
+
 .copyTiles
+  xor a
+  ld [_PAD], a
+  call setPress
+  call LCDControl.waitVBlank
+  call LCDControl.turnOff
   ld hl, $8000
   ld de, TilesStart
   ld bc, TilesEnd - TilesStart
@@ -678,6 +707,10 @@ section "Tiles", ROM0
 TilesStart:
 include "assets/tiles.inc"
 TilesEnd:
+
+TitleTilesStart:
+include "assets/title_screen.inc"
+TitleTilesEnd:
 
 section "Maps", ROM0
 include "assets/maps.inc"
