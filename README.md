@@ -1,15 +1,6 @@
 Yatzy for the game boy.
 
-Progress so far...
-
+![](./images/titlescreen.png)
 ![](./images/screen.png)
 
->Features:
-- Joypad input
-- Dice
-- Menu Logic
-
->Still need to implement:
-- Pseudo Random Number generator
-- Scoring dice
-- Keeping dice 
+This is a complete implementation of the game Yatzy for the gameboy.
