@@ -3,7 +3,6 @@ Yatzy for the game boy.
 Progress so far...
 
 ![](./images/screen.png)
-![](./images/gameplay.gif)
 
 >Features:
 - Joypad input

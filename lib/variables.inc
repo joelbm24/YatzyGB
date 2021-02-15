@@ -78,6 +78,54 @@ Seed:
 RN:
   ds 5
 
+DISPLAY_TOTAL:
+  ds 4
+
+DISPLAY_SUBTOTAL:
+  ds 3
+
+DISPLAY_ONES:
+  ds 2
+
+DISPLAY_TWOS:
+  ds 2
+
+DISPLAY_THREES:
+  ds 2
+
+DISPLAY_FOURS:
+  ds 2
+
+DISPLAY_FIVES:
+  ds 2
+
+DISPLAY_SIXES:
+  ds 2
+
+DISPLAY_BONUS:
+  ds 2
+
+DISPLAY_3KIND:
+  ds 2
+
+DISPLAY_4KIND:
+  ds 2
+
+DISPLAY_FULL:
+  ds 2
+
+DISPLAY_SMALL:
+  ds 2
+
+DISPLAY_LARGE:
+  ds 2
+
+DISPLAY_YATZY:
+  ds 2
+
+DISPLAY_CHANCE:
+  ds 2
+
 ROLL_COUNT:
   ds 1
 
@@ -99,6 +147,9 @@ POSSIBLE_FIVES:
 POSSIBLE_SIXES:
   ds 1
 
+POSSIBLE_BONUS:
+  ds 1
+
 POSSIBLE_3KIND:
   ds 1
 
@@ -118,4 +169,58 @@ POSSIBLE_YATZY:
   ds 1
 
 POSSIBLE_CHANCE:
+  ds 1
+
+SCORE_ONES:
+  ds 1
+
+SCORE_TWOS:
+  ds 1
+
+SCORE_THREES:
+  ds 1
+
+SCORE_FOURS:
+  ds 1
+
+SCORE_FIVES:
+  ds 1
+
+SCORE_SIXES:
+  ds 1
+
+SCORE_BONUS:
+  ds 1
+
+SCORE_3KIND:
+  ds 1
+
+SCORE_4KIND:
+  ds 1
+
+SCORE_FULL:
+  ds 1
+
+SCORE_SMALL:
+  ds 1
+
+SCORE_LARGE:
+  ds 1
+
+SCORE_YATZY:
+  ds 1
+
+SCORE_CHANCE:
+  ds 1
+
+TOTAL:
+  ds 2
+
+SUBTOTAL:
+  ds 1
+
+LOWER_STATUS:
+  ds 1
+
+UPPER_STATUS:
   ds 1

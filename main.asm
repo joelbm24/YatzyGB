@@ -15,12 +15,14 @@ include "lib/variables.inc"
 
 section "Game Code", ROM0
 Start:
-ld a, 0
+xor a
 ld [SELECTION], a
 ld [MENU], a
 ld [KEPT_DICE], a
 ld [_PAD_PRESSED], a
 ld [CARD], a
+call status.init
+call scorecard.init
 
 .initDisplay
   ; Init display Registers
@@ -104,6 +106,7 @@ include "lib/dice.inc"
 include "lib/sounds.inc"
 include "lib/status.inc"
 include "lib/scorecard.inc"
+include "lib/calc_score.inc"
 
 setMenuCursorConstraints:
   ld a, MENU_Y_MIN
@@ -249,6 +252,8 @@ changeMenu:
   ret
 
 roll:
+  call calcScore.calcPossibleScore
+  call scorecard.update
   call status.decreaseRollCount
   call enableKeepScore
 
@@ -282,8 +287,16 @@ selectCard:
   ret
 
 selectCategory:
+  call scorecard.check
+  ld a, b
+  cp a, 1
+  call z, sounds.ErrorBeep
+  ret z
+
   call sounds.SelectBeep
+  call scorecard.setScore
   call enableBack
+  call scorecard.clear
   call disableKeepScore
   call changeDice.resetDice
   call status.resetRollCount
@@ -467,8 +480,10 @@ moveArrow:
   ret
 
 draw:
-  call drawDice
   call status.drawRollCount
+  call status.drawTotal
+  call status.drawSubtotal
+  call drawDice
   call LCDControl.resetUpdate
   ret
 
@@ -520,100 +535,23 @@ input:
 
 
   call LCDControl.waitVBlank
-  call draw
   call moveArrow
+  call draw
+  call scorecard.drawPossibleLower
+  call scorecard.drawPossibleUpper
+
+  call LCDControl.waitVBlank
+  call scorecard.drawPossibleLower
+  call scorecard.drawPossibleUpper
+  call scorecard.drawPossibleLower
+  call scorecard.drawPossibleUpper
 
   call Reseed
   call setRandomNumbers
 
   jr input
 
-drawTextTiles:
-  ld a, [de]
-  ld [hli], a
-  inc de
-  ld a, [de]
-  ld [hli], a
-  inc de
-  ld a, [de]
-  ld [hli], a
-  inc de
-  ld a, [de]
-  ld [hli], a
-  inc de
-  ret
-
-setRandomNumbers:
-  call RandomNumber
-  ld [RN], a
-  
-  call RandomNumber
-  ld [RN+1], a
-
-  call RandomNumber
-  ld [RN+2], a
-
-  call RandomNumber
-  ld [RN+3], a
-
-  call RandomNumber
-  ld [RN+4], a
-
-Reseed:
-  ld a, [rDIV]
-  ld [Seed], a
-  ld a, [rTIMA]
-  ld [Seed+1], a
-  ld a, [rDIV]
-  ld b, a
-  ld a, [rTIMA]
-  xor b
-  ld [Seed+2], a
-  ret
-
-RandomNumber:
-  ld      hl,Seed
-  ld      a,[hl+]
-  sra     a
-  sra     a
-  sra     a
-  xor     [hl]
-  inc     hl
-  rra
-  rl      [hl]
-  dec     hl
-  rl      [hl]
-  dec     hl
-  rl      [hl]
-  ld      a,[rDIV]
-
-.randomness:
-  add [hl]
-  call mod6
-  ld a, c
-  ret
-
-mod6:
-  ld b, a
-  ld c, 0
-
-.loop
-  dec b
-  inc c
-  ld a, 6
-  cp a, c
-  call z, .resetC
-
-  ld a, 0
-  cp a, b
-  jr nz, .loop
-
-  inc c
-  ret
-
-.resetC
-  ld c, 0
-  ret
+include "lib/helpers.inc"
 
 
 section "Tiles", ROM0

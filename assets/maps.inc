@@ -243,6 +243,10 @@ NumberMap:
 DB $BF, $C0, $C1, $C2, $C3, $C4, $C5, $C6, $C7
 NumberMapEnd:
 
+InvertNumberMap:
+DB $C8, $C9, $CA, $CB, $CD, $CE, $CF, $D0, $D1
+InvertNumberMapEnd:
+
 EmptyDiceMapStart:
 DB $00,$00,$00
 DB $00,$00,$00
