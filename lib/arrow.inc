@@ -146,3 +146,10 @@ arrow:
   ld [_ARROW_Y], a
   ld [ARROW_Y], a
   ret
+
+.draw
+  ld a, [ARROW_Y]
+  ld [_ARROW_Y], a
+
+  ld a, [ARROW_X]
+  ld [_ARROW_X], a

@@ -169,29 +169,9 @@ OLD_X:
 OLD_Y:
   ds 1
 
-OLD_SELECTION:
+PAUSE_SELECTION:
   ds 1
 
-OLD_MENU:
-  ds 1
-
-OLD_X_MIN:
-  ds 1
-
-OLD_Y_MIN:
-  ds 1
-
-OLD_X_MAX:
-  ds 1
-
-OLD_Y_MAX:
-  ds 1
-
-OLD_Y_CHANGE:
-  ds 1
-
-OLD_X_CHANGE:
-  ds 1
 
 Section "Display Data", hram
 DISPLAY_BONUS:

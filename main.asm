@@ -17,6 +17,16 @@ include "lib/variables.inc"
 section "Game Code", ROM0
 Start:
 
+  ld a, TACF_START
+  ld [rTAC], a
+  ld a, [rDIV]
+  ld [Seed], a
+  ld a, [rDIV]
+  ld [Seed+1], a
+  ld a, [rDIV]
+  ld [Seed+2], a
+
+
 .initDisplay
   ; Init display Registers
   ld a, %11100100
@@ -52,7 +62,7 @@ Start:
   call read_pad
   ld		a, [_PAD]
 	and    		%00001000
-	call		nz, .copyTiles
+	jr		nz, .copyTiles
   jr .lockup
 
 .copyTiles
@@ -74,7 +84,7 @@ Start:
   or c
   jr nz, .copyTilesLoop
 
-.setupGame
+setupGame:
   ld a, 3
   ld [ROLL_COUNT], a
 
@@ -95,15 +105,6 @@ Start:
   call status.init
   call scorecard.init
   call sounds.init
-
-  ld a, TACF_START
-  ld [rTAC], a
-  ld a, [rDIV]
-  ld [Seed], a
-  ld a, [rDIV]
-  ld [Seed+1], a
-  ld a, [rDIV]
-  ld [Seed+2], a
 
 .main
   call drawGameScreen
@@ -142,64 +143,6 @@ setMenuCursorConstraints:
   ld [ARROW_Y_CHANGE], a
   ret
 
-setOldMenuConstraints:
-  ld a, [OLD_SELECTION]
-  ld [SELECTION], a
-  ld a, [OLD_MENU]
-  ld [MENU], a
-
-  ld a, [OLD_X]
-  ld [_ARROW_X], a
-
-  ld a, [OLD_Y]
-  ld [_ARROW_Y], a
-
-  ld a, [OLD_Y_MIN]
-  ld [ARROW_MIN_Y], a
-  ld a, [OLD_Y_MAX]
-  ld [ARROW_MAX_Y], a
-
-  ld a, [OLD_X_MIN]
-  ld [ARROW_MIN_X], a
-  ld a, [OLD_X_MAX]
-  ld [ARROW_MAX_X], a
-
-  ld a, [OLD_X_CHANGE]
-  ld [ARROW_X_CHANGE], a
-
-  ld a, [OLD_Y_CHANGE]
-  ld [ARROW_Y_CHANGE], a
-  ret
-
-swapMenu:
-  ld a, [SELECTION]
-  ld [OLD_SELECTION], a
-  ld a, [MENU]
-  ld [OLD_MENU], a
-
-  ld a, [ARROW_X]
-  ld [OLD_X], a
-
-  ld a, [ARROW_Y]
-  ld [OLD_Y], a
-
-  ld a, [ARROW_MIN_Y]
-  ld [OLD_Y_MIN], a
-  ld a, [ARROW_MAX_Y]
-  ld [OLD_Y_MAX], a
-
-  ld a, [ARROW_MIN_X]
-  ld [OLD_X_MIN], a
-  ld a, [ARROW_MAX_X]
-  ld [OLD_X_MAX], a
-
-  ld a, [ARROW_X_CHANGE]
-  ld [OLD_X_CHANGE], a
-
-  ld a, [ARROW_Y_CHANGE]
-  ld [OLD_Y_CHANGE], a
-  ret
-
 setKeepConstraints:
   ld a, DICE_Y_MIN
   ld [ARROW_MIN_Y], a
@@ -234,25 +177,6 @@ setCardConstraints:
   ld [ARROW_X_CHANGE], a
 
   ld a, CARD_Y_CHANGE
-  ld [ARROW_Y_CHANGE], a
-
-  ret
-
-setPauseConstraints:
-  ld a, PAUSE_Y_MIN
-  ld [ARROW_MIN_Y], a
-  ld a, PAUSE_Y_MAX
-  ld [ARROW_MAX_Y], a
-
-  ld a, PAUSE_X_MIN
-  ld [ARROW_MIN_X], a
-  ld a, PAUSE_X_MAX
-  ld [ARROW_MAX_X], a
-
-  ld a, PAUSE_X_CHANGE
-  ld [ARROW_X_CHANGE], a
-
-  ld a, PAUSE_Y_CHANGE
   ld [ARROW_Y_CHANGE], a
 
   ret
@@ -300,10 +224,6 @@ read_pad:
 
 select:
   call setPress
-
-  ld a, [MENU]
-  cp a, 4
-  call z, selectYesNo
 
   ld a, [MENU]
   cp a, 0
@@ -437,44 +357,6 @@ selectKeep:
   call arrow.jump
 
   ret
-
-selectPause:
-  call setPress
-  ld a, [MENU]
-  cp a, 4
-  jp z, selectYesNo.closeWindow
-
-  call swapMenu
-
-  ld a, 4
-  ld [MENU], a
-
-  ld a, 0
-  ld [SELECTION], a
-
-  call openCloseWindow
-  call setPauseConstraints
-  call arrow.jump
-
-  ret
-
-selectYesNo:
-  ld a, [SELECTION]
-  cp a, 0
-  jp z, Start.setupGame
-
-.closeWindow
-	ld	a, [rLCDC]
-	res 5, a
-	ld	[rLCDC], a
-  ld a, 0
-  ld [_PAD], a
-
-  call LCDControl.waitVBlank
-  call setOldMenuConstraints
-  call arrow.jump
-  call arrow.move
-  jp input
 
 goBack:
   call setPress
@@ -668,16 +550,11 @@ input:
   ; Start
   ld		a, [_PAD]
 	and    		%00001000
-	call		nz, selectPause
+	jp		nz, selectPause
 
 
   call LCDControl.waitVBlank
   call moveArrow
-  
-  ld a, [MENU]
-  cp a, 4
-  jr z, input
-
   call draw
   call scorecard.drawPossibleLower
   call scorecard.drawPossibleUpper
@@ -685,7 +562,6 @@ input:
   call LCDControl.waitVBlank
   call scorecard.drawPossibleLower
   call scorecard.drawPossibleUpper
-
   call scorecard.drawPossibleLower
   call scorecard.drawPossibleUpper
 
@@ -694,14 +570,177 @@ input:
 
   jr input
 
-include "lib/helpers.inc"
+pauseInput:
+  call read_pad
 
-openCloseWindow:
-	; Activate and deactivate the window sprites
-	ld		a, [rLCDC]
-	or		LCDCF_WINON
-	ld		[rLCDC], a
+  ld a, [_PAD]
+	cp a, 0
+  call z, resetPress
+
+  ; wait til button is released
+  ld a, [_PAD_PRESSED]
+  cp a, 1
+  jp z, pauseInput
+
+  ; Start
+  ld		a, [_PAD]
+	and    		%00001000
+	jp		nz, closeWindow
+
+  ; up
+  ld		a, [_PAD]
+	and    		%01000000
+	call		nz, pauseMoveUp
+
+  ; down
+	ld		a, [_PAD]
+	and		%10000000
+	call		nz, pauseMoveDown
+
+  ; B
+  ld		a, [_PAD]
+	and    		%00000010
+	jr		nz, closeWindow
+
+  ; A
+  ld		a, [_PAD]
+	and    		%00000001
+	jr		nz, selectYesNo
+
+  call LCDControl.waitVBlank
+  call arrow.draw
+
+  jr pauseInput
+
+slowdown:
+  ld bc, $1fff
+
+.slowLoop
+  dec bc
+  ld a, b
+  cp a, 0
+  jr nz, .slowLoop
   ret
+
+openWindow:
+  call slowdown
+	ld	a, [rLCDC]
+  set 5, a
+	ld	[rLCDC], a
+  ret
+
+selectPause:
+  call setPress
+
+  call saveArrowPosition
+  call openWindow
+
+  ld a, 1
+  ld [PAUSE_SELECTION], a
+  ld a, PAUSE_Y_MAX
+  ld [ARROW_Y], a
+
+  ld a, PAUSE_X_MIN
+  ld [ARROW_X], a
+
+  call LCDControl.waitVBlank
+  call arrow.draw
+
+  jr pauseInput
+
+setOldArrowPosition:
+  ld a, [OLD_X]
+  ld [ARROW_X], a
+
+  ld a, [OLD_Y]
+  ld [ARROW_Y], a
+
+  ; call LCDControl.waitVBlank
+  ; call arrow.draw
+  ret
+
+saveArrowPosition:
+  ld a, [ARROW_X]
+  ld [OLD_X], a
+
+  ld a, [ARROW_Y]
+  ld [OLD_Y], a
+  ret
+
+restartGame:
+  call LCDControl.waitVBlank
+  call LCDControl.turnOff
+  jp setupGame
+
+selectYesNo:
+  call setPress
+  call sounds.SelectBeep
+
+  call slowdown
+  ld a, [PAUSE_SELECTION]
+  cp a, 0
+  jr z, restartGame
+
+closeWindow:
+  call setPress
+  xor a
+  ld [_PAD], a
+
+  call slowdown
+
+	ld	a, [rLCDC]
+	res 5, a
+	ld	[rLCDC], a
+
+  call setOldArrowPosition
+  call LCDControl.waitVBlank
+  call arrow.draw
+  jp input
+
+pauseMoveUp:
+  call setPress
+
+  ld a, PAUSE_Y_MIN
+  ld b, a
+  ld a, [ARROW_Y]
+  cp a, b
+
+  call z, sounds.ErrorBeep
+  ret z
+
+  call sounds.MoveBeep
+  ld a, [PAUSE_SELECTION]
+  dec a
+  ld [PAUSE_SELECTION], a
+
+  ld a, [ARROW_Y]
+  sub a, 16
+  ld [ARROW_Y], a
+  ret
+
+pauseMoveDown:
+  call setPress
+
+  ld a, PAUSE_Y_MAX
+  ld b, a
+  ld a, [ARROW_Y]
+  cp a, b
+
+  call z, sounds.ErrorBeep
+  ret z
+
+  call sounds.MoveBeep
+  ld a, [PAUSE_SELECTION]
+  inc a
+  ld [PAUSE_SELECTION], a
+
+  ld a, [ARROW_Y]
+  add a, 16
+  ld [ARROW_Y], a
+
+  ret
+
+include "lib/helpers.inc"
 
 section "Tiles", ROM0
 TilesStart:

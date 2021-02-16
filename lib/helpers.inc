@@ -75,13 +75,22 @@ setRandomNumbers:
   ld [RN+4], a
 
 Reseed:
-  ld a, [rDIV]
+  ; ld a, [rDIV]
+  ; ld [Seed], a
+  ; ld a, [rTIMA]
+  ; ld [Seed+1], a
+  ; ld a, [rDIV]
+  ; ld b, a
+  ; ld a, [rTIMA]
+  ; xor b
+  ; ld [Seed+2], a
+  ld a, [Seed]
   ld [Seed], a
-  ld a, [rTIMA]
+  ld a, [Seed+1]
   ld [Seed+1], a
-  ld a, [rDIV]
+  ld a, [Seed]
   ld b, a
-  ld a, [rTIMA]
+  ld a, [Seed+1]
   xor b
   ld [Seed+2], a
   ret
