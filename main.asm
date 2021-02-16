@@ -102,6 +102,7 @@ setupGame:
   ld [KEPT_DICE], a
   ld [CARD], a
   ld [_PAD], a
+  ld [NO_BACK], a
   call status.init
   call scorecard.init
   call sounds.init
