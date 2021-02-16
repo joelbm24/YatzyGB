@@ -407,24 +407,32 @@ calcScore:
 
 .isSmall
   ld a, [STRAIGHT]
+  res 7, a
+  res 6, a
   cp a, 15
   call z, .setSmall
 
   ld a, [STRAIGHT]
+  res 7, a
+  res 0, a
   cp a, 30
   call z, .setSmall
 
   ld a, [STRAIGHT]
+  res 1, a
+  res 0, a
   cp a, 60
   call z, .setSmall
   ret
 
 .isLarge
   ld a, [STRAIGHT]
+  res 0, a
   cp a, 31
   call z, .setLarge
 
   ld a, [STRAIGHT]
+  res 7, a
   cp a, 62
   call z, .setLarge
   ret
