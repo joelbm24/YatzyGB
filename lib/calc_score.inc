@@ -427,12 +427,10 @@ calcScore:
 
 .isLarge
   ld a, [STRAIGHT]
-  res 0, a
   cp a, 31
   call z, .setLarge
 
   ld a, [STRAIGHT]
-  res 0, a
   cp a, 62
   call z, .setLarge
   ret
