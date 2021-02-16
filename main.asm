@@ -654,9 +654,6 @@ setOldArrowPosition:
 
   ld a, [OLD_Y]
   ld [ARROW_Y], a
-
-  ; call LCDControl.waitVBlank
-  ; call arrow.draw
   ret
 
 saveArrowPosition:
