@@ -26,10 +26,8 @@ Start:
   ld a, [rDIV]
   ld [Seed+2], a
 
-
 .initDisplay
-  ; Init display Registers
-  ld a, %11100100
+  ld a, %00000000
   ld [rBGP], a
   ld [rOBP0], a
   ld [rOBP1], a
@@ -57,6 +55,7 @@ Start:
 
   call drawTitleScreen
   call LCDControl.turnOn
+  call fadeIn
 
 .lockup
   call read_pad
@@ -78,8 +77,10 @@ Start:
   xor a
   ld [_PAD], a
   call setPress
+  call fadeOut
   call LCDControl.waitVBlank
   call LCDControl.turnOff
+
   ld hl, $8000
   ld de, TilesStart
   ld bc, TilesEnd - TilesStart
@@ -129,6 +130,8 @@ setupGame:
   call status.drawSubtotal
   call status.drawTotal
   call LCDControl.turnOn
+  call fadeIn
+
 
   jp input
 
@@ -210,31 +213,31 @@ decMenuSelection:
   ret
 
 read_pad:
-    ld      a, %00100000
-    ld      [rP1], a
+    ld a, %00100000
+    ld [rP1], a
  
-    ld      a, [rP1]
-    ld      a, [rP1]
-    ld      a, [rP1]
-    ld      a, [rP1]
+    ld a, [rP1]
+    ld a, [rP1]
+    ld a, [rP1]
+    ld a, [rP1]
  
-    and     $0F
-    swap    a
-    ld      b, a
+    and $0F
+    swap a
+    ld b, a
  
-    ld      a, %00010000
-    ld      [rP1], a
+    ld a, %00010000
+    ld [rP1], a
  
-    ld      a, [rP1]
-    ld      a, [rP1]
-    ld      a, [rP1]
-    ld      a, [rP1]
+    ld a, [rP1]
+    ld a, [rP1]
+    ld a, [rP1]
+    ld a, [rP1]
  
-    and     $0F
-    or      b
+    and $0F
+    or b
 
     cpl
-    ld      [_PAD], a
+    ld [_PAD], a
     ret
 
 select:
@@ -539,39 +542,39 @@ input:
   cp a, 1
   jp z, input
 
-  ld		a, [_PAD]
-	and    		%01000000
-	call		nz, moveArrowUp
+  ld a, [_PAD]
+	and PADF_UP
+	call nz, moveArrowUp
 
   ; down
-	ld		a, [_PAD]
-	and		%10000000
-	call		nz, moveArrowDown
+	ld a, [_PAD]
+	and	PADF_DOWN
+	call nz, moveArrowDown
 
   ; left
- 	ld		a, [_PAD]
-	and    		%00100000
-	call		nz, moveArrowLeft
+ 	ld a, [_PAD]
+	and PADF_LEFT
+	call nz, moveArrowLeft
 
   ; right
-  ld		a, [_PAD]
-	and    		%00010000
-	call		nz, moveArrowRight
+  ld a, [_PAD]
+	and PADF_RIGHT
+	call nz, moveArrowRight
 
   ; B
-  ld		a, [_PAD]
-	and    		%00000010
-	call		nz, goBack
+  ld a, [_PAD]
+	and PADF_B
+	call nz, goBack
 
   ; A
-  ld		a, [_PAD]
-	and    		%00000001
-	call		nz, select
+  ld a, [_PAD]
+	and PADF_A
+	call nz, select
 
   ; Start
-  ld		a, [_PAD]
-	and    		%00001000
-	jp		nz, selectPause
+  ld a, [_PAD]
+	and PADF_START
+	jp nz, selectPause
 
   call LCDControl.waitVBlank
   call moveArrow
@@ -603,29 +606,29 @@ pauseInput:
   jp z, pauseInput
 
   ; Start
-  ld		a, [_PAD]
-	and    		%00001000
-	jp		nz, closeWindow
+  ld a, [_PAD]
+	and PADF_START
+	jp nz, closeWindow
 
   ; up
-  ld		a, [_PAD]
-	and    		%01000000
-	call		nz, pauseMoveUp
+  ld a, [_PAD]
+	and PADF_UP
+	call nz, pauseMoveUp
 
   ; down
-	ld		a, [_PAD]
-	and		%10000000
-	call		nz, pauseMoveDown
+	ld a, [_PAD]
+	and PADF_DOWN
+	call nz, pauseMoveDown
 
   ; B
-  ld		a, [_PAD]
-	and    		%00000010
-	jr		nz, closeWindow
+  ld a, [_PAD]
+	and PADF_B
+	jr nz, closeWindow
 
   ; A
-  ld		a, [_PAD]
-	and    		%00000001
-	jr		nz, selectYesNo
+  ld a, [_PAD]
+	and PADF_A
+	jr nz, selectYesNo
 
   call LCDControl.waitVBlank
   call arrow.draw
@@ -762,6 +765,7 @@ launchFinishScreen:
 
   call slowdown
 
+  call fadeOut
   call LCDControl.waitVBlank
   call LCDControl.turnOff
 
@@ -812,6 +816,7 @@ launchFinishScreen:
   ld a, [rLCDC]
   res 1, a
   ld [rLCDC], a
+  call fadeIn
 
 .lockup
   call read_pad

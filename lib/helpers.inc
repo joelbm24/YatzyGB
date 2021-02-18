@@ -205,3 +205,63 @@ getDisplayNumber:
   ld h, 0
   ld l, a
   jr .loop
+
+fadeIn:
+  call LCDControl.waitVBlank
+  ld a, %00000000
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  call slowdown
+  call LCDControl.waitVBlank
+  ld a, %01010100
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  call slowdown
+  call LCDControl.waitVBlank
+  ld a, %10100100
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  call slowdown
+  call LCDControl.waitVBlank
+  ld a, %11100100
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  ret
+
+fadeOut:
+  call LCDControl.waitVBlank
+  ld a, %11100100
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  call slowdown
+  call LCDControl.waitVBlank
+  ld a, %10100100
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  call slowdown
+  call LCDControl.waitVBlank
+  ld a, %01010100
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  call slowdown
+  call LCDControl.waitVBlank
+  ld a, %00000000
+  ld [rBGP], a
+  ld [rOBP0], a
+  ld [rOBP1], a
+
+  ret
