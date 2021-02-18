@@ -212,43 +212,43 @@ DB $40,$40,$40,$40,$40,$40,$40,$40,$40,$40,$40,$40,$40,$40,$7C,$7C ; 7E
 TotalTilesEnd:
 
 VerticalBorderTile:
-DB $7E,$7E,$66,$66,$7E,$7E,$66,$66,$7E,$7E,$66,$66,$7E,$7E,$66,$66 ; 7F
+DB $6E,$6E,$76,$76,$6E,$6E,$76,$76,$6E,$6E,$76,$76,$6E,$6E,$76,$76 ; 7F
 VerticalBorderTileEnd:
 
 HorizontalBorderTile:
-DB $00,$00,$FF,$FF,$FF,$FF,$AA,$AA,$AA,$AA,$FF,$FF,$FF,$FF,$00,$00 ; 80
+DB $00,$00,$FF,$FF,$FF,$FF,$55,$55,$AA,$AA,$FF,$FF,$FF,$FF,$00,$00 ; 80
 HorizontalBorderTileEnd:
 
 JunctionBLTile:
-DB $66,$66,$7F,$7F,$7F,$7F,$66,$66,$66,$66,$7F,$7F,$7F,$7F,$00,$00 ; 81
+DB $6E,$6E,$77,$77,$6F,$6F,$75,$75,$3A,$3A,$1F,$1F,$0F,$0F,$00,$00 ; 81
 JunctionBLTileEnd:
 
 JunctionBTile:
-DB $66,$66,$FF,$FF,$FF,$FF,$66,$66,$66,$66,$FF,$FF,$FF,$FF,$00,$00 ; 82
+DB $6E,$6E,$F7,$F7,$EF,$EF,$55,$55,$AA,$AA,$FF,$FF,$FF,$FF,$00,$00 ; 82
 JunctionBTileEnd:
 
 JunctionBRTile:
-DB $66,$66,$FE,$FE,$FE,$FE,$66,$66,$66,$66,$FE,$FE,$FE,$FE,$00,$00 ; 83
+DB $6E,$6E,$F6,$F6,$EE,$EE,$56,$56,$AC,$AC,$F8,$F8,$F0,$F0,$00,$00 ; 83
 JunctionBRTileEnd:
 
 JunctionLTile:
-DB $66,$66,$7F,$7F,$7F,$7F,$66,$66,$66,$66,$7F,$7F,$7F,$7F,$66,$66 ; 84
+DB $6E,$6E,$77,$77,$6F,$6F,$75,$75,$6A,$6A,$77,$77,$6F,$6F,$76,$76 ; 84
 JunctionLTileEnd:
 
 JunctionRTile:
-DB $66,$66,$FE,$FE,$FE,$FE,$66,$66,$66,$66,$FE,$FE,$FE,$FE,$66,$66 ; 85
+DB $6E,$6E,$F6,$F6,$EE,$EE,$56,$56,$AE,$AE,$F6,$F6,$EE,$EE,$76,$76; 85
 JunctionRTileEnd:
 
 JuntionTLTile:
-DB $00,$00,$7F,$7F,$7F,$7F,$66,$66,$66,$66,$7F,$7F,$7F,$7F,$66,$66 ; 86
+DB $00,$00,$0F,$0F,$1F,$1F,$35,$35,$6A,$6A,$77,$77,$6F,$6F,$76,$76 ; 86
 JunctionTLEnd:
 
 JunctionTRTile:
-DB $00,$00,$FE,$FE,$FE,$FE,$66,$66,$66,$66,$FE,$FE,$FE,$FE,$66,$66 ; 87
+DB $00,$00,$F0,$F0,$F8,$F8,$5C,$5C,$AE,$AE,$F6,$F6,$EE,$EE,$76,$76 ; 87
 JunctionTRTileEnd:
 
 JunctionTTile:
-DB $00,$00,$FF,$FF,$FF,$FF,$66,$66,$66,$66,$FF,$FF,$FF,$FF,$66,$66 ; 88
+DB $00,$00,$FF,$FF,$FF,$FF,$55,$55,$AA,$AA,$F7,$F7,$EF,$EF,$76,$76 ; 88
 JunctionTTileEnd:
 
 InvertDice1Tile:

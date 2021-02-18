@@ -16,6 +16,7 @@ include "lib/variables.inc"
 
 section "Game Code", ROM0
 Start:
+  ; TODO set stack to top of ram
   ld a, TACF_START
   ld [rTAC], a
   ld a, [rDIV]
@@ -123,6 +124,10 @@ setupGame:
   call arrow.initialize
   call arrow.setPosition
   call arrow.jump
+  call scorecard.drawPossibleLower
+  call scorecard.drawPossibleUpper
+  call status.drawSubtotal
+  call status.drawTotal
   call LCDControl.turnOn
 
   jp input
@@ -753,7 +758,9 @@ pauseMoveDown:
   ret
 
 launchFinishScreen:
-  pop hl
+  pop hl ; TODO should just set the stack to the top of ram
+
+  call slowdown
 
   call LCDControl.waitVBlank
   call LCDControl.turnOff
