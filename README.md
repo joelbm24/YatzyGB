@@ -2,7 +2,7 @@
 YatzyGB is a Gameboy implementation of the dice game Yatzy written in 8bit assembly.
 
 <img src="./images/titlescreen.png" width="200">
-<img src="./images/screen.png" width="200" style="margin-left: 5px">
+<img src="./images/screen.png" width="200">
 
 ---
 
