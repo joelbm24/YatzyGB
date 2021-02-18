@@ -16,7 +16,6 @@ include "lib/variables.inc"
 
 section "Game Code", ROM0
 Start:
-
   ld a, TACF_START
   ld [rTAC], a
   ld a, [rDIV]
@@ -60,6 +59,15 @@ Start:
 
 .lockup
   call read_pad
+
+  ld a, [_PAD]
+	cp a, 0
+  call z, resetPress
+
+  ld a, [_PAD_PRESSED]
+  cp a, 1
+  jr z, .lockup
+
   ld		a, [_PAD]
 	and    		%00001000
 	jr		nz, .copyTiles
@@ -102,6 +110,7 @@ setupGame:
   ld [KEPT_DICE], a
   ld [CARD], a
   ld [_PAD], a
+  ld [GAME_FINISHED], a
   ld [NO_BACK], a
   call status.init
   call scorecard.init
@@ -321,6 +330,12 @@ selectCategory:
   call status.updateSubtotal
   call status.updateTotal
   call changeToMainMenu
+
+  call scorecard.checkFinished
+  ld a, [GAME_FINISHED]
+  cp a, 1
+  jp z, launchFinishScreen
+
   ret
 
 selectDie:
@@ -553,7 +568,6 @@ input:
 	and    		%00001000
 	jp		nz, selectPause
 
-
   call LCDControl.waitVBlank
   call moveArrow
   call draw
@@ -738,6 +752,80 @@ pauseMoveDown:
 
   ret
 
+launchFinishScreen:
+  pop hl
+
+  call LCDControl.waitVBlank
+  call LCDControl.turnOff
+
+
+.copyFinishTiles
+  ld hl, $8000
+  ld de, FinishTilesStart
+  ld bc, (FinishTilesEnd - FinishTilesStart)
+
+.copyFinishTilesLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec bc
+  ld a, b
+  or c
+  jr nz, .copyFinishTilesLoop
+
+  ld de, NumberTiles
+  ld bc, NumberTilesEnd - NumberTiles
+
+.copyNumberTilesLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec bc
+  ld a, b
+  or c
+  jr nz, .copyNumberTilesLoop
+
+  call drawFinishScreen
+
+  ld hl, $9928
+  ld a, [DISPLAY_TOTAL+3]
+  add 53
+  ld [hli], a
+  ld a, [DISPLAY_TOTAL+2]
+  add 53
+  ld [hli], a
+  ld a, [DISPLAY_TOTAL+1]
+  add 53
+  ld [hli], a
+  ld a, [DISPLAY_TOTAL]
+  add 53
+  ld [hli], a
+
+  call LCDControl.turnOn
+  ld a, [rLCDC]
+  res 1, a
+  ld [rLCDC], a
+
+.lockup
+  call read_pad
+
+  ld a, [_PAD]
+	cp a, 0
+  call z, resetPress
+
+  ld a, [_PAD_PRESSED]
+  cp a, 1
+  jr z, .lockup
+
+  ld a, [_PAD]
+  cp a, 0
+
+  call nz, setPress
+  ld a, 0
+  ld [_PAD], a
+	jp nz, Start
+  jr .lockup
+
 include "lib/helpers.inc"
 
 section "Tiles", ROM0
@@ -748,6 +836,10 @@ TilesEnd:
 TitleTilesStart:
 include "assets/title_screen.inc"
 TitleTilesEnd:
+
+FinishTilesStart:
+include "assets/finish_screen.inc"
+FinishTilesEnd:
 
 section "Maps", ROM0
 include "assets/maps.inc"

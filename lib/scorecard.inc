@@ -1256,16 +1256,18 @@ scorecard:
   ret z
 
 .setGameFinished
-  ld a, [GAME_FINISHED]
-  cp a, 1
+  ld a, 1
   ld [GAME_FINISHED], a
   ret
 
 .checkFinished
   ld a, [UPPER_STATUS]
-  ld b, a
-  ld a, [LOWER_STATUS]
-  add b
   cp a, 126
-  call z, .setGameFinished
+  ret c
+
+  ld a, [LOWER_STATUS]
+  cp a, 254
+  ret c
+
+  call .setGameFinished
   ret

@@ -13,6 +13,21 @@ drawTitleScreen:
   jr nz, .drawTitleTilesLoop
   ret
 
+drawFinishScreen:
+  ld hl, _SCRN0
+  ld de, FinishScreenMap
+  ld bc, FinishScreenMapEnd - FinishScreenMap
+
+.drawFinishTilesLoop
+  ld a, [de]
+  ld [hli], a
+  inc de
+  dec bc
+  ld a, b
+  or c
+  jr nz, .drawFinishTilesLoop
+  ret
+
 drawGameScreen:
   ld hl, _SCRN0
   ld de, GameScreenMap

@@ -160,9 +160,6 @@ DICE_SUM:
 DICE_STATUS:
   ds 1
 
-GAME_FINISHED:
-  ds 1
-
 OLD_X:
   ds 1
 
@@ -172,6 +169,8 @@ OLD_Y:
 PAUSE_SELECTION:
   ds 1
 
+GAME_FINISHED:
+  ds 1
 
 Section "Display Data", hram
 DISPLAY_BONUS:
