@@ -279,7 +279,12 @@ calcScore:
 .calcRepeatYatzy
   ld a, [LOWER_STATUS]
   bit 7, a
-  ld a, 00
+  ld a, 0
+  ret z
+
+  ld a, [LOWER_STATUS]
+  bit 5, a
+  ld a, 0
   ret z
 
   ld a, 100
