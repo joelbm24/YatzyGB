@@ -1,8 +1,8 @@
 # YatzyGB
 YatzyGB is a Gameboy implementation of the dice game Yatzy written in 8bit assembly.
 
-<img src="./images/titlescreen.png" width="300">
-<img src="./images/screen.png" width="300" style="margin-left: 5px">
+<img src="./images/titlescreen.png" width="200">
+<img src="./images/screen.png" width="200" style="margin-left: 5px">
 
 ---
 
@@ -29,6 +29,12 @@ The game is controlled using:
 * **B** for back
 * **DPAD** for navigation
 * **START** for restarting the game
+
+---
+
+## Features I'd like to implement
+* Saving the current game
+* Highscores, such as being able to enter a high score and view high scores.
 
 ---
 
