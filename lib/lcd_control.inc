@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 LCDControl:
 
 .waitVBlank

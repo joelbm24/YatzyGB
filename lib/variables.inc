@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 SCREEN_UPDATE:
   ds 1
 

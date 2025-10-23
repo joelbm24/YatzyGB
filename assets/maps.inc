@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 TitleScreenMap:
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -63,7 +65,7 @@ DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-TitleScreenMapEnd:
+.end
 
 GameScreenMap:
 DB $86, $80, $80, $80, $80, $80, $80, $88, $80, $80, $80, $80, $80, $80, $88, $80, $80, $80, $80, $87
@@ -101,7 +103,7 @@ DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 DB $00, $04, $05, $06, $00, $04, $05, $06, $00, $04, $05, $06, $00, $04, $05, $06, $00, $04, $05, $06
 DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 DB $00, $07, $08, $09, $00, $07, $08, $09, $00, $07, $08, $09, $00, $07, $08, $09, $00, $07, $08, $09
-GameScreenEnd:
+.end
 
 FinishScreenMap:
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -168,7 +170,7 @@ DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-FinishScreenMapEnd:
+.end
 
 WindowMap:
 DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -206,221 +208,221 @@ DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 DB $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-WindowMapEnd:
+.end
 
 
-Dice0MapStart:
+Dice0Map:
 DB $01,$02,$03
 DB $04,$05,$06
 DB $07,$08,$09
-Dice0MapEnd:
+.end
 
-Dice1MapStart:
+Dice1Map:
 DB $0A,$0B,$0C
 DB $0D,$0E,$0F
 DB $10,$11,$12
-Dice1MapEnd:
+.end
 
-Dice2MapStart:
+Dice2Map:
 DB $13,$14,$15
 DB $16,$17,$18
 DB $19,$1A,$1B
-Dice2MapEnd:
+.end
 
-Dice3MapStart:
+Dice3Map:
 DB $1C,$1D,$1E
 DB $1F,$20,$21
 DB $22,$23,$24
-Dice3MapEnd:
+.end
 
-Dice4MapStart:
+Dice4Map:
 DB $25,$26,$27
 DB $28,$29,$2A
 DB $2B,$2C,$2D
-Dice4MapEnd:
+.end
 
-Dice5MapStart:
+Dice5Map:
 DB $2E,$2F,$30
 DB $31,$32,$33
 DB $34,$35,$36
-Dice5MapEnd:
+.end
 
-Dice6MapStart:
+Dice6Map:
 DB $37,$38,$39
 DB $3A,$3B,$3C
 DB $3D,$3E,$3F
-Dice6MapEnd:
+.end
 
-ArrowMapStart:
+ArrowMap:
 DB $40
-ArrowMapEnd:
+.end
 
-RollMapStart:
+RollMap:
 DB $00, $41,$42,$43
-RollMapEnd:
+.end
 
-KeepMapStart:
+KeepMap:
 DB $00, $44, $45, $46
-KeepMapEnd:
+.end
 
-ScoreMapStart:
+ScoreMap:
 DB $00, $47, $48, $49
-ScoreMapEnd:
+.end
 
-OnesMapStart:
+OnesMap:
 DB $00, $4A,$4B, $4C
-OnesMapEnd:
+.end
 
-TwosMapStart:
+TwosMap:
 DB $00, $4D, $4E, $4F
-TwosMapEnd:
+.end
 
-ThreesMapStart:
+ThreesMap:
 DB $00, $50, $51, $52
-ThreesMapEnd:
+.end
 
-FoursMapStart:
+FoursMap:
 DB $00, $53, $54, $55
-FoursMapEnd:
+.end
 
-FivesMapStart:
+FivesMap:
 DB $00, $56, $57, $58
-FivesMapEnd:
+.end
 
-SixesMapStart:
+SixesMap:
 DB $00, $59, $5A, $5B
-SixesMapEnd:
+.end
 
-BonusMapStart:
+BonusMap:
 DB $00, $5C, $5D, $5E
-BonusMapEnd:
+.end
 
-ThreeKindMapStart:
+ThreeKindMap:
 DB $00, $5F, $60, $61
-ThreeKindMapEnd:
+.end
 
-FourKindMapStart:
+FourKindMap:
 DB $00, $62, $63, $64
-FourKindMapEnd:
+.end
 
-FullMapStart:
+FullMap:
 DB $00, $65, $66, $67
-FullMapEnd:
+.end
 
-SmallMapStart:
+SmallMap:
 DB $00, $68, $69, $6A
-SmallMapEnd:
+.end
 
-LargeMapStart:
+LargeMap:
 DB $00, $6B, $6C, $6D
-LargeMapEnd:
+.end
 
-YatzyMapStart:
+YatzyMap:
 DB $00, $6E, $6F, $70
-YatzyMapEnd:
+.end
 
-ChanceMapStart:
+ChanceMap:
 DB $00, $71, $72, $73
-ChanceMapEnd:
+.end
 
-RollsMapStart:
+RollsMap:
 DB $00, $74, $75, $76
-RollsMapEnd:
+.end
 
-SubtotalMapStart:
+SubtotalMap:
 DB $77, $78, $79, $7A
-SubtotalMapEnd:
+.end
 
-TotalMapStart:
+TotalMap:
 DB $7B, $7C, $7D, $7E
-TotalMapEnd:
+.end
 
-VerticalBorderMapStart:
+VerticalBorderMap:
 DB $7F
-VerticalBorderMapEnd:
+.end
 
-HorizontalBorderMapStart:
+HorizontalBorderMap:
 DB $80
-HorizontalBorderMapEnd:
+.end
 
-JunctionBLMapStart:
+JunctionBLMap:
 DB $81
-JunctionBLMapEnd:
+.end
 
-JunctionBMapStart:
+JunctionBMap:
 DB $82
-JunctionBMapEnd:
+.end
 
-JunctionBRMapStart:
+JunctionBRMap:
 DB $83
-JunctionBRMapEnd:
+.end
 
-JunctionLMapStart:
+JunctionLMap:
 DB $84
-JunctionLMapEnd:
+.end
 
-JunctionRMapStart:
+JunctionRMap:
 DB $85
-JunctionRMapEnd:
+.end
 
-JunctionTLMapStart:
+JunctionTLMap:
 DB $86
-JunctionTLMapEnd:
+.end
 
-JunctionTRMapStart:
+JunctionTRMap:
 DB $87
-JunctionTRMapEnd:
+.end
 
-JunctionTMapStart:
+JunctionTMap:
 DB $88
-JunctionTMapEnd:
+.end
 
-InvertDice1MapStart:
+InvertDice1Map:
 DB $89,$8A,$8B
 DB $8C,$8D,$8E
 DB $8F,$90,$91
-InvertDice1MapEnd:
+.end
 
-InvertDice2MapStart:
+InvertDice2Map:
 DB $92,$93,$94
 DB $95,$96,$97
 DB $98,$99,$9A
-InvertDice2MapEnd:
+.end
 
-InvertDice3MapStart:
+InvertDice3Map:
 DB $9B,$9C,$9D
 DB $9E,$9F,$A0
 DB $A1,$A2,$A3
-InvertDice3MapEnd:
+.end
 
-InvertDice4MapStart:
+InvertDice4Map:
 DB $A4,$A5,$A6
 DB $A7,$A8,$A9
 DB $AA,$AB,$AC
-InvertDice4MapEnd:
+.end
 
-InvertDice5MapStart:
+InvertDice5Map:
 DB $AD,$AE,$AF
 DB $B0,$B1,$B2
 DB $B3,$B4,$B5
-InvertDice5MapEnd:
+.end
 
-InvertDice6MapStart:
+InvertDice6Map:
 DB $B6,$B7,$B8
 DB $B9,$BA,$BB
 DB $BC,$BD,$BE
-InvertDice6MapEnd:
+.end
 
 NumberMap:
 DB $BF, $C0, $C1, $C2, $C3, $C4, $C5, $C6, $C7
-NumberMapEnd:
+.end
 
 InvertNumberMap:
 DB $C8, $C9, $CA, $CB, $CD, $CE, $CF, $D0, $D1
-InvertNumberMapEnd:
+.end
 
-EmptyDiceMapStart:
+EmptyDiceMap:
 DB $00,$00,$00
 DB $00,$00,$00
 DB $00,$00,$00
-EmptyDiceMapEnd:
+.end

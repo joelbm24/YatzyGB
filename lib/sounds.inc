@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 sounds:
 .init
   ld a, %10000000

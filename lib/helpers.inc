@@ -1,7 +1,9 @@
+; vim: ft=gbasm
+
 drawTitleScreen:
   ld hl, _SCRN0
   ld de, TitleScreenMap
-  ld bc, TitleScreenMapEnd - TitleScreenMap
+  ld bc, TitleScreenMap.end - TitleScreenMap
 
 .drawTitleTilesLoop
   ld a, [de]
@@ -16,7 +18,7 @@ drawTitleScreen:
 drawFinishScreen:
   ld hl, _SCRN0
   ld de, FinishScreenMap
-  ld bc, FinishScreenMapEnd - FinishScreenMap
+  ld bc, FinishScreenMap.end - FinishScreenMap
 
 .drawFinishTilesLoop
   ld a, [de]
@@ -31,7 +33,7 @@ drawFinishScreen:
 drawGameScreen:
   ld hl, _SCRN0
   ld de, GameScreenMap
-  ld bc, GameScreenEnd - GameScreenMap
+  ld bc, GameScreenMap.end- GameScreenMap
 
 .drawTilesLoop
   ld a, [de]
@@ -46,7 +48,7 @@ drawGameScreen:
 drawWindow:
   ld hl, _SCRN1
   ld de, WindowMap
-  ld bc, WindowMapEnd - WindowMap
+  ld bc, WindowMap.end - WindowMap
 
 .drawWindowLoop
   ld a, [de]
@@ -76,7 +78,7 @@ drawTextTiles:
 setRandomNumbers:
   call RandomNumber
   ld [RN], a
-  
+
   call RandomNumber
   ld [RN+1], a
 
@@ -90,15 +92,6 @@ setRandomNumbers:
   ld [RN+4], a
 
 Reseed:
-  ; ld a, [rDIV]
-  ; ld [Seed], a
-  ; ld a, [rTIMA]
-  ; ld [Seed+1], a
-  ; ld a, [rDIV]
-  ; ld b, a
-  ; ld a, [rTIMA]
-  ; xor b
-  ; ld [Seed+2], a
   ld a, [Seed]
   ld [Seed], a
   ld a, [Seed+1]

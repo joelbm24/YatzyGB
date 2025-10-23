@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 arrow:
 .initialize
   ld hl, _OAMRAM
@@ -23,8 +25,8 @@ arrow:
   ld a, [ARROW_MIN_Y]
   ld [_ARROW_Y], a
   ld [ARROW_Y], a
-  
-  ld a, [ArrowMapStart]
+
+  ld a, [ArrowMap]
   ld [_ARROW_NUM], a
   ld a, 0
   ld [_ARROW_ATT], a

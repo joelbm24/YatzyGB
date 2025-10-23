@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 scorecard:
 .init
   xor a
@@ -366,7 +368,7 @@ scorecard:
 
 .updateOnes
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_ONES]
   ld l, a
   ld de, DISPLAY_ONES
@@ -375,7 +377,7 @@ scorecard:
 
 .updateTwos
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_TWOS]
   ld l, a
   ld de, DISPLAY_TWOS
@@ -384,7 +386,7 @@ scorecard:
 
 .updateThrees
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_THREES]
   ld l, a
   ld de, DISPLAY_THREES
@@ -393,7 +395,7 @@ scorecard:
 
 .updateFours
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_FOURS]
   ld l, a
   ld de, DISPLAY_FOURS
@@ -402,7 +404,7 @@ scorecard:
 
 .updateFives
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_FIVES]
   ld l, a
   ld de, DISPLAY_FIVES
@@ -411,7 +413,7 @@ scorecard:
 
 .updateSixes
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_SIXES]
   ld l, a
   ld de, DISPLAY_SIXES
@@ -420,7 +422,7 @@ scorecard:
 
 .updateBonus
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_BONUS]
   ld l, a
   ld de, DISPLAY_BONUS
@@ -429,7 +431,7 @@ scorecard:
 
 .update3Kind
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_3KIND]
   ld l, a
   ld de, DISPLAY_3KIND
@@ -438,7 +440,7 @@ scorecard:
 
 .update4Kind
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_4KIND]
   ld l, a
   ld de, DISPLAY_4KIND
@@ -447,7 +449,7 @@ scorecard:
 
 .updateFull
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_FULL]
   ld l, a
   ld de, DISPLAY_FULL
@@ -456,7 +458,7 @@ scorecard:
 
 .updateSmall
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_SMALL]
   ld l, a
   ld de, DISPLAY_SMALL
@@ -465,7 +467,7 @@ scorecard:
 
 .updateLarge
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_LARGE]
   ld l, a
   ld de, DISPLAY_LARGE
@@ -474,7 +476,7 @@ scorecard:
 
 .updateYatzy
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_YATZY]
   ld l, a
   ld de, DISPLAY_YATZY
@@ -483,7 +485,7 @@ scorecard:
 
 .updateChance
   xor a
-  ld h, 0 
+  ld h, 0
   ld a, [POSSIBLE_CHANCE]
   ld l, a
   ld de, DISPLAY_CHANCE

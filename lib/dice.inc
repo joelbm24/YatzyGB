@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 drawDice:
   call .drawSlot1
   call .drawSlot2
@@ -92,55 +94,55 @@ drawDice:
   jr z, .setDieToInvert6
 
 .setDieTo0:
-  ld de, Dice0MapStart
+  ld de, Dice0Map
   ret
 
 .setDieTo1:
-  ld de, Dice1MapStart
+  ld de, Dice1Map
   ret
 
 .setDieToInvert1
-  ld de, InvertDice1MapStart
+  ld de, InvertDice1Map
   ret
 
 .setDieTo2:
-  ld de, Dice2MapStart
+  ld de, Dice2Map
   ret
 
 .setDieToInvert2
-  ld de, InvertDice2MapStart
+  ld de, InvertDice2Map
   ret
 
 .setDieTo3:
-  ld de, Dice3MapStart
+  ld de, Dice3Map
   ret
 
 .setDieToInvert3
-  ld de, InvertDice3MapStart
+  ld de, InvertDice3Map
   ret
 
 .setDieTo4:
-  ld de, Dice4MapStart
+  ld de, Dice4Map
   ret
 
 .setDieToInvert4
-  ld de, InvertDice4MapStart
+  ld de, InvertDice4Map
   ret
 
 .setDieTo5:
-  ld de, Dice5MapStart
+  ld de, Dice5Map
   ret
 
 .setDieToInvert5
-  ld de, InvertDice5MapStart
+  ld de, InvertDice5Map
   ret
 
 .setDieTo6:
-  ld de, Dice6MapStart
+  ld de, Dice6Map
   ret
 
 .setDieToInvert6
-  ld de, InvertDice6MapStart
+  ld de, InvertDice6Map
   ret
 
 .copyDiceSlot

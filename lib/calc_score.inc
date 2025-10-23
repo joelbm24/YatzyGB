@@ -1,3 +1,5 @@
+; vim: ft=gbasm
+
 calcScore:
 .init
 .reset

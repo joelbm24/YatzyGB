@@ -1,4 +1,7 @@
+; vim: ft=gbasm
+
 include "lib/hardware.inc"
+include "lib/hardware_compat.inc"
 include "lib/constants.inc"
 
 section "Header", ROM0[$100]
@@ -41,8 +44,8 @@ Start:
 
 .copyTitleTiles
   ld hl, $8000
-  ld de, TitleTilesStart
-  ld bc, TitleTilesEnd - TitleTilesStart
+  ld de, TitleTiles
+  ld bc, TitleTiles.end - TitleTiles
 
 .copyTitleTilesLoop
   ld a, [de]
@@ -82,8 +85,8 @@ Start:
   call LCDControl.turnOff
 
   ld hl, $8000
-  ld de, TilesStart
-  ld bc, TilesEnd - TilesStart
+  ld de, Tiles
+  ld bc, Tiles.end - Tiles
 
 .copyTilesLoop
   ld a, [de]
@@ -215,24 +218,24 @@ decMenuSelection:
 read_pad:
     ld a, %00100000
     ld [rP1], a
- 
+
     ld a, [rP1]
     ld a, [rP1]
     ld a, [rP1]
     ld a, [rP1]
- 
+
     and $0F
     swap a
     ld b, a
- 
+
     ld a, %00010000
     ld [rP1], a
- 
+
     ld a, [rP1]
     ld a, [rP1]
     ld a, [rP1]
     ld a, [rP1]
- 
+
     and $0F
     or b
 
@@ -260,7 +263,7 @@ select:
 
 changeMenu:
   call sounds.SelectBeep
-  
+
   ld a, [SELECTION]
   cp a, 0
   call z, roll
@@ -772,8 +775,8 @@ launchFinishScreen:
 
 .copyFinishTiles
   ld hl, $8000
-  ld de, FinishTilesStart
-  ld bc, (FinishTilesEnd - FinishTilesStart)
+  ld de, FinishTiles
+  ld bc, (FinishTiles.end - FinishTiles)
 
 .copyFinishTilesLoop
   ld a, [de]
@@ -785,7 +788,7 @@ launchFinishScreen:
   jr nz, .copyFinishTilesLoop
 
   ld de, NumberTiles
-  ld bc, NumberTilesEnd - NumberTiles
+  ld bc, NumberTiles.end - NumberTiles
 
 .copyNumberTilesLoop
   ld a, [de]
@@ -841,17 +844,17 @@ launchFinishScreen:
 include "lib/helpers.inc"
 
 section "Tiles", ROM0
-TilesStart:
+Tiles:
 include "assets/tiles.inc"
-TilesEnd:
+Tiles.end
 
-TitleTilesStart:
+TitleTiles:
 include "assets/title_screen.inc"
-TitleTilesEnd:
+TitleTiles.end
 
-FinishTilesStart:
+FinishTiles:
 include "assets/finish_screen.inc"
-FinishTilesEnd:
+FinishTiles.end
 
 section "Maps", ROM0
 include "assets/maps.inc"

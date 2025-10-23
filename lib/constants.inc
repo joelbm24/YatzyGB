@@ -1,7 +1,8 @@
+; vim: ft=gbasm
+
 def BEGIN_SLOT_1 equ $99E1
 def BEGIN_SLOT_1_ROW_2 equ BEGIN_SLOT_1 + 32
 def BEGIN_SLOT_1_ROW_3 equ BEGIN_SLOT_1_ROW_2 + 32
-
 def BEGIN_SLOT_2 equ BEGIN_SLOT_1+4
 def BEGIN_SLOT_3 equ BEGIN_SLOT_2+4
 def BEGIN_SLOT_4 equ BEGIN_SLOT_3+4
@@ -26,8 +27,8 @@ def BEGIN_SMALL equ BEGIN_FULL+$40
 def BEGIN_LARGE equ BEGIN_SMALL+$40
 def BEGIN_YATZY equ BEGIN_LARGE+$40
 def BEGIN_CHANCE equ BEGIN_YATZY+$40
-
 def BEGIN_ROLLS equ $98EE
+
 def BEGIN_SUBTOTAL equ BEGIN_ROLLS+$41
 def BEGIN_TOTAL equ BEGIN_SUBTOTAL+$60
 
@@ -35,7 +36,6 @@ def MENU_Y_MIN equ $18
 def MENU_Y_MAX equ $38
 def MENU_X_MIN equ $80
 def MENU_X_MAX equ $80
-
 def MENU_X_CHANGE equ 0
 def MENU_Y_CHANGE equ 16
 
@@ -43,25 +43,20 @@ def PAUSE_Y_MIN equ $58
 def PAUSE_Y_MAX equ $68
 def PAUSE_X_MIN equ $48
 def PAUSE_X_MAX equ $48
-
 def PAUSE_X_CHANGE equ 0
 def PAUSE_Y_CHANGE equ 16
 
 def DICE_Y_MIN equ 144
 def DICE_Y_MAX equ 144
-
 def DICE_X_MIN equ 9
 def DICE_X_MAX equ 137
-
 def DICE_X_CHANGE equ 32
 def DICE_Y_CHANGE equ 0
 
 def CARD_Y_MIN equ 24
 def CARD_Y_MAX equ 104
-
 def CARD_X_MIN equ 17
 def CARD_X_MAX equ 73
-
 def CARD_X_CHANGE equ 56
 def CARD_Y_CHANGE equ 16
 

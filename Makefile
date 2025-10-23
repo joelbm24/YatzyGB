@@ -1,11 +1,12 @@
 yatzy : link
-	rgbfix -v yatzy.gb
+	rgbfix -v -p 0xFF bin/yatzy.gb
 
 link : asm
-	rgblink -o yatzy.gb yatzy.o
+	rgblink -o bin/yatzy.gb bin/yatzy.o
 
 asm :
-	rgbasm -o yatzy.o main.asm
+	mkdir -p bin
+	rgbasm -o bin/yatzy.o main.asm
 
 clean :
-	rm yatzy.gb yatzy.o
+	rm -r bin
