@@ -1,5 +1,6 @@
 ; vim: ft=gbasm
 
+def NUMBER_ZERO_TILE equ $5C
 def BEGIN_SLOT_1 equ $99E1
 def BEGIN_SLOT_1_ROW_2 equ BEGIN_SLOT_1 + 32
 def BEGIN_SLOT_1_ROW_3 equ BEGIN_SLOT_1_ROW_2 + 32

@@ -772,47 +772,20 @@ launchFinishScreen:
   call LCDControl.waitVBlank
   call LCDControl.turnOff
 
-
-.copyFinishTiles
-  ld hl, $8000
-  ld de, FinishTiles
-  ld bc, (FinishTiles.end - FinishTiles)
-
-.copyFinishTilesLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec bc
-  ld a, b
-  or c
-  jr nz, .copyFinishTilesLoop
-
-  ld de, NumberTiles
-  ld bc, NumberTiles.end - NumberTiles
-
-.copyNumberTilesLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec bc
-  ld a, b
-  or c
-  jr nz, .copyNumberTilesLoop
-
   call drawFinishScreen
 
   ld hl, $9928
   ld a, [DISPLAY_TOTAL+3]
-  add 53
+  add $5C
   ld [hli], a
   ld a, [DISPLAY_TOTAL+2]
-  add 53
+  add $5C
   ld [hli], a
   ld a, [DISPLAY_TOTAL+1]
-  add 53
+  add $5C
   ld [hli], a
   ld a, [DISPLAY_TOTAL]
-  add 53
+  add $5C
   ld [hli], a
 
   call LCDControl.turnOn
@@ -848,13 +821,9 @@ Tiles:
 include "assets/tiles.inc"
 Tiles.end
 
-TitleTiles:
-include "assets/title_screen.inc"
-TitleTiles.end
-
-FinishTiles:
-include "assets/finish_screen.inc"
-FinishTiles.end
+include "assets/title_screen_tiles.inc"
 
 section "Maps", ROM0
 include "assets/maps.inc"
+include "assets/finish_screen_map.inc"
+include "assets/title_screen_map.inc"

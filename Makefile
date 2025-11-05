@@ -10,3 +10,6 @@ asm :
 
 clean :
 	rm -r bin
+
+run : yatzy
+	mgba bin/yatzy.gb

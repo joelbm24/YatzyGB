@@ -665,11 +665,11 @@ scorecard:
   ld de, DISPLAY_ONES+1
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -678,11 +678,11 @@ scorecard:
   ld de, DISPLAY_TWOS+1
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -691,11 +691,11 @@ scorecard:
   ld de, DISPLAY_THREES+1
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -704,11 +704,11 @@ scorecard:
   ld de, DISPLAY_FOURS+1
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -717,11 +717,11 @@ scorecard:
   ld de, DISPLAY_FIVES+1
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -730,11 +730,11 @@ scorecard:
   ld de, DISPLAY_SIXES+1
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -744,11 +744,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -758,11 +758,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -772,11 +772,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -786,11 +786,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -800,11 +800,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -814,11 +814,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -828,11 +828,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -842,11 +842,11 @@ scorecard:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 

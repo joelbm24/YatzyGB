@@ -31,7 +31,7 @@ status:
 .drawRollCount
   ld hl, BEGIN_ROLLS+4
   ld a, [ROLL_COUNT]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -49,16 +49,16 @@ status:
   ld de, DISPLAY_SUBTOTAL+2
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
 
@@ -77,20 +77,20 @@ status:
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
   dec de
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hli], a
 
   ld a, [de]
-  add $BF
+  add NUMBER_ZERO_TILE
   ld [hl], a
   ret
