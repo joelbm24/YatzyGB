@@ -27,10 +27,6 @@ status:
   ld [ROLL_COUNT], a
   ret
 
-; .drawRollCount
-;   DRAW_NUMBER BEGIN_ROLLS_NUMBER, ROLL_COUNT, 1
-;   ret
-
 .updateSubtotal
   xor a
   ld h, a
@@ -40,10 +36,6 @@ status:
   call getDisplayNumber
   ret
 
-.drawSubtotal
-  DrawNumber BEGIN_SUBTOTAL_NUMBERS, DISPLAY_SUBTOTAL, 3
-  ret
-
 .updateTotal
   ld a, [TOTAL]
   ld h, a
@@ -51,8 +43,4 @@ status:
   ld l, a
   ld de, DISPLAY_TOTAL
   call getDisplayNumber
-  ret
-
-.drawTotal
-  DrawNumber BEGIN_TOTAL_NUMBERS, DISPLAY_TOTAL, 4
   ret

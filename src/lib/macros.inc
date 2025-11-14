@@ -12,6 +12,28 @@ macro DrawNumber ; TO_AREA, TILES_START, AMOUNT
     ld [hl], a
 endm
 
+; TODO: HL might be the better register for this.
+macro ChangeCardNumber ; DISPLAY_TILES
+  ld de, \1+1
+  ld a, [de]
+  add 10
+  ld [de], a
+  dec de
+
+  ld a, [de]
+  add 10
+  ld [de], a
+endm
+
+macro UpdateCardNumber ; POSSIBLE, DISPLAY_TILES
+  xor a
+  ld h, 0
+  ld a, [\1]
+  ld l, a
+  ld de, \2
+  call getDisplayNumber
+endm
+
 macro DrawRollCount
   DrawNumber BEGIN_ROLLS_NUMBER, ROLL_COUNT, 1
 endm

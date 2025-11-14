@@ -275,6 +275,15 @@ scorecard:
   call .addTotal
   ret
 
+.setChance
+  ld a, [LOWER_STATUS]
+  set 6, a
+  ld [LOWER_STATUS], a
+  call .changeChance
+  ld a, [POSSIBLE_CHANCE]
+  call .addTotal
+  ret
+
 .setYatzy
   ld a, [LOWER_STATUS]
   set 5, a
@@ -287,14 +296,6 @@ scorecard:
   ld [LOWER_STATUS], a
   ret
 
-.setChance
-  ld a, [LOWER_STATUS]
-  set 6, a
-  ld [LOWER_STATUS], a
-  call .changeChance
-  ld a, [POSSIBLE_CHANCE]
-  call .addTotal
-  ret
 
 .clearOnes
   ld de, DISPLAY_ONES
@@ -367,487 +368,119 @@ scorecard:
   ret
 
 .updateOnes
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_ONES]
-  ld l, a
-  ld de, DISPLAY_ONES
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_ONES, DISPLAY_ONES
   ret
 
 .updateTwos
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_TWOS]
-  ld l, a
-  ld de, DISPLAY_TWOS
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_TWOS, DISPLAY_TWOS
   ret
 
 .updateThrees
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_THREES]
-  ld l, a
-  ld de, DISPLAY_THREES
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_THREES, DISPLAY_THREES
   ret
 
 .updateFours
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_FOURS]
-  ld l, a
-  ld de, DISPLAY_FOURS
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_FOURS, DISPLAY_FOURS
   ret
 
 .updateFives
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_FIVES]
-  ld l, a
-  ld de, DISPLAY_FIVES
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_FIVES, DISPLAY_FIVES
   ret
 
 .updateSixes
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_SIXES]
-  ld l, a
-  ld de, DISPLAY_SIXES
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_SIXES, DISPLAY_SIXES
   ret
 
 .updateBonus
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_BONUS]
-  ld l, a
-  ld de, DISPLAY_BONUS
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_BONUS, DISPLAY_BONUS
   ret
 
 .update3Kind
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_3KIND]
-  ld l, a
-  ld de, DISPLAY_3KIND
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_3KIND, DISPLAY_3KIND
   ret
 
 .update4Kind
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_4KIND]
-  ld l, a
-  ld de, DISPLAY_4KIND
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_4KIND, DISPLAY_4KIND
   ret
 
 .updateFull
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_FULL]
-  ld l, a
-  ld de, DISPLAY_FULL
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_FULL, DISPLAY_FULL
   ret
 
 .updateSmall
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_SMALL]
-  ld l, a
-  ld de, DISPLAY_SMALL
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_SMALL, DISPLAY_SMALL
   ret
 
 .updateLarge
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_LARGE]
-  ld l, a
-  ld de, DISPLAY_LARGE
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_LARGE, DISPLAY_LARGE
   ret
 
 .updateYatzy
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_YATZY]
-  ld l, a
-  ld de, DISPLAY_YATZY
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_YATZY, DISPLAY_YATZY
   ret
 
 .updateChance
-  xor a
-  ld h, 0
-  ld a, [POSSIBLE_CHANCE]
-  ld l, a
-  ld de, DISPLAY_CHANCE
-  call getDisplayNumber
+  UpdateCardNumber POSSIBLE_CHANCE, DISPLAY_CHANCE
   ret
 
 .changeOnes
-  ld de, DISPLAY_ONES+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_ONES
   ret
 
 .changeTwos
-  ld de, DISPLAY_TWOS+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_TWOS
   ret
 
 .changeThrees
-  ld de, DISPLAY_THREES+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_THREES
   ret
 
 .changeFours
-  ld de, DISPLAY_FOURS+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_FOURS
   ret
 
 .changeFives
-  ld de, DISPLAY_FIVES+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_FIVES
   ret
 
 .changeSixes
-  ld de, DISPLAY_SIXES+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_SIXES
   ret
 
 .changeBonus
-  ld de, DISPLAY_BONUS+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_BONUS
   ret
 
 .change3Kind
-  ld de, DISPLAY_3KIND+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_3KIND
   ret
 
 .change4Kind
-  ld de, DISPLAY_4KIND+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_4KIND
   ret
 
 .changeFull
-  ld de, DISPLAY_FULL+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_FULL
   ret
 
 .changeSmall
-  ld de, DISPLAY_SMALL+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_SMALL
   ret
 
 .changeLarge
-  ld de, DISPLAY_LARGE+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_LARGE
   ret
 
 .changeYatzy
-  ld de, DISPLAY_YATZY+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
+  ChangeCardNumber DISPLAY_YATZY
   ret
 
 .changeChance
-  ld de, DISPLAY_CHANCE+1
-  ld a, [de]
-  add 10
-  ld [de], a
-  dec de
-
-  ld a, [de]
-  add 10
-  ld [de], a
-  ret
-
-.drawOnes
-  ld hl, BEGIN_ONES+4
-  ld de, DISPLAY_ONES+1
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawTwos
-  ld hl, BEGIN_TWOS+4
-  ld de, DISPLAY_TWOS+1
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawThrees
-  ld hl, BEGIN_THREES+4
-  ld de, DISPLAY_THREES+1
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawFours
-  ld hl, BEGIN_FOURS+4
-  ld de, DISPLAY_FOURS+1
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawFives
-  ld hl, BEGIN_FIVES+4
-  ld de, DISPLAY_FIVES+1
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawSixes
-  ld hl, BEGIN_SIXES+4
-  ld de, DISPLAY_SIXES+1
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
+  ChangeCardNumber DISPLAY_CHANCE
   ret
 
 .drawBonus
-  ld hl, BEGIN_BONUS+4
-  ld de, DISPLAY_BONUS+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.draw3Kind
-  ld hl, BEGIN_3KIND+4
-  ld de, DISPLAY_3KIND+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.draw4Kind
-  ld hl, BEGIN_4KIND+4
-  ld de, DISPLAY_4KIND+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawFull
-  ld hl, BEGIN_FULL+4
-  ld de, DISPLAY_FULL+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawSmall
-  ld hl, BEGIN_SMALL+4
-  ld de, DISPLAY_SMALL+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawLarge
-  ld hl, BEGIN_LARGE+4
-  ld de, DISPLAY_LARGE+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawYatzy
-  ld hl, BEGIN_YATZY+4
-  ld de, DISPLAY_YATZY+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
-
-.drawChance
-  ld hl, BEGIN_CHANCE+4
-  ld de, DISPLAY_CHANCE+1
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
+  DrawNumber BEGIN_BONUS+4, DISPLAY_BONUS, 2
   ret
 
 .updatePossibleUpper:
@@ -911,18 +544,6 @@ scorecard:
   call z, .updateChance
   ret
 
-.drawPossibleUpper
-  call .drawOnes
-  call .drawTwos
-  call .drawThrees
-  call .drawFours
-  call .drawFives
-  call .drawSixes
-  ld a, [UPPER_STATUS]
-  bit 6, a
-  call nz, .drawBonus
-  ret
-
 .clearUpper
   ld a, [UPPER_STATUS]
   bit 0, a
@@ -984,16 +605,6 @@ scorecard:
   call z, .clearChance
   ret
 
-.drawPossibleLower
-  call .draw3Kind
-  call .draw4Kind
-  call .drawFull
-  call .drawSmall
-  call .drawLarge
-  call .drawYatzy
-  call .drawChance
-  ret
-
 .setScore
   ld a, [SELECTION]
   cp a, 0
@@ -1052,8 +663,22 @@ scorecard:
   ret
 
 .draw
-  call .drawPossibleUpper
-  call .drawPossibleLower
+  DrawNumber BEGIN_ONES+4, DISPLAY_ONES, 2
+  DrawNumber BEGIN_3KIND+4, DISPLAY_3KIND, 2
+  DrawNumber BEGIN_TWOS+4, DISPLAY_TWOS, 2
+  DrawNumber BEGIN_4KIND+4, DISPLAY_4KIND, 2
+  DrawNumber BEGIN_THREES+4, DISPLAY_THREES, 2
+  DrawNumber BEGIN_FULL+4, DISPLAY_FULL, 2
+  DrawNumber BEGIN_FOURS+4, DISPLAY_FOURS, 2
+  DrawNumber BEGIN_SMALL+4, DISPLAY_SMALL, 2
+  DrawNumber BEGIN_FIVES+4, DISPLAY_FIVES, 2
+  DrawNumber BEGIN_LARGE+4, DISPLAY_LARGE, 2
+  DrawNumber BEGIN_SIXES+4, DISPLAY_SIXES, 2
+  DrawNumber BEGIN_YATZY+4, DISPLAY_YATZY, 2
+  DrawNumber BEGIN_CHANCE+4, DISPLAY_CHANCE, 2
+  ld a, [UPPER_STATUS]
+  bit 6, a
+  call nz, .drawBonus
   ret
 
 .update

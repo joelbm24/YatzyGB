@@ -131,12 +131,9 @@ setupGame:
   call arrow_control.initialize
   call arrow_control.setPosition
   call arrow_control.jump
-  call scorecard.drawPossibleLower
-  call scorecard.drawPossibleUpper
+  call scorecard.draw
   DrawSubtotal
   DrawTotal
-  ; call status.drawSubtotal
-  ; call status.drawTotal
 
   call LCDControl.turnOn
   call fadeIn
@@ -531,9 +528,6 @@ moveArrow:
   ret
 
 draw:
-  ; call status.drawRollCount
-  ; call status.drawTotal
-  ; call status.drawSubtotal
   DrawRollCount
   DrawTotal
   DrawSubtotal
@@ -590,14 +584,9 @@ input:
   call LCDControl.waitVBlank
   call moveArrow
   call draw
-  call scorecard.drawPossibleLower
-  call scorecard.drawPossibleUpper
-
   call LCDControl.waitVBlank
-  call scorecard.drawPossibleLower
-  call scorecard.drawPossibleUpper
-  call scorecard.drawPossibleLower
-  call scorecard.drawPossibleUpper
+
+  call scorecard.draw
 
   call Reseed
   call setRandomNumbers
