@@ -1,8 +1,10 @@
 ; vim: ft=gbasm
 
-include "lib/hardware.inc"
-include "lib/hardware_compat.inc"
-include "lib/constants.inc"
+include "src/lib/hardware.inc"
+include "src/lib/hardware_compat.inc"
+include "src/lib/macros.inc"
+include "src/lib/definitions.inc"
+include "src/lib/constants.inc"
 
 section "Header", ROM0[$100]
 EntryPoint:
@@ -13,9 +15,11 @@ rept $150 - $104
   db 0
 endr
 
-section "Data", wram0
-include "lib/variables.inc"
+section "Sprites", oam
+dstruct ArrowSprite, arrowSprite
 
+section "Data", wram0
+include "src/lib/variables.inc"
 
 section "Game Code", ROM0
 Start:
@@ -30,12 +34,11 @@ Start:
   ld [Seed+2], a
 
 .initDisplay
-  ld a, %00000000
+  xor a
   ld [rBGP], a
   ld [rOBP0], a
   ld [rOBP1], a
 
-  xor a
   ld [rSCY], a
   ld [rSCX], a
 
@@ -125,80 +128,82 @@ setupGame:
   call drawGameScreen
   call drawWindow
   call setMenuCursorConstraints
-  call arrow.initialize
-  call arrow.setPosition
-  call arrow.jump
+  call arrow_control.initialize
+  call arrow_control.setPosition
+  call arrow_control.jump
   call scorecard.drawPossibleLower
   call scorecard.drawPossibleUpper
-  call status.drawSubtotal
-  call status.drawTotal
+  DrawSubtotal
+  DrawTotal
+  ; call status.drawSubtotal
+  ; call status.drawTotal
+
   call LCDControl.turnOn
   call fadeIn
 
 
   jp input
 
-include "lib/arrow.inc"
-include "lib/lcd_control.inc"
-include "lib/dice.inc"
-include "lib/sounds.inc"
-include "lib/status.inc"
-include "lib/scorecard.inc"
-include "lib/calc_score.inc"
+include "src/lib/arrow_control.inc"
+include "src/lib/lcd_control.inc"
+include "src/lib/dice.inc"
+include "src/lib/sounds.inc"
+include "src/lib/status.inc"
+include "src/lib/scorecard.inc"
+include "src/lib/calc_score.inc"
 
 setMenuCursorConstraints:
   ld a, MENU_Y_MIN
-  ld [ARROW_MIN_Y], a
+  ld [arrowData_MinY], a
   ld a, MENU_Y_MAX
-  ld [ARROW_MAX_Y], a
+  ld [arrowData_MaxY], a
 
   ld a, MENU_X_MIN
-  ld [ARROW_MIN_X], a
+  ld [arrowData_MinX], a
   ld a, MENU_X_MAX
-  ld [ARROW_MAX_X], a
+  ld [arrowData_MaxX], a
 
   ld a, MENU_X_CHANGE
-  ld [ARROW_X_CHANGE], a
-
+  ld [arrowData_XChange], a
   ld a, MENU_Y_CHANGE
-  ld [ARROW_Y_CHANGE], a
+  ld [arrowData_YChange], a
   ret
 
 setKeepConstraints:
   ld a, DICE_Y_MIN
-  ld [ARROW_MIN_Y], a
+  ld [arrowData_MinY], a
   ld a, DICE_Y_MAX
-  ld [ARROW_MAX_Y], a
+  ld [arrowData_MaxY], a
 
   ld a, DICE_X_MIN
-  ld [ARROW_MIN_X], a
+  ld [arrowData_MinX], a
   ld a, DICE_X_MAX
-  ld [ARROW_MAX_X], a
+  ld [arrowData_MaxX], a
 
   ld a, DICE_X_CHANGE
-  ld [ARROW_X_CHANGE], a
+  ld [arrowData_XChange], a
 
   ld a, DICE_Y_CHANGE
-  ld [ARROW_Y_CHANGE], a
+  ld [arrowData_YChange], a
 
   ret
 
 setCardConstraints:
   ld a, CARD_Y_MIN
-  ld [ARROW_MIN_Y], a
+  ld [arrowData_MinY], a
   ld a, CARD_Y_MAX
-  ld [ARROW_MAX_Y], a
+  ld [arrowData_MaxY], a
 
   ld a, CARD_X_MIN
-  ld [ARROW_MIN_X], a
+  ld [arrowData_MinX], a
   ld a, CARD_X_MAX
-  ld [ARROW_MAX_X], a
+  ld [arrowData_MaxX], a
 
   ld a, CARD_X_CHANGE
-  ld [ARROW_X_CHANGE], a
+  ld [arrowData_XChange], a
 
   ld a, CARD_Y_CHANGE
-  ld [ARROW_Y_CHANGE], a
+  ld [arrowData_YChange], a
 
   ret
 
@@ -321,7 +326,7 @@ selectCard:
 
   call disableBack
   call setCardConstraints
-  call arrow.jump
+  call arrow_control.jump
   ret
 
 selectCategory:
@@ -381,7 +386,7 @@ selectKeep:
   ld [SELECTION], a
 
   call setKeepConstraints
-  call arrow.jump
+  call arrow_control.jump
 
   ret
 
@@ -406,7 +411,7 @@ changeToMainMenu:
   ld [MENU], a
 
   call setMenuCursorConstraints
-  call arrow.jump
+  call arrow_control.jump
   ret
 
 enableBack:
@@ -432,9 +437,9 @@ disableKeepScore:
 moveArrowUp:
   call setPress
 
-  ld a, [ARROW_MIN_Y]
+  ld a, [arrowData_MinY]
   ld b, a
-  ld a, [ARROW_Y]
+  ld a, [arrowData_YPos]
   cp a, b
 
   call z, sounds.ErrorBeep
@@ -443,14 +448,14 @@ moveArrowUp:
   call sounds.MoveBeep
   call decMenuSelection
 
-  call arrow.up
+  call arrow_control.up
   ret
 
 moveArrowDown:
   call setPress
-  ld a, [ARROW_MAX_Y]
+  ld a, [arrowData_MaxY]
   ld b, a
-  ld a, [ARROW_Y]
+  ld a, [arrowData_YPos]
   cp a, b
   call z, sounds.ErrorBeep
   ret z
@@ -458,14 +463,14 @@ moveArrowDown:
   call sounds.MoveBeep
   call incMenuSelection
 
-  call arrow.down
+  call arrow_control.down
   ret
 
 moveArrowLeft:
   call setPress
-  ld a, [ARROW_MIN_X]
+  ld a, [arrowData_MinX]
   ld b, a
-  ld a, [ARROW_X]
+  ld a, [arrowData_XPos]
   cp a, b
 
   call z, sounds.ErrorBeep
@@ -475,7 +480,7 @@ moveArrowLeft:
   ld a, [MENU]
   cp a, 2
   call z, scorecard.changeToCard0
-  call arrow.left
+  call arrow_control.left
   ret z
 
   call decMenuSelection
@@ -484,9 +489,9 @@ moveArrowLeft:
 
 moveArrowRight:
   call setPress
-  ld a, [ARROW_MAX_X]
+  ld a, [arrowData_MaxX]
   ld b, a
-  ld a, [ARROW_X]
+  ld a, [arrowData_XPos]
   cp a, b
 
   call z, sounds.ErrorBeep
@@ -496,11 +501,11 @@ moveArrowRight:
   ld a, [MENU]
   cp a, 2
   call z, scorecard.changeToCard1
-  call arrow.right
+  call arrow_control.right
   ret z
   call incMenuSelection
 
-  call arrow.right
+  call arrow_control.right
   ret
 
 setPress:
@@ -514,21 +519,24 @@ resetPress:
   ret
 
 moveArrow:
-  ld a, [ARROW_UPDATE]
+  ld a, [arrowData_Update]
   bit 0, a
   ret z
 
-  call arrow.move
+  call arrow_control.move
 
   xor a
-  ld [ARROW_UPDATE], a
+  ld [arrowData_Update], a
 
   ret
 
 draw:
-  call status.drawRollCount
-  call status.drawTotal
-  call status.drawSubtotal
+  ; call status.drawRollCount
+  ; call status.drawTotal
+  ; call status.drawSubtotal
+  DrawRollCount
+  DrawTotal
+  DrawSubtotal
   call drawDice
   call LCDControl.resetUpdate
   ret
@@ -634,7 +642,7 @@ pauseInput:
 	jr nz, selectYesNo
 
   call LCDControl.waitVBlank
-  call arrow.draw
+  call arrow_control.draw
 
   jr pauseInput
 
@@ -664,30 +672,30 @@ selectPause:
   ld a, 1
   ld [PAUSE_SELECTION], a
   ld a, PAUSE_Y_MAX
-  ld [ARROW_Y], a
+  ld [arrowData_YPos], a
 
   ld a, PAUSE_X_MIN
-  ld [ARROW_X], a
+  ld [arrowData_XPos], a
 
   call LCDControl.waitVBlank
-  call arrow.draw
+  call arrow_control.draw
 
   jr pauseInput
 
 setOldArrowPosition:
-  ld a, [OLD_X]
-  ld [ARROW_X], a
+  ld a, [arrowData_OldX]
+  ld [arrowData_XPos], a
 
-  ld a, [OLD_Y]
-  ld [ARROW_Y], a
+  ld a, [arrowData_OldY]
+  ld [arrowData_YPos], a
   ret
 
 saveArrowPosition:
-  ld a, [ARROW_X]
-  ld [OLD_X], a
+  ld a, [arrowData_XPos]
+  ld [arrowData_OldX], a
 
-  ld a, [ARROW_Y]
-  ld [OLD_Y], a
+  ld a, [arrowData_YPos]
+  ld [arrowData_OldY], a
   ret
 
 restartGame:
@@ -717,7 +725,7 @@ closeWindow:
 
   call setOldArrowPosition
   call LCDControl.waitVBlank
-  call arrow.draw
+  call arrow_control.draw
   jp input
 
 pauseMoveUp:
@@ -725,7 +733,7 @@ pauseMoveUp:
 
   ld a, PAUSE_Y_MIN
   ld b, a
-  ld a, [ARROW_Y]
+  ld a, [arrowData_YPos]
   cp a, b
 
   call z, sounds.ErrorBeep
@@ -736,9 +744,9 @@ pauseMoveUp:
   dec a
   ld [PAUSE_SELECTION], a
 
-  ld a, [ARROW_Y]
+  ld a, [arrowData_YPos]
   sub a, 16
-  ld [ARROW_Y], a
+  ld [arrowData_YPos], a
   ret
 
 pauseMoveDown:
@@ -746,7 +754,7 @@ pauseMoveDown:
 
   ld a, PAUSE_Y_MAX
   ld b, a
-  ld a, [ARROW_Y]
+  ld a, [arrowData_YPos]
   cp a, b
 
   call z, sounds.ErrorBeep
@@ -757,9 +765,9 @@ pauseMoveDown:
   inc a
   ld [PAUSE_SELECTION], a
 
-  ld a, [ARROW_Y]
+  ld a, [arrowData_YPos]
   add a, 16
-  ld [ARROW_Y], a
+  ld [arrowData_YPos], a
 
   ret
 
@@ -774,19 +782,7 @@ launchFinishScreen:
 
   call drawFinishScreen
 
-  ld hl, $9928
-  ld a, [DISPLAY_TOTAL+3]
-  add $5C
-  ld [hli], a
-  ld a, [DISPLAY_TOTAL+2]
-  add $5C
-  ld [hli], a
-  ld a, [DISPLAY_TOTAL+1]
-  add $5C
-  ld [hli], a
-  ld a, [DISPLAY_TOTAL]
-  add $5C
-  ld [hli], a
+  DrawNumber BEGIN_FINISH_TOTAL, DISPLAY_TOTAL, 4
 
   call LCDControl.turnOn
   ld a, [rLCDC]
@@ -814,7 +810,7 @@ launchFinishScreen:
 	jp nz, Start
   jr .lockup
 
-include "lib/helpers.inc"
+include "src/lib/helpers.inc"
 
 section "Tiles", ROM0
 Tiles:

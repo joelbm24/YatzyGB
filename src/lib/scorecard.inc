@@ -43,9 +43,9 @@ scorecard:
   add 9
   ld [SELECTION], a
 
-  ld a, [ARROW_MAX_Y]
+  ld a, [arrowData_MaxY]
   add a, 16
-  ld [ARROW_MAX_Y], a
+  ld [arrowData_MaxY], a
 
   ret
 
@@ -53,9 +53,9 @@ scorecard:
   xor a
   ld [CARD], a
 
-  ld a, [ARROW_MAX_Y]
+  ld a, [arrowData_MaxY]
   sub a, 16
-  ld [ARROW_MAX_Y], a
+  ld [arrowData_MaxY], a
 
   ld a, [SELECTION]
   cp a, 16
@@ -70,7 +70,7 @@ scorecard:
 .adjustArrow
   dec a
   ld [SELECTION], a
-  call arrow.up
+  call arrow_control.up
   ret
 
 .resetNumber

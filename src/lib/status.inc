@@ -8,7 +8,6 @@ status:
   ld [TOTAL+1], a
   ld [DISPLAY_SUBTOTAL], a
   ld [DISPLAY_SUBTOTAL+1], a
-  ld [DISPLAY_SUBTOTAL], a
   ld [DISPLAY_SUBTOTAL+2], a
   ld [DISPLAY_TOTAL], a
   ld [DISPLAY_TOTAL+1], a
@@ -28,12 +27,9 @@ status:
   ld [ROLL_COUNT], a
   ret
 
-.drawRollCount
-  ld hl, BEGIN_ROLLS+4
-  ld a, [ROLL_COUNT]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
-  ret
+; .drawRollCount
+;   DRAW_NUMBER BEGIN_ROLLS_NUMBER, ROLL_COUNT, 1
+;   ret
 
 .updateSubtotal
   xor a
@@ -45,21 +41,7 @@ status:
   ret
 
 .drawSubtotal
-  ld hl, BEGIN_SUBTOTAL+33
-  ld de, DISPLAY_SUBTOTAL+2
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
+  DrawNumber BEGIN_SUBTOTAL_NUMBERS, DISPLAY_SUBTOTAL, 3
   ret
 
 .updateTotal
@@ -72,25 +54,5 @@ status:
   ret
 
 .drawTotal
-  ld hl, BEGIN_TOTAL+32
-  ld de, DISPLAY_TOTAL+3
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  dec de
-  add NUMBER_ZERO_TILE
-  ld [hli], a
-
-  ld a, [de]
-  add NUMBER_ZERO_TILE
-  ld [hl], a
+  DrawNumber BEGIN_TOTAL_NUMBERS, DISPLAY_TOTAL, 4
   ret
