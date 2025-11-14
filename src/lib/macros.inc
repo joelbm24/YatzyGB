@@ -34,6 +34,37 @@ macro UpdateCardNumber ; POSSIBLE, DISPLAY_TILES
   call getDisplayNumber
 endm
 
+; TODO: Should replace these function calls with jumps
+macro CheckStatus ; STATUS, BIT
+  ld a, [\1]
+  bit \2, a
+  call nz, .loadA
+  call z, .unloadA
+endm
+
+macro VariableAdd ; VARIABLE, VALUE
+  ld a, [\1]
+  add a, \2
+  ld [\1], a
+endm
+
+macro VariableSub ; VARIABLE, VALUE
+  ld a, [\1]
+  sub a, \2
+  ld [\1], a
+endm
+
+macro VariableSet ; VARIABLE, VALUE
+  ld a, [\2]
+  ld [\1], a
+endm
+
+macro SetVariableBit ; VARIABLE BIT
+  ld a, [\1]
+  set \2, a
+  ld [\1], a
+endm
+
 macro DrawRollCount
   DrawNumber BEGIN_ROLLS_NUMBER, ROLL_COUNT, 1
 endm

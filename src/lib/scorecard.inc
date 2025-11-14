@@ -36,34 +36,22 @@ scorecard:
   ret
 
 .changeToCard1
-  ld a, 1
-  ld [CARD], a
-
-  ld a, [SELECTION]
-  add 9
-  ld [SELECTION], a
-
-  ld a, [arrowData_MaxY]
-  add a, 16
-  ld [arrowData_MaxY], a
-
+  VariableSet CARD, 1
+  VariableAdd SELECTION, 9
+  VariableAdd arrowData_MaxY, 16
   ret
 
 .changeToCard0
   xor a
   ld [CARD], a
 
-  ld a, [arrowData_MaxY]
-  sub a, 16
-  ld [arrowData_MaxY], a
+  VariableSub arrowData_MaxY, 16
 
   ld a, [SELECTION]
   cp a, 16
   call z, .adjustArrow
 
-  ld a, [SELECTION]
-  sub 9
-  ld [SELECTION], a
+  VariableSub SELECTION, 9
 
   ret
 
@@ -78,17 +66,6 @@ scorecard:
   ld [de], a
   inc de
   ld [de], a
-  ret
-
-.drawTwoNumbers
-  ld a, [de]
-  dec de
-  add $BF
-  ld [hli], a
-
-  ld a, [de]
-  add $BF
-  ld [hl], a
   ret
 
 .addSubtotal
@@ -131,9 +108,8 @@ scorecard:
   ret
 
 .setOnes
-  ld a, [UPPER_STATUS]
-  set 0, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 0
+
   call .changeOnes
   ld a, [POSSIBLE_ONES]
   call .addSubtotal
@@ -143,9 +119,8 @@ scorecard:
   ret
 
 .setTwos
-  ld a, [UPPER_STATUS]
-  set 1, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 1
+
   call .changeTwos
   ld a, [POSSIBLE_TWOS]
   call .addSubtotal
@@ -155,9 +130,8 @@ scorecard:
   ret
 
 .setThrees
-  ld a, [UPPER_STATUS]
-  set 2, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 2
+
   call .changeThrees
   ld a, [POSSIBLE_THREES]
   call .addSubtotal
@@ -167,9 +141,7 @@ scorecard:
   ret
 
 .setFours
-  ld a, [UPPER_STATUS]
-  set 3, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 3
   call .changeFours
   ld a, [POSSIBLE_FOURS]
   call .addSubtotal
@@ -179,9 +151,7 @@ scorecard:
   ret
 
 .setFives
-  ld a, [UPPER_STATUS]
-  set 4, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 4
   call .changeFives
   ld a, [POSSIBLE_FIVES]
   call .addSubtotal
@@ -191,9 +161,7 @@ scorecard:
   ret
 
 .setSixes
-  ld a, [UPPER_STATUS]
-  set 5, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 5
   call .changeSixes
   ld a, [POSSIBLE_SIXES]
   call .addSubtotal
@@ -203,9 +171,7 @@ scorecard:
   ret
 
 .setBonus
-  ld a, [UPPER_STATUS]
-  set 6, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 6
   call .changeBonus
   ld a, [POSSIBLE_BONUS]
   call .addSubtotal
@@ -220,9 +186,7 @@ scorecard:
   ret
 
 .setNoBonus
-  ld a, [UPPER_STATUS]
-  set 6, a
-  ld [UPPER_STATUS], a
+  SetVariableBit UPPER_STATUS, 6
   xor a
   ld [POSSIBLE_BONUS], a
   call .clearBonus
@@ -231,63 +195,49 @@ scorecard:
   ret
 
 .set3Kind
-  ld a, [LOWER_STATUS]
-  set 0, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 0
   call .change3Kind
   ld a, [POSSIBLE_3KIND]
   call .addTotal
   ret
 
 .set4Kind
-  ld a, [LOWER_STATUS]
-  set 1, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 1
   call .change4Kind
   ld a, [POSSIBLE_4KIND]
   call .addTotal
   ret
 
 .setFull
-  ld a, [LOWER_STATUS]
-  set 2, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 2
   call .changeFull
   ld a, [POSSIBLE_FULL]
   call .addTotal
   ret
 
 .setSmall
-  ld a, [LOWER_STATUS]
-  set 3, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 3
   call .changeSmall
   ld a, [POSSIBLE_SMALL]
   call .addTotal
   ret
 
 .setLarge
-  ld a, [LOWER_STATUS]
-  set 4, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 4
   call .changeLarge
   ld a, [POSSIBLE_LARGE]
   call .addTotal
   ret
 
 .setChance
-  ld a, [LOWER_STATUS]
-  set 6, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 6
   call .changeChance
   ld a, [POSSIBLE_CHANCE]
   call .addTotal
   ret
 
 .setYatzy
-  ld a, [LOWER_STATUS]
-  set 5, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 5
   call .changeYatzy
   ld a, [POSSIBLE_YATZY]
   call .addTotal
@@ -700,94 +650,55 @@ scorecard:
   ret
 
 .checkOnes
-  ld a, [UPPER_STATUS]
-  bit 0, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus UPPER_STATUS, 0
   ret
 
 .checkTwos
-  ld a, [UPPER_STATUS]
-  bit 1, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus UPPER_STATUS, 1
   ret
 
 .checkThrees
-  ld a, [UPPER_STATUS]
-  bit 2, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus UPPER_STATUS, 2
   ret
 
 .checkFours
-  ld a, [UPPER_STATUS]
-  bit 3, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus UPPER_STATUS, 3
   ret
 
 .checkFives
-  ld a, [UPPER_STATUS]
-  bit 4, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus UPPER_STATUS, 4
   ret
 
 .checkSixes
-  ld a, [UPPER_STATUS]
-  bit 5, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus UPPER_STATUS, 5
   ret
 
 .check3Kind
-  ld a, [LOWER_STATUS]
-  bit 0, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus LOWER_STATUS, 0
   ret
 
 .check4Kind
-  ld a, [LOWER_STATUS]
-  bit 1, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus LOWER_STATUS, 1
   ret
 
 .checkFull
-  ld a, [LOWER_STATUS]
-  bit 2, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus LOWER_STATUS, 2
   ret
 
 .checkSmall
-  ld a, [LOWER_STATUS]
-  bit 3, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus LOWER_STATUS, 3
   ret
 
 .checkLarge
-  ld a, [LOWER_STATUS]
-  bit 4, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus LOWER_STATUS, 4
   ret
 
 .checkYatzy
-  ld a, [LOWER_STATUS]
-  bit 5, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus LOWER_STATUS, 5
   ret
 
 .checkChance
-  ld a, [LOWER_STATUS]
-  bit 6, a
-  call nz, .loadA
-  call z, .unloadA
+  CheckStatus LOWER_STATUS, 6
   ret
 
 .check
