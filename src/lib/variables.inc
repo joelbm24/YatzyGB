@@ -3,41 +3,13 @@
 SCREEN_UPDATE:
   ds 1
 
-ARROW_UPDATE:
-  ds 1
-
-ARROW_DIRECTION:
-  ds 1
-
 _PAD:
   ds 1
 
 _PAD_PRESSED:
   ds 1
 
-ARROW_X:
-  ds 1
-
-ARROW_Y:
-  ds 1
-
-ARROW_MIN_Y:
-  ds 1
-
-ARROW_MAX_Y:
-  ds 1
-
-ARROW_MIN_X:
-  ds 1
-
-ARROW_MAX_X:
-  ds 1
-
-ARROW_X_CHANGE:
-  ds 1
-
-ARROW_Y_CHANGE:
-  ds 1
+dstruct ArrowData, arrowData
 
 NO_BACK:
   ds 1
@@ -56,9 +28,6 @@ CARD:
 
 KEPT_DICE:
   ds 1
-
-Seed:
-  ds 3
 
 ROLL_COUNT:
   ds 1
@@ -175,6 +144,9 @@ GAME_FINISHED:
   ds 1
 
 Section "Display Data", hram
+Seed:
+  ds 3
+
 DISPLAY_BONUS:
   ds 2
 

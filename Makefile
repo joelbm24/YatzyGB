@@ -6,7 +6,7 @@ link : asm
 
 asm :
 	mkdir -p bin
-	rgbasm -o bin/yatzy.o main.asm
+	rgbasm -Weverything -o bin/yatzy.o src/main.asm
 
 clean :
 	rm -r bin

@@ -244,6 +244,7 @@ calcScore:
   bit 2, a
   ld a, 0
   ret z
+
   ld a, 25
   ret
 
