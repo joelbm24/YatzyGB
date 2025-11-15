@@ -23,7 +23,6 @@ include "src/lib/variables.inc"
 
 section "Game Code", ROM0
 Start:
-  ; TODO set stack to top of ram
   CopyConstToVar rTAC, TACF_START
   CopyVars Seed, rDIV
   CopyVars Seed+1, rDIV
@@ -96,6 +95,7 @@ Start:
   jr nz, .copyTilesLoop
 
 setupGame:
+  ld sp, $DFFF
   VariableSet ROLL_COUNT, 3
   VariableSet DISABLE_KEEP_SCORE, 1
 
@@ -120,7 +120,12 @@ setupGame:
 .main
   call drawGameScreen
   call drawWindow
-  call setMenuCursorConstraints
+  CopyConstToVar arrowData_MinY, MENU_Y_MIN
+  CopyConstToVar arrowData_MaxY, MENU_Y_MAX
+  CopyConstToVar arrowData_MinX, MENU_X_MIN
+  CopyConstToVar arrowData_MaxX, MENU_X_MAX
+  CopyConstToVar arrowData_XChange, MENU_X_CHANGE
+  CopyConstToVar arrowData_YChange, MENU_Y_CHANGE
   call arrow_control.initialize
   call arrow_control.setPosition
   call arrow_control.jump
@@ -130,7 +135,6 @@ setupGame:
 
   call LCDControl.turnOn
   call fadeIn
-
 
   jp input
 
@@ -142,48 +146,8 @@ include "src/lib/status.inc"
 include "src/lib/scorecard.inc"
 include "src/lib/calc_score.inc"
 
-setMenuCursorConstraints:
-  CopyConstToVar arrowData_MinY, MENU_Y_MIN
-  CopyConstToVar arrowData_MaxY, MENU_Y_MAX
-  CopyConstToVar arrowData_MinX, MENU_X_MIN
-  CopyConstToVar arrowData_MaxX, MENU_X_MAX
-  CopyConstToVar arrowData_XChange, MENU_X_CHANGE
-  CopyConstToVar arrowData_YChange, MENU_Y_CHANGE
-  ret
-
-setKeepConstraints:
-  CopyConstToVar arrowData_MinY, DICE_Y_MIN
-  CopyConstToVar arrowData_MaxY, DICE_Y_MAX
-  CopyConstToVar arrowData_MinX, DICE_X_MIN
-  CopyConstToVar arrowData_MaxX, DICE_X_MAX
-  CopyConstToVar arrowData_XChange, DICE_X_CHANGE
-  CopyConstToVar arrowData_YChange, DICE_Y_CHANGE
-  ret
-
-setCardConstraints:
-  CopyConstToVar arrowData_MinY, CARD_Y_MIN
-  CopyConstToVar arrowData_MaxY, CARD_Y_MAX
-  CopyConstToVar arrowData_MinX, CARD_X_MIN
-  CopyConstToVar arrowData_MaxX, CARD_X_MAX
-  CopyConstToVar arrowData_XChange, CARD_X_CHANGE
-  CopyConstToVar arrowData_YChange, CARD_Y_CHANGE
-  ret
-
-incMenuSelection:
-  ld a, [SELECTION]
-  inc a
-  ld [SELECTION], a
-  ret
-
-decMenuSelection:
-  ld a, [SELECTION]
-  dec a
-  ld [SELECTION], a
-  ret
-
 read_pad:
-    ld a, %00100000
-    ld [rP1], a
+    VariableSet rP1, %00100000
     ld a, [rP1]
     ld a, [rP1]
     ld a, [rP1]
@@ -193,9 +157,7 @@ read_pad:
     swap a
     ld b, a
 
-    ld a, %00010000
-    ld [rP1], a
-
+    VariableSet rP1, %00010000
     ld a, [rP1]
     ld a, [rP1]
     ld a, [rP1]
@@ -267,9 +229,10 @@ roll:
   call changeDice.changeSlot5
 
   call calcScore.calcPossibleScore
-  call status.decreaseRollCount
+  VariableDec ROLL_COUNT
   call scorecard.update
-  call enableKeepScore
+  xor a
+  ld [DISABLE_KEEP_SCORE], a
 
   ld a, [ROLL_COUNT]
   cp a, 0
@@ -278,15 +241,18 @@ roll:
   ret
 
 selectCard:
-  ld a, 2
-  ld [MENU], a
   VariableSet MENU, 2
 
   xor a
   ld [SELECTION], a
 
-  call disableBack
-  call setCardConstraints
+  VariableSet NO_BACK, 1
+  CopyConstToVar arrowData_MinY, CARD_Y_MIN
+  CopyConstToVar arrowData_MaxY, CARD_Y_MAX
+  CopyConstToVar arrowData_MinX, CARD_X_MIN
+  CopyConstToVar arrowData_MaxX, CARD_X_MAX
+  CopyConstToVar arrowData_XChange, CARD_X_CHANGE
+  CopyConstToVar arrowData_YChange, CARD_Y_CHANGE
   call arrow_control.jump
   ret
 
@@ -299,11 +265,12 @@ selectCategory:
 
   call sounds.SelectBeep
   call scorecard.setScore
-  call enableBack
+  xor a
+  ld [NO_BACK], a
   call scorecard.clear
-  call disableKeepScore
+  VariableSet DISABLE_KEEP_SCORE, 1
   call changeDice.resetDice
-  call status.resetRollCount
+  VariableSet ROLL_COUNT, 3
   call status.updateSubtotal
   call status.updateTotal
   call changeToMainMenu
@@ -342,7 +309,12 @@ selectDie:
 selectKeep:
   VariableSet MENU, 1
   VariableSet SELECTION, 0
-  call setKeepConstraints
+  CopyConstToVar arrowData_MinY, DICE_Y_MIN
+  CopyConstToVar arrowData_MaxY, DICE_Y_MAX
+  CopyConstToVar arrowData_MinX, DICE_X_MIN
+  CopyConstToVar arrowData_MaxX, DICE_X_MAX
+  CopyConstToVar arrowData_XChange, DICE_X_CHANGE
+  CopyConstToVar arrowData_YChange, DICE_Y_CHANGE
   call arrow_control.jump
 
   ret
@@ -358,7 +330,12 @@ goBack:
   ld a, [MENU]
   cp a, 1
   call z, changeToMainMenu
-  call z, enableKeepScore
+  jr z, .keepscore
+  ret
+
+  .keepscore
+  xor a
+  ld [DISABLE_KEEP_SCORE], a
   ret
 
 changeToMainMenu:
@@ -366,26 +343,13 @@ changeToMainMenu:
   ld [SELECTION], a
   ld [MENU], a
 
-  call setMenuCursorConstraints
+  CopyConstToVar arrowData_MinY, MENU_Y_MIN
+  CopyConstToVar arrowData_MaxY, MENU_Y_MAX
+  CopyConstToVar arrowData_MinX, MENU_X_MIN
+  CopyConstToVar arrowData_MaxX, MENU_X_MAX
+  CopyConstToVar arrowData_XChange, MENU_X_CHANGE
+  CopyConstToVar arrowData_YChange, MENU_Y_CHANGE
   call arrow_control.jump
-  ret
-
-enableBack:
-  xor a
-  ld [NO_BACK], a
-  ret
-
-disableBack:
-  VariableSet NO_BACK, 1
-  ret
-
-enableKeepScore:
-  xor a
-  ld [DISABLE_KEEP_SCORE], a
-  ret
-
-disableKeepScore:
-  VariableSet DISABLE_KEEP_SCORE, 1
   ret
 
 moveArrowUp:
@@ -397,7 +361,7 @@ moveArrowUp:
   ret z
 
   call sounds.MoveBeep
-  call decMenuSelection
+  VariableDec SELECTION
 
   call arrow_control.up
   ret
@@ -411,7 +375,7 @@ moveArrowDown:
   ret z
 
   call sounds.MoveBeep
-  call incMenuSelection
+  VariableInc SELECTION
 
   call arrow_control.down
   ret
@@ -431,7 +395,7 @@ moveArrowLeft:
   call arrow_control.left
   ret z
 
-  call decMenuSelection
+  VariableDec SELECTION
 
   ret
 
@@ -449,13 +413,13 @@ moveArrowRight:
   call z, scorecard.changeToCard1
   call arrow_control.right
   ret z
-  call incMenuSelection
+  VariableInc SELECTION
 
   call arrow_control.right
   ret
 
 setPress:
-  VariableSet _PAD_PRESSED, $01
+  VariableSet _PAD_PRESSED, 1
   ret
 
 resetPress:
@@ -479,7 +443,11 @@ draw:
   DrawRollCount
   DrawTotal
   DrawSubtotal
-  call drawDice
+  DrawDiceSlot slot1Value, BEGIN_SLOT_1, 0
+  DrawDiceSlot slot2Value, BEGIN_SLOT_2, 1
+  DrawDiceSlot slot3Value, BEGIN_SLOT_3, 2
+  DrawDiceSlot slot4Value, BEGIN_SLOT_4, 3
+  DrawDiceSlot slot5Value, BEGIN_SLOT_5, 4
   call LCDControl.resetUpdate
   ret
 
@@ -625,6 +593,7 @@ saveArrowPosition:
 
 restartGame:
   call LCDControl.waitVBlank
+  call fadeOut
   call LCDControl.turnOff
   jp setupGame
 
@@ -665,13 +634,8 @@ pauseMoveUp:
   ret z
 
   call sounds.MoveBeep
-  ld a, [PAUSE_SELECTION]
-  dec a
-  ld [PAUSE_SELECTION], a
-
-  ld a, [arrowData_YPos]
-  sub a, 16
-  ld [arrowData_YPos], a
+  VariableDec PAUSE_SELECTION
+  VariableSub arrowData_YPos, 16
   ret
 
 pauseMoveDown:
@@ -693,7 +657,7 @@ pauseMoveDown:
   ret
 
 launchFinishScreen:
-  pop hl ; TODO should just set the stack to the top of ram
+  pop hl
 
   call slowdown
 

@@ -9,7 +9,7 @@ macro DrawNumber ; TO_AREA, TILES_START, AMOUNT
   ENDR
     ld a, [\2]
     add NUMBER_ZERO_TILE
-    ld [hl], a
+ld [hl], a
 endm
 
 ; TODO: HL might be the better register for this.
@@ -92,6 +92,17 @@ macro CompareVars ; Var1, Var2
   ld b, a
   ld a, [\1]
   cp a, b
+endm
+
+macro DrawDiceSlot ; SLOT_VALUE, DICE_SLOT, BIT
+  ld a, [KEPT_DICE]
+  ld b, a
+  bit \3, b
+  ld a, [\1]
+  call z, dice.setupDie
+  call nz, dice.setupInvertDie
+  ld hl, \2
+  call dice.copyDiceSlot
 endm
 
 macro DrawRollCount

@@ -17,14 +17,7 @@ status:
 
 
 .decreaseRollCount
-  ld a, [ROLL_COUNT]
-  dec a
-  ld [ROLL_COUNT], a
-  ret
-
-.resetRollCount
-  ld a, 3
-  ld [ROLL_COUNT], a
+  VariableDec ROLL_COUNT
   ret
 
 .updateSubtotal
