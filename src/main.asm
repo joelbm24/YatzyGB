@@ -24,21 +24,16 @@ include "src/lib/variables.inc"
 section "Game Code", ROM0
 Start:
   ; TODO set stack to top of ram
-  ld a, TACF_START
-  ld [rTAC], a
-  ld a, [rDIV]
-  ld [Seed], a
-  ld a, [rDIV]
-  ld [Seed+1], a
-  ld a, [rDIV]
-  ld [Seed+2], a
+  CopyConstToVar rTAC, TACF_START
+  CopyVars Seed, rDIV
+  CopyVars Seed+1, rDIV
+  CopyVars Seed+2, rDIV
 
 .initDisplay
   xor a
   ld [rBGP], a
   ld [rOBP0], a
   ld [rOBP1], a
-
   ld [rSCY], a
   ld [rSCX], a
 
@@ -74,9 +69,9 @@ Start:
   cp a, 1
   jr z, .lockup
 
-  ld		a, [_PAD]
-	and    		%00001000
-	jr		nz, .copyTiles
+  ld a, [_PAD]
+	and %00001000
+	jr nz, .copyTiles
   jr .lockup
 
 .copyTiles
@@ -101,11 +96,8 @@ Start:
   jr nz, .copyTilesLoop
 
 setupGame:
-  ld a, 3
-  ld [ROLL_COUNT], a
-
-  ld a, 1
-  ld [DISABLE_KEEP_SCORE], a
+  VariableSet ROLL_COUNT, 3
+  VariableSet DISABLE_KEEP_SCORE, 1
 
   xor a
   ld [slot1Value], a
@@ -120,6 +112,7 @@ setupGame:
   ld [_PAD], a
   ld [GAME_FINISHED], a
   ld [NO_BACK], a
+
   call status.init
   call scorecard.init
   call sounds.init
@@ -150,58 +143,30 @@ include "src/lib/scorecard.inc"
 include "src/lib/calc_score.inc"
 
 setMenuCursorConstraints:
-  ld a, MENU_Y_MIN
-  ld [arrowData_MinY], a
-  ld a, MENU_Y_MAX
-  ld [arrowData_MaxY], a
-
-  ld a, MENU_X_MIN
-  ld [arrowData_MinX], a
-  ld a, MENU_X_MAX
-  ld [arrowData_MaxX], a
-
-  ld a, MENU_X_CHANGE
-  ld [arrowData_XChange], a
-  ld a, MENU_Y_CHANGE
-  ld [arrowData_YChange], a
+  CopyConstToVar arrowData_MinY, MENU_Y_MIN
+  CopyConstToVar arrowData_MaxY, MENU_Y_MAX
+  CopyConstToVar arrowData_MinX, MENU_X_MIN
+  CopyConstToVar arrowData_MaxX, MENU_X_MAX
+  CopyConstToVar arrowData_XChange, MENU_X_CHANGE
+  CopyConstToVar arrowData_YChange, MENU_Y_CHANGE
   ret
 
 setKeepConstraints:
-  ld a, DICE_Y_MIN
-  ld [arrowData_MinY], a
-  ld a, DICE_Y_MAX
-  ld [arrowData_MaxY], a
-
-  ld a, DICE_X_MIN
-  ld [arrowData_MinX], a
-  ld a, DICE_X_MAX
-  ld [arrowData_MaxX], a
-
-  ld a, DICE_X_CHANGE
-  ld [arrowData_XChange], a
-
-  ld a, DICE_Y_CHANGE
-  ld [arrowData_YChange], a
-
+  CopyConstToVar arrowData_MinY, DICE_Y_MIN
+  CopyConstToVar arrowData_MaxY, DICE_Y_MAX
+  CopyConstToVar arrowData_MinX, DICE_X_MIN
+  CopyConstToVar arrowData_MaxX, DICE_X_MAX
+  CopyConstToVar arrowData_XChange, DICE_X_CHANGE
+  CopyConstToVar arrowData_YChange, DICE_Y_CHANGE
   ret
 
 setCardConstraints:
-  ld a, CARD_Y_MIN
-  ld [arrowData_MinY], a
-  ld a, CARD_Y_MAX
-  ld [arrowData_MaxY], a
-
-  ld a, CARD_X_MIN
-  ld [arrowData_MinX], a
-  ld a, CARD_X_MAX
-  ld [arrowData_MaxX], a
-
-  ld a, CARD_X_CHANGE
-  ld [arrowData_XChange], a
-
-  ld a, CARD_Y_CHANGE
-  ld [arrowData_YChange], a
-
+  CopyConstToVar arrowData_MinY, CARD_Y_MIN
+  CopyConstToVar arrowData_MaxY, CARD_Y_MAX
+  CopyConstToVar arrowData_MinX, CARD_X_MIN
+  CopyConstToVar arrowData_MaxX, CARD_X_MAX
+  CopyConstToVar arrowData_XChange, CARD_X_CHANGE
+  CopyConstToVar arrowData_YChange, CARD_Y_CHANGE
   ret
 
 incMenuSelection:
@@ -214,13 +179,11 @@ decMenuSelection:
   ld a, [SELECTION]
   dec a
   ld [SELECTION], a
-
   ret
 
 read_pad:
     ld a, %00100000
     ld [rP1], a
-
     ld a, [rP1]
     ld a, [rP1]
     ld a, [rP1]
@@ -317,8 +280,9 @@ roll:
 selectCard:
   ld a, 2
   ld [MENU], a
+  VariableSet MENU, 2
 
-  ld a, 0
+  xor a
   ld [SELECTION], a
 
   call disableBack
@@ -376,12 +340,8 @@ selectDie:
   ret
 
 selectKeep:
-  ld a, 1
-  ld [MENU], a
-
-  ld a, 0
-  ld [SELECTION], a
-
+  VariableSet MENU, 1
+  VariableSet SELECTION, 0
   call setKeepConstraints
   call arrow_control.jump
 
@@ -402,9 +362,8 @@ goBack:
   ret
 
 changeToMainMenu:
-  ld a, 0
+  xor a
   ld [SELECTION], a
-  ld a, 0
   ld [MENU], a
 
   call setMenuCursorConstraints
@@ -412,32 +371,27 @@ changeToMainMenu:
   ret
 
 enableBack:
-  ld a, 0
+  xor a
   ld [NO_BACK], a
   ret
 
 disableBack:
-  ld a, 1
-  ld [NO_BACK], a
+  VariableSet NO_BACK, 1
   ret
 
 enableKeepScore:
-  ld a, 0
+  xor a
   ld [DISABLE_KEEP_SCORE], a
   ret
 
 disableKeepScore:
-  ld a, 1
-  ld [DISABLE_KEEP_SCORE], a
+  VariableSet DISABLE_KEEP_SCORE, 1
   ret
 
 moveArrowUp:
   call setPress
 
-  ld a, [arrowData_MinY]
-  ld b, a
-  ld a, [arrowData_YPos]
-  cp a, b
+  CompareVars arrowData_YPos, arrowData_MinY
 
   call z, sounds.ErrorBeep
   ret z
@@ -450,10 +404,9 @@ moveArrowUp:
 
 moveArrowDown:
   call setPress
-  ld a, [arrowData_MaxY]
-  ld b, a
-  ld a, [arrowData_YPos]
-  cp a, b
+
+  CompareVars arrowData_YPos, arrowData_MaxY
+
   call z, sounds.ErrorBeep
   ret z
 
@@ -465,10 +418,8 @@ moveArrowDown:
 
 moveArrowLeft:
   call setPress
-  ld a, [arrowData_MinX]
-  ld b, a
-  ld a, [arrowData_XPos]
-  cp a, b
+
+  CompareVars arrowData_XPos, arrowData_MinX
 
   call z, sounds.ErrorBeep
   ret z
@@ -486,10 +437,8 @@ moveArrowLeft:
 
 moveArrowRight:
   call setPress
-  ld a, [arrowData_MaxX]
-  ld b, a
-  ld a, [arrowData_XPos]
-  cp a, b
+
+  CompareVars arrowData_XPos, arrowData_MaxX
 
   call z, sounds.ErrorBeep
   ret z
@@ -506,12 +455,11 @@ moveArrowRight:
   ret
 
 setPress:
-  ld a, $01
-  ld [_PAD_PRESSED], a
+  VariableSet _PAD_PRESSED, $01
   ret
 
 resetPress:
-  ld a, $00
+  xor a
   ld [_PAD_PRESSED], a
   ret
 
@@ -647,9 +595,7 @@ slowdown:
 
 openWindow:
   call slowdown
-	ld	a, [rLCDC]
-  set 5, a
-	ld	[rLCDC], a
+  SetVariableBit rLCDC, 5
   ret
 
 selectPause:
@@ -658,13 +604,9 @@ selectPause:
   call saveArrowPosition
   call openWindow
 
-  ld a, 1
-  ld [PAUSE_SELECTION], a
-  ld a, PAUSE_Y_MAX
-  ld [arrowData_YPos], a
-
-  ld a, PAUSE_X_MIN
-  ld [arrowData_XPos], a
+  VariableSet PAUSE_SELECTION, 1
+  CopyConstToVar arrowData_YPos, PAUSE_Y_MAX
+  CopyConstToVar arrowData_XPos, PAUSE_X_MIN
 
   call LCDControl.waitVBlank
   call arrow_control.draw
@@ -672,19 +614,13 @@ selectPause:
   jr pauseInput
 
 setOldArrowPosition:
-  ld a, [arrowData_OldX]
-  ld [arrowData_XPos], a
-
-  ld a, [arrowData_OldY]
-  ld [arrowData_YPos], a
+  CopyVars arrowData_XPos, arrowData_OldX
+  CopyVars arrowData_YPos, arrowData_OldY
   ret
 
 saveArrowPosition:
-  ld a, [arrowData_XPos]
-  ld [arrowData_OldX], a
-
-  ld a, [arrowData_YPos]
-  ld [arrowData_OldY], a
+  CopyVars arrowData_OldX, arrowData_XPos
+  CopyVars arrowData_OldY, arrowData_YPos
   ret
 
 restartGame:
@@ -750,13 +686,9 @@ pauseMoveDown:
   ret z
 
   call sounds.MoveBeep
-  ld a, [PAUSE_SELECTION]
-  inc a
-  ld [PAUSE_SELECTION], a
 
-  ld a, [arrowData_YPos]
-  add a, 16
-  ld [arrowData_YPos], a
+  VariableInc PAUSE_SELECTION
+  VariableAdd arrowData_YPos, 16
 
   ret
 

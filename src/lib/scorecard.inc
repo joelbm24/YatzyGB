@@ -241,9 +241,7 @@ scorecard:
   call .changeYatzy
   ld a, [POSSIBLE_YATZY]
   call .addTotal
-  ld a, [LOWER_STATUS]
-  set 7, a
-  ld [LOWER_STATUS], a
+  SetVariableBit LOWER_STATUS, 7
   ret
 
 

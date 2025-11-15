@@ -54,8 +54,20 @@ macro VariableSub ; VARIABLE, VALUE
   ld [\1], a
 endm
 
+macro VariableDec ; VARIABLE
+  ld a, [\1]
+  dec a
+  ld [\1], a
+endm
+
+macro VariableInc ; VARIABLE
+  ld a, [\1]
+  inc a
+  ld [\1], a
+endm
+
 macro VariableSet ; VARIABLE, VALUE
-  ld a, [\2]
+  ld a, \2
   ld [\1], a
 endm
 
@@ -63,6 +75,23 @@ macro SetVariableBit ; VARIABLE BIT
   ld a, [\1]
   set \2, a
   ld [\1], a
+endm
+
+macro CopyConstToVar ; TO, FROM
+  ld a, \2
+  ld [\1], a
+endm
+
+macro CopyVars ; TO, FROM
+  ld a, [\2]
+  ld [\1], a
+endm
+
+macro CompareVars ; Var1, Var2
+  ld a, [\2]
+  ld b, a
+  ld a, [\1]
+  cp a, b
 endm
 
 macro DrawRollCount
