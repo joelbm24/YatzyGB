@@ -5,6 +5,9 @@ YatzyGB is a Gameboy implementation of the dice game Yatzy written in 8bit assem
 
 ---
 
+## Download
+[Download on itch.io](https://joelmoore24.itch.io/yatzygb)
+
 ## How to play
 Yatzy is a game played with five dice. The player gets three rolls and can choose to keep certain dice between each roll. The player must enter a score in one of the categories even if it's a zero.
 
