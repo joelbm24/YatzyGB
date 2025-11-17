@@ -501,7 +501,8 @@ input:
   DrawRollCount
   DrawTotal
   DrawSubtotal
-  ResetDisplay
+  xor a
+  ld [SCREEN_UPDATE], a
 
   call Reseed
   call setRandomNumbers
