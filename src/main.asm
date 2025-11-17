@@ -505,7 +505,16 @@ input:
   ld [SCREEN_UPDATE], a
 
   call Reseed
-  call setRandomNumbers
+  call RandomNumber
+  ld [RN], a
+  call RandomNumber
+  ld [RN+1], a
+  call RandomNumber
+  ld [RN+2], a
+  call RandomNumber
+  ld [RN+3], a
+  call RandomNumber
+  ld [RN+4], a
 
   jp input
 
