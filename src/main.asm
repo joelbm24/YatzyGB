@@ -457,6 +457,7 @@ input:
   ld a, [_PAD]
 	and PADF_UP
 	call nz, moveArrowUp
+  ; TODO: Maybe skip to drawing, we only need to confirm one input at a time.
 
   ; down
 	ld a, [_PAD]
