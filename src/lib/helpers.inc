@@ -136,7 +136,7 @@ mod6:
   cp a, c
   call z, .resetC
 
-  ld a, 0
+  xor a
   cp a, b
   jr nz, .loop
 

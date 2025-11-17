@@ -28,7 +28,7 @@ LCDControl:
 
 .resetUpdate
   ld b, a
-  ld a, 0
+  xor a
   ld [SCREEN_UPDATE], a
   ld a, b
   ret

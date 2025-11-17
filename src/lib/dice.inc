@@ -1,67 +1,6 @@
 ; vim: ft=gbasm
 
-drawDice:
-  call .drawSlot1
-  call .drawSlot2
-  call .drawSlot3
-  call .drawSlot4
-  call .drawSlot5
-  ret
-
-.drawSlot1
-  ld a, [KEPT_DICE]
-  ld b, a
-  bit 0, b
-  ld a, [slot1Value]
-  call z, .setupDie
-  call nz, .setupInvertDie
-  ld hl, BEGIN_SLOT_1
-  call .copyDiceSlot
-  ret
-
-.drawSlot2
-  ld a, [KEPT_DICE]
-  ld b, a
-  ld a, [slot2Value]
-  bit 1, b
-  call z, .setupDie
-  call nz, .setupInvertDie
-  ld hl, BEGIN_SLOT_2
-  call .copyDiceSlot
-  ret
-
-.drawSlot3
-  ld a, [KEPT_DICE]
-  ld b, a
-  bit 2, b
-  ld a, [slot3Value]
-  call z, .setupDie
-  call nz, .setupInvertDie
-  ld hl, BEGIN_SLOT_3
-  call .copyDiceSlot
-  ret
-
-.drawSlot4
-  ld a, [KEPT_DICE]
-  ld b, a
-  bit 3, b
-  ld a, [slot4Value]
-  call z, .setupDie
-  call nz, .setupInvertDie
-  ld hl, BEGIN_SLOT_4
-  call .copyDiceSlot
-  ret
-
-.drawSlot5
-  ld a, [KEPT_DICE]
-  ld b, a
-  bit 4, b
-  ld a, [slot5Value]
-  call z, .setupDie
-  call nz, .setupInvertDie
-  ld hl, BEGIN_SLOT_5
-  call .copyDiceSlot
-  ret
+dice:
 
 .setupDie:
   cp a, 0
@@ -198,7 +137,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot1Value], a
+  ld [diceSlots_Slot1], a
   ret
 
 .changeSlot2
@@ -209,7 +148,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot2Value], a
+  ld [diceSlots_Slot2], a
   ret
 
 .changeSlot3
@@ -220,7 +159,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot3Value], a
+  ld [diceSlots_Slot3], a
   ret
 
 .changeSlot4
@@ -231,7 +170,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot4Value], a
+  ld [diceSlots_Slot4], a
   ret
 
 .changeSlot5
@@ -242,7 +181,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot5Value], a
+  ld [diceSlots_Slot5], a
   ret
 
 .selectSlot1
@@ -297,18 +236,14 @@ changeDice:
 
 .resetDice:
   call LCDControl.setUpdate
-  ld a, 3
-  ld [ROLL_COUNT], a
-
-  ;call updateRollCount
+  VariableSet ROLL_COUNT, 3
 
   xor a
-
-  ld [slot1Value], a
-  ld [slot2Value], a
-  ld [slot3Value], a
-  ld [slot4Value], a
-  ld [slot5Value], a
+  ld [diceSlots_Slot1], a
+  ld [diceSlots_Slot2], a
+  ld [diceSlots_Slot3], a
+  ld [diceSlots_Slot4], a
+  ld [diceSlots_Slot5], a
   ld [KEPT_DICE], a
 
   ret

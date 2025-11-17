@@ -89,128 +89,128 @@ calcScore:
 
 .calcDice
 .calcOnes
-  ld a, [slot1Value]
+  ld a, [diceSlots_Slot1]
   cp a, 1
   call z, .addOne
 
-  ld a, [slot2Value]
+  ld a, [diceSlots_Slot2]
   cp a, 1
   call z, .addOne
 
-  ld a, [slot3Value]
+  ld a, [diceSlots_Slot3]
   cp a, 1
   call z, .addOne
 
-  ld a, [slot4Value]
+  ld a, [diceSlots_Slot4]
   cp a, 1
   call z, .addOne
 
-  ld a, [slot5Value]
+  ld a, [diceSlots_Slot5]
   cp a, 1
   call z, .addOne
 
 .calcTwos
-  ld a, [slot1Value]
+  ld a, [diceSlots_Slot1]
   cp a, 2
   call z, .addTwo
 
-  ld a, [slot2Value]
+  ld a, [diceSlots_Slot2]
   cp a, 2
   call z, .addTwo
 
-  ld a, [slot3Value]
+  ld a, [diceSlots_Slot3]
   cp a, 2
   call z, .addTwo
 
-  ld a, [slot4Value]
+  ld a, [diceSlots_Slot4]
   cp a, 2
   call z, .addTwo
 
-  ld a, [slot5Value]
+  ld a, [diceSlots_Slot5]
   cp a, 2
   call z, .addTwo
 
 .calcThrees
-  ld a, [slot1Value]
+  ld a, [diceSlots_Slot1]
   cp a, 3
   call z, .addThree
 
-  ld a, [slot2Value]
+  ld a, [diceSlots_Slot2]
   cp a, 3
   call z, .addThree
 
-  ld a, [slot3Value]
+  ld a, [diceSlots_Slot3]
   cp a, 3
   call z, .addThree
 
-  ld a, [slot4Value]
+  ld a, [diceSlots_Slot4]
   cp a, 3
   call z, .addThree
 
-  ld a, [slot5Value]
+  ld a, [diceSlots_Slot5]
   cp a, 3
   call z, .addThree
 
 .calcFours
-  ld a, [slot1Value]
+  ld a, [diceSlots_Slot1]
   cp a, 4
   call z, .addFour
 
-  ld a, [slot2Value]
+  ld a, [diceSlots_Slot2]
   cp a, 4
   call z, .addFour
 
-  ld a, [slot3Value]
+  ld a, [diceSlots_Slot3]
   cp a, 4
   call z, .addFour
 
-  ld a, [slot4Value]
+  ld a, [diceSlots_Slot4]
   cp a, 4
   call z, .addFour
 
-  ld a, [slot5Value]
+  ld a, [diceSlots_Slot5]
   cp a, 4
   call z, .addFour
 
 .calcFives
-  ld a, [slot1Value]
+  ld a, [diceSlots_Slot1]
   cp a, 5
   call z, .addFive
 
-  ld a, [slot2Value]
+  ld a, [diceSlots_Slot2]
   cp a, 5
   call z, .addFive
 
-  ld a, [slot3Value]
+  ld a, [diceSlots_Slot3]
   cp a, 5
   call z, .addFive
 
-  ld a, [slot4Value]
+  ld a, [diceSlots_Slot4]
   cp a, 5
   call z, .addFive
 
-  ld a, [slot5Value]
+  ld a, [diceSlots_Slot5]
   cp a, 5
   call z, .addFive
 
 .calcSixes
-  ld a, [slot1Value]
+  ld a, [diceSlots_Slot1]
   cp a, 6
   call z, .addSix
 
-  ld a, [slot2Value]
+  ld a, [diceSlots_Slot2]
   cp a, 6
   call z, .addSix
 
-  ld a, [slot3Value]
+  ld a, [diceSlots_Slot3]
   cp a, 6
   call z, .addSix
 
-  ld a, [slot4Value]
+  ld a, [diceSlots_Slot4]
   cp a, 6
   call z, .addSix
 
-  ld a, [slot5Value]
+  ld a, [diceSlots_Slot5]
   cp a, 6
   call z, .addSix
 
@@ -244,6 +244,7 @@ calcScore:
   bit 2, a
   ld a, 0
   ret z
+
   ld a, 25
   ret
 
