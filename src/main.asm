@@ -18,6 +18,9 @@ endr
 section "Sprites", oam
 dstruct ArrowSprite, arrowSprite
 
+Section "Fast Data", hram
+include "src/lib/fast_variables.inc"
+
 section "Data", wram0
 include "src/lib/variables.inc"
 
@@ -100,11 +103,11 @@ setupGame:
   VariableSet DISABLE_KEEP_SCORE, 1
 
   xor a
-  ld [slot1Value], a
-  ld [slot2Value], a
-  ld [slot3Value], a
-  ld [slot4Value], a
-  ld [slot5Value], a
+  ld [diceSlots_Slot1], a
+  ld [diceSlots_Slot2], a
+  ld [diceSlots_Slot3], a
+  ld [diceSlots_Slot4], a
+  ld [diceSlots_Slot5], a
   ld [SELECTION], a
   ld [MENU], a
   ld [KEPT_DICE], a
@@ -439,18 +442,6 @@ moveArrow:
 
   ret
 
-draw:
-  DrawRollCount
-  DrawTotal
-  DrawSubtotal
-  DrawDiceSlot slot1Value, BEGIN_SLOT_1, 0
-  DrawDiceSlot slot2Value, BEGIN_SLOT_2, 1
-  DrawDiceSlot slot3Value, BEGIN_SLOT_3, 2
-  DrawDiceSlot slot4Value, BEGIN_SLOT_4, 3
-  DrawDiceSlot slot5Value, BEGIN_SLOT_5, 4
-  call LCDControl.resetUpdate
-  ret
-
 input:
 	call read_pad
 
@@ -497,17 +488,24 @@ input:
 	and PADF_START
 	jp nz, selectPause
 
+  ; TODO: Probably don't have to draw all of this after each input...
   call LCDControl.waitVBlank
+  DrawDiceSlot diceSlots_Slot1, BEGIN_SLOT_1, 0
+  DrawDiceSlot diceSlots_Slot2, BEGIN_SLOT_2, 1
+  DrawDiceSlot diceSlots_Slot3, BEGIN_SLOT_3, 2
+  DrawDiceSlot diceSlots_Slot4, BEGIN_SLOT_4, 3
+  DrawDiceSlot diceSlots_Slot5, BEGIN_SLOT_5, 4
   call moveArrow
-  call draw
-  call LCDControl.waitVBlank
-
   call scorecard.draw
+  DrawRollCount
+  DrawTotal
+  DrawSubtotal
+  ResetDisplay
 
   call Reseed
   call setRandomNumbers
 
-  jr input
+  jp input
 
 pauseInput:
   call read_pad

@@ -131,86 +131,8 @@ DICE_SUM:
 DICE_STATUS:
   ds 1
 
-OLD_X:
-  ds 1
-
-OLD_Y:
-  ds 1
-
 PAUSE_SELECTION:
   ds 1
 
 GAME_FINISHED:
   ds 1
-
-Section "Display Data", hram
-Seed:
-  ds 3
-
-DISPLAY_BONUS:
-  ds 2
-
-DISPLAY_TOTAL:
-  ds 4
-
-DISPLAY_SUBTOTAL:
-  ds 3
-
-DISPLAY_ONES:
-  ds 2
-
-DISPLAY_TWOS:
-  ds 2
-
-DISPLAY_THREES:
-  ds 2
-
-DISPLAY_FOURS:
-  ds 2
-
-DISPLAY_FIVES:
-  ds 2
-
-DISPLAY_SIXES:
-  ds 2
-
-DISPLAY_3KIND:
-  ds 2
-
-DISPLAY_4KIND:
-  ds 2
-
-DISPLAY_FULL:
-  ds 2
-
-DISPLAY_SMALL:
-  ds 2
-
-DISPLAY_LARGE:
-  ds 2
-
-DISPLAY_YATZY:
-  ds 2
-
-DISPLAY_CHANCE:
-  ds 2
-
-slotValuesStart:
-slot1Value:
-  ds 1
-
-slot2Value:
-  ds 1
-
-slot3Value:
-  ds 1
-
-slot4Value:
-  ds 1
-
-slot5Value:
-  ds 1
-slotValuesEnd:
-
-RN:
-  ds 5

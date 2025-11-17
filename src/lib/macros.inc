@@ -105,6 +105,13 @@ macro DrawDiceSlot ; SLOT_VALUE, DICE_SLOT, BIT
   call dice.copyDiceSlot
 endm
 
+macro ResetDisplay
+  ld b, a
+  xor a
+  ld [SCREEN_UPDATE], a
+  ld a, b
+endm
+
 macro DrawRollCount
   DrawNumber BEGIN_ROLLS_NUMBER, ROLL_COUNT, 1
 endm

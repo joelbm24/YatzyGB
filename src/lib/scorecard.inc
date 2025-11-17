@@ -17,10 +17,10 @@ scorecard:
   ld [DISPLAY_SIXES+1], a
   ld [DISPLAY_BONUS], a
   ld [DISPLAY_BONUS+1], a
-  ld [DISPLAY_3KIND], a
-  ld [DISPLAY_3KIND+1], a
-  ld [DISPLAY_4KIND], a
-  ld [DISPLAY_4KIND+1], a
+  ld [DISPLAY_v3KIND], a
+  ld [DISPLAY_v3KIND+1], a
+  ld [DISPLAY_v4KIND], a
+  ld [DISPLAY_v4KIND+1], a
   ld [DISPLAY_FULL], a
   ld [DISPLAY_FULL+1], a
   ld [DISPLAY_SMALL], a
@@ -281,12 +281,12 @@ scorecard:
   ret
 
 .clear3Kind
-  ld de, DISPLAY_3KIND
+  ld de, DISPLAY_v3KIND
   call .resetNumber
   ret
 
 .clear4Kind
-  ld de, DISPLAY_4KIND
+  ld de, DISPLAY_v4KIND
   call .resetNumber
   ret
 
@@ -344,11 +344,11 @@ scorecard:
   ret
 
 .update3Kind
-  UpdateCardNumber POSSIBLE_3KIND, DISPLAY_3KIND
+  UpdateCardNumber POSSIBLE_3KIND, DISPLAY_v3KIND
   ret
 
 .update4Kind
-  UpdateCardNumber POSSIBLE_4KIND, DISPLAY_4KIND
+  UpdateCardNumber POSSIBLE_4KIND, DISPLAY_v4KIND
   ret
 
 .updateFull
@@ -400,11 +400,11 @@ scorecard:
   ret
 
 .change3Kind
-  ChangeCardNumber DISPLAY_3KIND
+  ChangeCardNumber DISPLAY_v3KIND
   ret
 
 .change4Kind
-  ChangeCardNumber DISPLAY_4KIND
+  ChangeCardNumber DISPLAY_v4KIND
   ret
 
 .changeFull
@@ -612,9 +612,9 @@ scorecard:
 
 .draw
   DrawNumber BEGIN_ONES+4, DISPLAY_ONES, 2
-  DrawNumber BEGIN_3KIND+4, DISPLAY_3KIND, 2
+  DrawNumber BEGIN_3KIND+4, DISPLAY_v3KIND, 2
   DrawNumber BEGIN_TWOS+4, DISPLAY_TWOS, 2
-  DrawNumber BEGIN_4KIND+4, DISPLAY_4KIND, 2
+  DrawNumber BEGIN_4KIND+4, DISPLAY_v4KIND, 2
   DrawNumber BEGIN_THREES+4, DISPLAY_THREES, 2
   DrawNumber BEGIN_FULL+4, DISPLAY_FULL, 2
   DrawNumber BEGIN_FOURS+4, DISPLAY_FOURS, 2
@@ -802,7 +802,7 @@ scorecard:
   ret c
 
   ld a, [LOWER_STATUS]
-  cp a, 254
+  cp a, 255
   ret c
 
   call .setGameFinished

@@ -137,7 +137,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot1Value], a
+  ld [diceSlots_Slot1], a
   ret
 
 .changeSlot2
@@ -148,7 +148,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot2Value], a
+  ld [diceSlots_Slot2], a
   ret
 
 .changeSlot3
@@ -159,7 +159,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot3Value], a
+  ld [diceSlots_Slot3], a
   ret
 
 .changeSlot4
@@ -170,7 +170,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot4Value], a
+  ld [diceSlots_Slot4], a
   ret
 
 .changeSlot5
@@ -181,7 +181,7 @@ changeDice:
   ret nz
 
   ld a, b
-  ld [slot5Value], a
+  ld [diceSlots_Slot5], a
   ret
 
 .selectSlot1
@@ -236,18 +236,14 @@ changeDice:
 
 .resetDice:
   call LCDControl.setUpdate
-  ld a, 3
-  ld [ROLL_COUNT], a
-
-  ;call updateRollCount
+  VariableSet ROLL_COUNT, 3
 
   xor a
-
-  ld [slot1Value], a
-  ld [slot2Value], a
-  ld [slot3Value], a
-  ld [slot4Value], a
-  ld [slot5Value], a
+  ld [diceSlots_Slot1], a
+  ld [diceSlots_Slot2], a
+  ld [diceSlots_Slot3], a
+  ld [diceSlots_Slot4], a
+  ld [diceSlots_Slot5], a
   ld [KEPT_DICE], a
 
   ret
