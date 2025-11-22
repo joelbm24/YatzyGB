@@ -147,56 +147,99 @@ mod6:
   ld c, 0
   ret
 
+; Input: HL = 16-bit number to divide
+; Output: HL = quotient, A = remainder
+; Modifies: A, BC, HL
+
 div10:
-  ld a, l
-  ld b, 0
+    ld bc, 0         ; BC = quotient
 
-.loop
-  ld c, a
-  ld a, h
-  cp a, 0
-  call z, .checkCanExit
 
-  ld a, c
+.sub1000:
+    ld a, h
+    cp 0x03          ; Check if HL >= 1000 (0x3E8)
+    jr c, .sub100
+    jr nz, .do_sub1000
+    ld a, l
+    cp 0xE8
+    jr c, .sub100
 
-  cp a, 10
-  call c, .resetA
+.do_sub1000:
+    ld a, l
+    sub 0xE8
+    ld l, a
+    ld a, h
+    sbc 0x03
+    ld h, a
 
-  sub 10
-  inc b
-  cp a, 0
-  jr nz, .loop
-  ret
+    ld a, c
+    add a, 100
+    ld c, a
+    ld a, b
+    adc 0
+    ld b, a
 
-.checkCanExit
-  ld a, c
-  cp a, 10
-  jr c, .exit
-  ret
+    jr .sub1000
 
-.resetA
-  sub 10
-  inc b
-  dec h
-  ret
+.sub100:
+    ld a, h
+    or a
+    jr nz, .do_sub100
+    ld a, l
+    cp 100
+    jr c, .sub10
 
-.exit
-  pop hl
-  ret
+.do_sub100:
+    ld a, l
+    sub 100
+    ld l, a
+    ld a, h
+    sbc 0
+    ld h, a
+
+    ld a, c
+    add a, 10
+    ld c, a
+    ld a, b
+    adc 0
+    ld b, a
+
+    jr .sub100
+
+.sub10:
+    ld a, h
+    or a
+    jr nz, .do_sub10
+    ld a, l
+    cp 10
+    jr c, .done
+
+.do_sub10:
+    ld a, l
+    sub 10
+    ld l, a
+    ld a, h
+    sbc 0
+    ld h, a
+
+    inc bc
+
+    jr .sub10
+
+.done:
+    ld a, l
+    ld h, b
+    ld l, c
+    ret
 
 getDisplayNumber:
 .loop
   call div10
-  ld c, a
-  ld a, b
-  cp a, 0
-  ld a, c
   ld [de], a
   inc de
+  ld a, h
+  or l
   ret z
-  ld a, b
-  ld h, 0
-  ld l, a
   jr .loop
 
 fadeIn:

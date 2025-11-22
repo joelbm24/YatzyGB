@@ -75,6 +75,23 @@ scorecard:
   ld [SUBTOTAL], a
   ret
 
+.addTotalNoCheck
+  ld c, a
+  xor a
+  ld b, a
+  ld a, [TOTAL+1]
+  ld l, a
+  ld a, [TOTAL]
+  ld h, a
+  add hl, bc
+
+  ld a, h
+  ld [TOTAL], a
+  ld a, l
+  ld [TOTAL+1], a
+  ret
+
+
 .addTotal
   ld c, a
   xor a
@@ -85,6 +102,7 @@ scorecard:
   ld h, a
   add hl, bc
 
+  ; This will double add the yatzy bonus when upper card bonus is applied
   call calcScore.calcRepeatYatzy
   ld b, 0
   ld c, a
@@ -176,13 +194,7 @@ scorecard:
   ld a, [POSSIBLE_BONUS]
   call .addSubtotal
   ld a, [POSSIBLE_BONUS]
-  call .addTotal
-  ret
-
-.checkCardFilled
-  ld a, [UPPER_STATUS]
-  cp a, 63
-  call z, .setNoBonus
+  call .addTotalNoCheck
   ret
 
 .setNoBonus
@@ -192,6 +204,12 @@ scorecard:
   call .clearBonus
   call .updateBonus
   call .changeBonus
+  ret
+
+.checkCardFilled
+  ld a, [UPPER_STATUS]
+  cp a, 63
+  call z, .setNoBonus
   ret
 
 .set3Kind

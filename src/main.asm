@@ -38,6 +38,7 @@ Start:
   ld [rOBP1], a
   ld [rSCY], a
   ld [rSCX], a
+  ld [CHEAT_ENABLE], a
 
   call LCDControl.waitVBlank
   call LCDControl.turnOff
@@ -220,6 +221,10 @@ roll:
   call calcScore.init
   call scorecard.clear
 
+  ld a, [CHEAT_ENABLE]
+  cp a, 1
+  jr z, .cheat
+
   ld a, [RN]
   call changeDice.changeSlot1
   ld a, [RN+1]
@@ -230,7 +235,21 @@ roll:
   call changeDice.changeSlot4
   ld a, [RN+4]
   call changeDice.changeSlot5
+  jr .continue
 
+.cheat:
+  ld a, [RN]
+  call changeDice.changeSlot1
+  ld a, [diceSlots_Slot1]
+  call changeDice.changeSlot2
+  ld a, [diceSlots_Slot1]
+  call changeDice.changeSlot3
+  ld a, [diceSlots_Slot1]
+  call changeDice.changeSlot4
+  ld a, [diceSlots_Slot1]
+  call changeDice.changeSlot5
+
+.continue
   call calcScore.calcPossibleScore
   VariableDec ROLL_COUNT
   call scorecard.update
@@ -497,6 +516,7 @@ input:
   DrawDiceSlot diceSlots_Slot4, BEGIN_SLOT_4, 3
   DrawDiceSlot diceSlots_Slot5, BEGIN_SLOT_5, 4
   call moveArrow
+  call LCDControl.waitVBlank
   call scorecard.draw
   DrawRollCount
   DrawTotal

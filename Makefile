@@ -13,3 +13,6 @@ clean :
 
 run : yatzy
 	mgba bin/yatzy.gb
+
+debug : yatzy
+	java -jar ~/Emulicious/Emulicious.jar bin/yatzy.gb

@@ -468,7 +468,6 @@ calcScore:
   cp a, 30
   call z, .setYatzy
   ret
-  ret
 
 .calcPossibleUpperScore:
   ld a, [ONE_TOTAL]
