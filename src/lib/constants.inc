@@ -1,5 +1,11 @@
 ; vim: ft=gbasm
 
+def DRAW_STATE_NOTHING equ 0
+def DRAW_STATE_GAME equ 1
+def DRAW_STATE_PAUSE equ 2
+def DRAW_STATE_FADE_IN equ 3
+def DRAW_STATE_FADE_OUT equ 4
+
 def NUMBER_ZERO_TILE equ $5C
 def BEGIN_SLOT_1 equ $99E1
 def BEGIN_SLOT_1_ROW_2 equ BEGIN_SLOT_1 + 32

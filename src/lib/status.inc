@@ -6,13 +6,13 @@ status:
   ld [SUBTOTAL], a
   ld [TOTAL], a
   ld [TOTAL+1], a
-  ld [DISPLAY_SUBTOTAL], a
-  ld [DISPLAY_SUBTOTAL+1], a
-  ld [DISPLAY_SUBTOTAL+2], a
-  ld [DISPLAY_TOTAL], a
-  ld [DISPLAY_TOTAL+1], a
-  ld [DISPLAY_TOTAL+2], a
-  ld [DISPLAY_TOTAL+3], a
+  ldh [DISPLAY_SUBTOTAL], a
+  ldh [DISPLAY_SUBTOTAL+1], a
+  ldh [DISPLAY_SUBTOTAL+2], a
+  ldh [DISPLAY_TOTAL], a
+  ldh [DISPLAY_TOTAL+1], a
+  ldh [DISPLAY_TOTAL+2], a
+  ldh [DISPLAY_TOTAL+3], a
   ret
 
 

@@ -70,10 +70,6 @@ Dice6Map:
 DB $0C, $02, $0A, $0E, $00, $0F, $0B, $07, $0D
 .end
 
-ArrowMap:
-DB $10
-.end
-
 RollMap:
 DB $00, $11, $12, $13
 .end
