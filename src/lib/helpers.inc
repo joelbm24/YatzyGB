@@ -1,63 +1,19 @@
 ; vim: ft=gbasm
 
-drawTitleScreen:
-  ld hl, _SCRN0
-  ld de, TitleScreenMap
-  ld bc, TitleScreenMap.end - TitleScreenMap
-
-.drawTitleTilesLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec bc
-  ld a, b
-  or c
-  jr nz, .drawTitleTilesLoop
+drawTitleScreenMap:
+  CopyMemory _SCRN0, TitleScreenMap
   ret
 
-drawFinishScreen:
-  ld hl, _SCRN0
-  ld de, FinishScreenMap
-  ld bc, FinishScreenMap.end - FinishScreenMap
-
-.drawFinishTilesLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec bc
-  ld a, b
-  or c
-  jr nz, .drawFinishTilesLoop
+drawFinishScreenMap:
+  CopyMemory _SCRN0, FinishScreenMap
   ret
 
-drawGameScreen:
-  ld hl, _SCRN0
-  ld de, GameScreenMap
-  ld bc, GameScreenMap.end- GameScreenMap
-
-.drawTilesLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec bc
-  ld a, b
-  or c
-  jr nz, .drawTilesLoop
+drawGameScreenMap:
+  CopyMemory _SCRN0, GameScreenMap
   ret
 
-drawWindow:
-  ld hl, _SCRN1
-  ld de, WindowMap
-  ld bc, WindowMap.end - WindowMap
-
-.drawWindowLoop
-  ld a, [de]
-  ld [hli], a
-  inc de
-  dec bc
-  ld a, b
-  or c
-  jr nz, .drawWindowLoop
+drawWindowMap:
+  CopyMemory _SCRN1, WindowMap
   ret
 
 drawTextTiles:
@@ -77,30 +33,30 @@ drawTextTiles:
 
 setRandomNumbers:
   call RandomNumber
-  ld [RN], a
+  ldh [RN], a
 
   call RandomNumber
-  ld [RN+1], a
+  ldh [RN+1], a
 
   call RandomNumber
-  ld [RN+2], a
+  ldh [RN+2], a
 
   call RandomNumber
-  ld [RN+3], a
+  ldh [RN+3], a
 
   call RandomNumber
-  ld [RN+4], a
+  ldh [RN+4], a
 
 Reseed:
-  ld a, [Seed]
-  ld [Seed], a
-  ld a, [Seed+1]
-  ld [Seed+1], a
-  ld a, [Seed]
+  ldh a, [Seed]
+  ldh [Seed], a
+  ldh a, [Seed+1]
+  ldh [Seed+1], a
+  ldh a, [Seed]
   ld b, a
-  ld a, [Seed+1]
+  ldh a, [Seed+1]
   xor b
-  ld [Seed+2], a
+  ldh [Seed+2], a
   ret
 
 RandomNumber:
@@ -134,30 +90,27 @@ mod6:
   inc c
   ld a, 6
   cp a, c
-  call z, .resetC
-
+  jr z, .resetCounter
+.continue
   xor a
   cp a, b
   jr nz, .loop
 
   inc c
   ret
-
-.resetC
+.resetCounter
   ld c, 0
-  ret
+  jr .continue
 
 ; Input: HL = 16-bit number to divide
 ; Output: HL = quotient, A = remainder
 ; Modifies: A, BC, HL
-
 div10:
-    ld bc, 0         ; BC = quotient
-
+    ld bc, 0
 
 .sub1000:
     ld a, h
-    cp 0x03          ; Check if HL >= 1000 (0x3E8)
+    cp 0x03
     jr c, .sub100
     jr nz, .do_sub1000
     ld a, l
@@ -243,61 +196,105 @@ getDisplayNumber:
   jr .loop
 
 fadeIn:
-  call LCDControl.waitVBlank
-  ld a, %00000000
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+  ldh a, [frame_counter]
+  bit 2, a
+  jr z, .exit
 
-  call slowdown
-  call LCDControl.waitVBlank
-  ld a, %01010100
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+  xor a
+  ldh [frame_counter], a
 
-  call slowdown
-  call LCDControl.waitVBlank
-  ld a, %10100100
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+  ldh a, [fade_state]
+  cp 0
+  jr z, .stage1
+  cp 1
+  jr z, .stage2
+  cp 2
+  jr z, .stage3
+  cp 3
+  jr z, .stage4
 
-  call slowdown
-  call LCDControl.waitVBlank
-  ld a, %11100100
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+  jr .exit
 
+.stage1:
+  inc a
+  ldh [fade_state], a
+  SetAllPalletes %00000000
+  ret
+
+.stage2:
+  inc a
+  ldh [fade_state], a
+  SetAllPalletes %01010100
+  ret
+
+.stage3:
+  inc a
+  ldh [fade_state], a
+  SetAllPalletes %10100100
+  ret
+
+.stage4:
+  xor a
+  ldh [fade_state], a
+  ldh [fadein_enabled], a
+  SetAllPalletes %11100100
+.exit:
   ret
 
 fadeOut:
-  call LCDControl.waitVBlank
-  ld a, %11100100
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+  ldh a, [frame_counter]
+  bit 2, a
+  jr z, .exit
 
-  call slowdown
-  call LCDControl.waitVBlank
-  ld a, %10100100
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+  ldh a, [fade_state]
+  cp 0
+  jr z, .stage1
+  cp 1
+  jr z, .stage2
+  cp 2
+  jr z, .stage3
+  cp 3
+  jr z, .stage4
 
-  call slowdown
-  call LCDControl.waitVBlank
-  ld a, %01010100
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+.stage1:
+  inc a
+  ldh [fade_state], a
+  SetAllPalletes %11100100
+  ret
+.stage2:
+  inc a
+  ldh [fade_state], a
+  SetAllPalletes %10100100
+  ret
+.stage3:
+  inc a
+  ldh [fade_state], a
+  SetAllPalletes %01010100
+  ret
+.stage4:
+  xor a
+  ldh [fade_state], a
+  ldh [fadeout_enabled], a
+  SetAllPalletes %00000000
+.exit:
+  ret
 
-  call slowdown
-  call LCDControl.waitVBlank
-  ld a, %00000000
-  ld [rBGP], a
-  ld [rOBP0], a
-  ld [rOBP1], a
+enableAndWaitFadeIn:
+  ld a, 1
+  ldh [fadein_enabled], a
+.loop:
+  ldh a, [fadein_enabled]
+  cp 0
+  halt
+  jr nz, .loop
+  ret
 
+enableAndWaitFadeOut:
+  ld a, 1
+  ldh [fadeout_enabled], a
+.loop:
+  ldh a, [fadeout_enabled]
+  cp 0
+  halt
+  jr nz, .loop
   ret

@@ -17,19 +17,19 @@ arrow_control:
   jp .spriteCleanLoop
   ret
 
-.setPosition
-  ld a, [arrowData_MinX]
-  ld [arrowSprite_XPos], a
-  ld [arrowData_XPos], a
-
-  ld a, [arrowData_MinY]
-  ld [arrowSprite_YPos], a
-  ld [arrowData_YPos], a
-
-  ld a, [ArrowMap]
+.init:
+  ld a, $10
   ld [arrowSprite_Tile], a
   xor a
   ld [arrowSprite_Attr], a
+  ret
+
+.setPosition
+  ld a, [arrowData_MinX]
+  ld [arrowData_XPos], a
+
+  ld a, [arrowData_MinY]
+  ld [arrowData_YPos], a
   ret
 
 .jump
@@ -106,9 +106,8 @@ arrow_control:
 .moveRight
   ld a, [arrowData_XChange]
   ld b, a
-  ld a, [arrowSprite_XPos]
+  ld a, [arrowData_XPos]
   add a, b
-  ld [arrowSprite_XPos],a
   ld [arrowData_XPos], a
   ret
 
@@ -117,7 +116,6 @@ arrow_control:
   ld b, a
   ld a, [arrowData_XPos]
   sub a, b
-  ld [arrowSprite_XPos],a
   ld [arrowData_XPos], a
   ret
 
@@ -126,7 +124,6 @@ arrow_control:
   ld b, a
   ld a, [arrowData_YPos]
   add a, b
-  ld [arrowSprite_YPos],a
   ld [arrowData_YPos], a
   ret
 
@@ -135,23 +132,19 @@ arrow_control:
   ld b, a
   ld a, [arrowData_YPos]
   sub a, b
-  ld [arrowSprite_YPos],a
   ld [arrowData_YPos], a
   ret
 
 .jumpToLocation
   ld a, [arrowData_MinX]
-  ld [arrowSprite_XPos], a
   ld [arrowData_XPos], a
 
   ld a, [arrowData_MinY]
-  ld [arrowSprite_YPos], a
   ld [arrowData_YPos], a
   ret
 
 .draw
   ld a, [arrowData_YPos]
   ld [arrowSprite_YPos], a
-
   ld a, [arrowData_XPos]
   ld [arrowSprite_XPos], a

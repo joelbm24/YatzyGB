@@ -40,7 +40,7 @@ dice:
   ld de, Dice1Map
   ret
 
-.setDieToInvert1
+.setDieToInvert1:
   ld de, InvertDice1Map
   ret
 
@@ -48,7 +48,7 @@ dice:
   ld de, Dice2Map
   ret
 
-.setDieToInvert2
+.setDieToInvert2:
   ld de, InvertDice2Map
   ret
 
@@ -56,7 +56,7 @@ dice:
   ld de, Dice3Map
   ret
 
-.setDieToInvert3
+.setDieToInvert3:
   ld de, InvertDice3Map
   ret
 
@@ -72,7 +72,7 @@ dice:
   ld de, Dice5Map
   ret
 
-.setDieToInvert5
+.setDieToInvert5:
   ld de, InvertDice5Map
   ret
 
@@ -80,112 +80,89 @@ dice:
   ld de, Dice6Map
   ret
 
-.setDieToInvert6
+.setDieToInvert6:
   ld de, InvertDice6Map
   ret
 
-.copyDiceSlot
-  ld a, [de]
-  ld [hli], a
-  inc de
-
-  ld a, [de]
-  ld [hli], a
-  inc de
-
-  ld a, [de]
-  ld [hli], a
-  inc de
+.copyDiceSlot:
+  REPT 3
+    ld a, [de]
+    ld [hli], a
+    inc de
+  ENDR
 
   ld bc, 29
   add hl, bc
 
-  ld a, [de]
-  ld [hli], a
-  inc de
-
-  ld a, [de]
-  ld [hli], a
-  inc de
-
-  ld a, [de]
-  ld [hli], a
-  inc de
+  REPT 3
+    ld a, [de]
+    ld [hli], a
+    inc de
+  ENDR
 
   ld bc, 29
   add hl, bc
 
-  ld a, [de]
-  ld [hli], a
-  inc de
+  REPT 3
+    ld a, [de]
+    ld [hli], a
+    inc de
+  ENDR
 
-  ld a, [de]
-  ld [hli], a
-  inc de
-
-  ld a, [de]
-  ld [hli], a
-  inc de
   ret
 
 changeDice:
-.changeSlot1
-  call LCDControl.setUpdate
+.changeSlot1:
   ld b, a
   ld a, [KEPT_DICE]
   bit 0, a
   ret nz
 
   ld a, b
-  ld [diceSlots_Slot1], a
+  ldh [diceSlots_Slot1], a
   ret
 
-.changeSlot2
-  call LCDControl.setUpdate
+.changeSlot2:
   ld b, a
   ld a, [KEPT_DICE]
   bit 1, a
   ret nz
 
   ld a, b
-  ld [diceSlots_Slot2], a
+  ldh [diceSlots_Slot2], a
   ret
 
-.changeSlot3
-  call LCDControl.setUpdate
+.changeSlot3:
   ld b, a
   ld a, [KEPT_DICE]
   bit 2, a
   ret nz
 
   ld a, b
-  ld [diceSlots_Slot3], a
+  ldh [diceSlots_Slot3], a
   ret
 
-.changeSlot4
-  call LCDControl.setUpdate
+.changeSlot4:
   ld b, a
   ld a, [KEPT_DICE]
   bit 3, a
   ret nz
 
   ld a, b
-  ld [diceSlots_Slot4], a
+  ldh [diceSlots_Slot4], a
   ret
 
-.changeSlot5
-  call LCDControl.setUpdate
+.changeSlot5:
   ld b, a
   ld a, [KEPT_DICE]
   bit 4, a
   ret nz
 
   ld a, b
-  ld [diceSlots_Slot5], a
+  ldh [diceSlots_Slot5], a
   ret
 
-.selectSlot1
-  call LCDControl.setUpdate
+.selectSlot1:
   ld b, 0
   set 0, b
 
@@ -194,8 +171,7 @@ changeDice:
   ld [KEPT_DICE], a
   ret
 
-.selectSlot2
-  call LCDControl.setUpdate
+.selectSlot2:
   ld b, 0
   set 1, b
 
@@ -204,8 +180,7 @@ changeDice:
   ld [KEPT_DICE], a
   ret
 
-.selectSlot3
-  call LCDControl.setUpdate
+.selectSlot3:
   ld b, 0
   set 2, b
 
@@ -214,8 +189,7 @@ changeDice:
   ld [KEPT_DICE], a
   ret
 
-.selectSlot4
-  call LCDControl.setUpdate
+.selectSlot4:
   ld b, 0
   set 3, b
 
@@ -224,8 +198,7 @@ changeDice:
   ld [KEPT_DICE], a
   ret
 
-.selectSlot5
-  call LCDControl.setUpdate
+.selectSlot5:
   ld b, 0
   set 4, b
 
@@ -235,15 +208,14 @@ changeDice:
   ret
 
 .resetDice:
-  call LCDControl.setUpdate
   VariableSet ROLL_COUNT, 3
 
   xor a
-  ld [diceSlots_Slot1], a
-  ld [diceSlots_Slot2], a
-  ld [diceSlots_Slot3], a
-  ld [diceSlots_Slot4], a
-  ld [diceSlots_Slot5], a
+  ldh [diceSlots_Slot1], a
+  ldh [diceSlots_Slot2], a
+  ldh [diceSlots_Slot3], a
+  ldh [diceSlots_Slot4], a
+  ldh [diceSlots_Slot5], a
   ld [KEPT_DICE], a
 
   ret

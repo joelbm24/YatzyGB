@@ -1,14 +1,5 @@
 ; vim: ft=gbasm
 
-SCREEN_UPDATE:
-  ds 1
-
-_PAD:
-  ds 1
-
-_PAD_PRESSED:
-  ds 1
-
 dstruct ArrowData, arrowData
 
 NO_BACK:
