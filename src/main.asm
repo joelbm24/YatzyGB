@@ -312,7 +312,7 @@ roll:
   jr .continue
 
 .cheat:
-  ldh a, [RN]
+  call RandomNumber
   call changeDice.changeSlot1
   ldh a, [diceSlots_Slot1]
   call changeDice.changeSlot2
@@ -684,6 +684,9 @@ closeWindow:
 	ldh a, [rLCDC]
 	res 5, a
 	ldh [rLCDC], a
+
+  ld a, DRAW_STATE_GAME
+  ldh [game_state], a
 
 closeWindowDraw:
   call setOldArrowPosition
